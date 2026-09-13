@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="91e8ec1a-96e3-4795-8700-f4a880f9a12c" name="Changes" comment="Fixed consultation notification and CSS layers for the pair cancellation and menu.">
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/ScheduleUpload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/ScheduleUpload.vue" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="Vue Composition API Component" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Shuni21&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Viktor7774564/EduDepartUrTISI.git&quot;,
+    &quot;accountId&quot;: &quot;45467a5b-e46e-42ca-9767-04e69821201f&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="3DJBhwYEYk91pokMi7e8eSBhNNj" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Node.js.scheduleOptions.ts.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/WebstormProjects/EduDepartUrTISI/frontend/src/mocks&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.Back.executor&quot;: &quot;Run&quot;,
+    &quot;npm.Front.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\User\\WebstormProjects\\EduDepartUrTISI\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;vue.recent.templates&quot;: [
+      &quot;Vue Composition API Component&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\User\WebstormProjects\EduDepartUrTISI\frontend\src\mocks" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User\WebstormProjects\EduDepartUrTISI\frontend\src\mocks" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Compound.Unnamed">
+    <configuration name="Unnamed" type="CompoundRunConfigurationType">
+      <toRun name="Back" type="js.build_tools.npm" />
+      <toRun name="Front" type="js.build_tools.npm" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Back" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev:api" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <EXTENSION ID="com.intellij.javascript.debugger.execution.StartBrowserRunConfigurationExtension">
+        <browser with-js-debugger="true" />
+      </EXTENSION>
+      <method v="2" />
+    </configuration>
+    <configuration name="Front" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <EXTENSION ID="com.intellij.javascript.debugger.execution.StartBrowserRunConfigurationExtension">
+        <browser with-js-debugger="true" />
+      </EXTENSION>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Compound.Unnamed" />
+      <item itemvalue="npm.Front" />
+      <item itemvalue="npm.Back" />
+    </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.30387.83" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="91e8ec1a-96e3-4795-8700-f4a880f9a12c" name="Changes" comment="" />
+      <created>1777990414864</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1777990414864</updated>
+      <workItem from="1777990415903" duration="893000" />
+      <workItem from="1777991670889" duration="1909000" />
+      <workItem from="1778081469510" duration="2184000" />
+      <workItem from="1778086460723" duration="367000" />
+      <workItem from="1778133491239" duration="1767000" />
+      <workItem from="1778135300411" duration="768000" />
+      <workItem from="1778136106217" duration="13772000" />
+      <workItem from="1778158267738" duration="193000" />
+      <workItem from="1778255230728" duration="1081000" />
+      <workItem from="1778478406595" duration="9000" />
+      <workItem from="1778864371951" duration="216000" />
+      <workItem from="1779521229043" duration="1384000" />
+      <workItem from="1779596664713" duration="339000" />
+      <workItem from="1779597079682" duration="179000" />
+      <workItem from="1779598364649" duration="4630000" />
+      <workItem from="1779616791191" duration="3380000" />
+      <workItem from="1779620514848" duration="627000" />
+      <workItem from="1779640173768" duration="2974000" />
+      <workItem from="1779799905005" duration="108000" />
+      <workItem from="1780510872165" duration="412000" />
+      <workItem from="1780571621607" duration="825000" />
+      <workItem from="1781192706777" duration="503000" />
+      <workItem from="1781198604481" duration="334000" />
+      <workItem from="1781883421493" duration="1405000" />
+      <workItem from="1781884855746" duration="82000" />
+      <workItem from="1781884988518" duration="25000" />
+      <workItem from="1781885468431" duration="642000" />
+      <workItem from="1781967977332" duration="2654000" />
+      <workItem from="1781970671819" duration="2803000" />
+      <workItem from="1782020394382" duration="2567000" />
+      <workItem from="1782228912880" duration="139000" />
+      <workItem from="1783002029716" duration="503000" />
+      <workItem from="1783231930193" duration="4539000" />
+      <workItem from="1785516578881" duration="875000" />
+      <workItem from="1785518949818" duration="79000" />
+      <workItem from="1788181068726" duration="6000" />
+      <workItem from="1788268125088" duration="5811000" />
+      <workItem from="1788323949560" duration="3464000" />
+      <workItem from="1788362465754" duration="1231000" />
+      <workItem from="1788527736695" duration="9480000" />
+      <workItem from="1788589771021" duration="903000" />
+      <workItem from="1788590747386" duration="111000" />
+      <workItem from="1788600234215" duration="6042000" />
+      <workItem from="1788607390935" duration="716000" />
+      <workItem from="1788623722310" duration="1920000" />
+      <workItem from="1788705261542" duration="1454000" />
+      <workItem from="1788707103468" duration="301000" />
+      <workItem from="1788707529609" duration="87000" />
+      <workItem from="1788713707946" duration="1385000" />
+      <workItem from="1788930987907" duration="1202000" />
+      <workItem from="1788932268924" duration="359000" />
+      <workItem from="1789010393176" duration="1615000" />
+      <workItem from="1789316361276" duration="1463000" />
+    </task>
+    <task id="LOCAL-00001" summary="add separate file for temporary database">
+      <option name="closed" value="true" />
+      <created>1777992687746</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1777992687746</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add a modal to the schedule">
+      <option name="closed" value="true" />
+      <created>1778082972471</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1778082972471</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add an intermediate schedule selection and viewing all schedule types">
+      <option name="closed" value="true" />
+      <created>1778149436789</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1778149436789</updated>
+    </task>
+    <task id="LOCAL-00004" summary="FIX">
+      <option name="closed" value="true" />
+      <created>1779620278316</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1779620278316</updated>
+    </task>
+    <task id="LOCAL-00005" summary="replacing css with tailwing + mobile ver.">
+      <option name="closed" value="true" />
+      <created>1781193001248</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1781193001248</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Transferring style to a separate file and decoration README.md">
+      <option name="closed" value="true" />
+      <created>1781970453760</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1781970453760</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Changing the css style">
+      <option name="closed" value="true" />
+      <created>1781973498224</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1781973498224</updated>
+    </task>
+    <task id="LOCAL-00008" summary="TypeORM">
+      <option name="closed" value="true" />
+      <created>1782023212728</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1782023212728</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add migration and css fix">
+      <option name="closed" value="true" />
+      <created>1783243754342</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1783243754342</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fix">
+      <option name="closed" value="true" />
+      <created>1783244364587</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1783244364587</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Skipping the gym and fixing Cyrillic display">
+      <option name="closed" value="true" />
+      <created>1788272279101</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1788272279101</updated>
+    </task>
+    <task id="LOCAL-00012" summary="drag &amp; drop steam transfer and adding pair recognition">
+      <option name="closed" value="true" />
+      <created>1788326254317</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1788326254317</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Ignoring conflicts and adding pairs">
+      <option name="closed" value="true" />
+      <created>1788606871049</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1788606871049</updated>
+    </task>
+    <task id="LOCAL-00014" summary="show linked groups in lesson modal only">
+      <option name="closed" value="true" />
+      <created>1788608320474</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1788608320474</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Fix for conflict ignoring and confirmation of pair transfer.">
+      <option name="closed" value="true" />
+      <created>1788629150131</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1788629150131</updated>
+    </task>
+    <task id="LOCAL-00016" summary="chore">
+      <option name="closed" value="true" />
+      <created>1788714317529</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1788714317529</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Fixed consultation notification and CSS layers for the pair cancellation and menu.">
+      <option name="closed" value="true" />
+      <created>1788931974086</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1788931974086</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add separate file for temporary database" />
+    <MESSAGE value="Add a modal to the schedule" />
+    <MESSAGE value="Add an intermediate schedule selection and viewing all schedule types" />
+    <MESSAGE value="FIX" />
+    <MESSAGE value="replacing css with tailwing + mobile ver." />
+    <MESSAGE value="Transferring style to a separate file and decoration README.md" />
+    <MESSAGE value="Changing the css style" />
+    <MESSAGE value="TypeORM" />
+    <MESSAGE value="add migration and css fix" />
+    <MESSAGE value="fix" />
+    <MESSAGE value="Skipping the gym and fixing Cyrillic display" />
+    <MESSAGE value="drag &amp; drop steam transfer and adding pair recognition" />
+    <MESSAGE value="Ignoring conflicts and adding pairs" />
+    <MESSAGE value="show linked groups in lesson modal only" />
+    <MESSAGE value="Fix for conflict ignoring and confirmation of pair transfer." />
+    <MESSAGE value="chore" />
+    <MESSAGE value="Fixed consultation notification and CSS layers for the pair cancellation and menu." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed consultation notification and CSS layers for the pair cancellation and menu." />
+  </component>
+</project>

@@ -1125,28 +1125,36 @@ const toggleUploadWarnings = (id: number) => {
 }
 
 :global(.dark) .group-suggestions {
-  background: #1e242b;
+  background: #252a31;
   border-color: #3a424c;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .group-suggestions button {
   display: block;
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 24px;
   border: none;
-  background: none;
+  background: #fff;
   text-align: left;
   cursor: pointer;
   font: inherit;
-  color: inherit;
+  color: #24313f;
 }
 
 .group-suggestions button:hover {
-  background: #f3f5f7;
+  background: #1f6fd2;
+  color: #fff;
 }
 
 :global(.dark) .group-suggestions button:hover {
-  background: #2a3139;
+  background: #1f6fd2;
+  color: #fff;
+}
+
+:global(.dark) .group-suggestions button {
+  background: #252a31;
+  color: #f0f4f7;
 }
 
 .group-suggestions-empty {
@@ -1167,7 +1175,7 @@ const toggleUploadWarnings = (id: number) => {
 
 :global(.dark) .group-suggestions-empty {
   color: #9aa3ad;
-  background: #1e242b;
+  background: #252a31;
   border-color: #3a424c;
 }
 

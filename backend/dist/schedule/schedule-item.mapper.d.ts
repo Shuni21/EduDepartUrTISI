@@ -1,0 +1,11 @@
+import { User } from '../users/entities/user.entity';
+import { Room } from './entities/room.entity';
+import { ScheduleItem } from './entities/schedule-item.entity';
+import { ScheduleDisplayLesson } from './schedule-display.service';
+import { ScheduleLessonSlot } from './parser/schedule-conflict.validator';
+export declare function formatTeacherName(user: User): string;
+export declare function formatRoomLabel(room: Room | null): string;
+export declare function resolveTeacherName(item: ScheduleItem): string;
+export declare function formatTime(value: string): string;
+export declare function mapItemToDisplayLesson(item: ScheduleItem, linkedGroups?: string[]): ScheduleDisplayLesson;
+export declare function mapItemToLessonSlot(item: ScheduleItem): ScheduleLessonSlot;
