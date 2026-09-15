@@ -13,6 +13,6 @@ export declare class ScheduleUploadController {
     previewSchedule(req: AuthenticatedRequest, file: Express.Multer.File | undefined): Promise<import("./schedule-upload.service").SchedulePreviewResponse>;
     confirmSchedule(req: AuthenticatedRequest, file: Express.Multer.File | undefined): Promise<import("./schedule-upload.service").ScheduleUploadResponse>;
     uploadSchedule(req: AuthenticatedRequest, file: Express.Multer.File | undefined): Promise<import("./schedule-upload.service").ScheduleUploadResponse>;
-    deleteUpload(req: AuthenticatedRequest, id: number): Promise<void>;
+    deleteUpload(id: number): Promise<void>;
 }
 export {};

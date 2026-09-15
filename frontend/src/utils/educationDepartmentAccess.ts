@@ -15,13 +15,9 @@ export function hasScheduleManageAccess(user: AuthUser | null | undefined): bool
     return false
   }
 
-  if (user.canManageSchedule !== undefined) {
-    return user.canManageSchedule
+  if (user.role === 'employee' && isEducationDepartmentName(user.department)) {
+    return true
   }
 
-  if (user.role !== 'employee') {
-    return false
-  }
-
-  return isEducationDepartmentName(user.department)
+  return user.canManageSchedule === true
 }

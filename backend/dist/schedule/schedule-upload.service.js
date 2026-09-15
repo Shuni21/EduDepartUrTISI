@@ -552,13 +552,10 @@ let ScheduleUploadService = class ScheduleUploadService {
         });
         return this.toResponse(uploadWithUser);
     }
-    async deleteUpload(id, uploadedById) {
+    async deleteUpload(id) {
         const upload = await this.uploadsRepository.findOne({ where: { id } });
         if (!upload) {
             throw new common_1.NotFoundException('Файл не найден');
-        }
-        if (upload.uploadedById !== uploadedById) {
-            throw new common_1.ForbiddenException('Можно удалять только свои загрузки');
         }
         await this.handleOwnedSchedulesBeforeUploadDelete(upload);
         const filePath = (0, node_path_1.join)(this.schedulesDir, upload.storedFileName);

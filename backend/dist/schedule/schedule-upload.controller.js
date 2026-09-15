@@ -44,8 +44,8 @@ let ScheduleUploadController = class ScheduleUploadController {
     uploadSchedule(req, file) {
         return this.scheduleUploadService.uploadSchedule(req.user.sub, req.body?.scheduleType, req.body?.groupName, req.body?.facultyName, file);
     }
-    deleteUpload(req, id) {
-        return this.scheduleUploadService.deleteUpload(id, req.user.sub);
+    deleteUpload(id) {
+        return this.scheduleUploadService.deleteUpload(id);
     }
 };
 exports.ScheduleUploadController = ScheduleUploadController;
@@ -93,10 +93,9 @@ __decorate([
 ], ScheduleUploadController.prototype, "uploadSchedule", null);
 __decorate([
     (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], ScheduleUploadController.prototype, "deleteUpload", null);
 exports.ScheduleUploadController = ScheduleUploadController = __decorate([

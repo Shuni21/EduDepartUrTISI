@@ -301,11 +301,36 @@ function onCancel() {
 }
 
 .btn.secondary {
-  background: #e5e7eb;
+  background: #c43636;
+  color: #fff;
+}
+
+.btn.secondary:hover {
+  background: #a82e2e;
 }
 
 .btn.primary {
   background: var(--color-primary, #2563eb);
   color: #fff;
+}
+
+:global(.dark) .dialog {
+  color: #f0f4f7;
+}
+
+:global(.dark) .meta,
+:global(.dark) .count,
+:global(.dark) .group-name {
+  color: #c3ccd6;
+  opacity: 1;
+}
+
+:global(.dark) .hint {
+  color: #c3ccd6;
+  opacity: 1;
+}
+
+:global(.dark) .actions {
+  border-top-color: rgba(255, 255, 255, 0.12);
 }
 </style>

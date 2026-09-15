@@ -29,6 +29,7 @@ export async function fetchScheduleGroups(): Promise<ScheduleGroupInfo[]> {
 export async function fetchGroupSchedule(groupName: string): Promise<GroupScheduleResponse> {
   const response = await api.get<GroupScheduleResponse>(
     `/schedules/groups/${encodeURIComponent(groupName)}`,
+    { params: { _ts: Date.now() } },
   )
   return response.data
 }
@@ -43,6 +44,7 @@ export async function fetchScheduleTeachers(departmentId?: number): Promise<stri
 export async function fetchTeacherSchedule(teacherName: string): Promise<TeacherScheduleResponse> {
   const response = await api.get<TeacherScheduleResponse>(
     `/schedules/teachers/${encodeURIComponent(teacherName)}`,
+    { params: { _ts: Date.now() } },
   )
   return response.data
 }
@@ -62,6 +64,7 @@ export async function fetchScheduleRooms(building?: string): Promise<string[]> {
 export async function fetchRoomSchedule(roomName: string): Promise<RoomScheduleResponse> {
   const response = await api.get<RoomScheduleResponse>(
     `/schedules/rooms/${encodeURIComponent(roomName)}`,
+    { params: { _ts: Date.now() } },
   )
   return response.data
 }

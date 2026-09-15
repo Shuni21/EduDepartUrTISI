@@ -19,7 +19,7 @@ import {
 } from '@/api/consultations'
 import {
   createScheduleItem,
-  disableScheduleItem,
+  deleteScheduleItem,
   fetchScheduleItemLinkedGroups,
   fetchScheduleTransferRecommendations,
   previewScheduleItemChanges,
@@ -481,6 +481,7 @@ watch([scheduleType, firstValue, secondValue], () => {
   hasSyncedInitialWeek.value = false
   pendingWeekKeyToRestore.value = null
   selectedWeekKey.value = null
+  currentWeekIndex.value = 0
   hasLoadedScheduleOnce.value = false
   offlineScheduleNotice.value = null
   void loadSchedule()
@@ -661,7 +662,7 @@ const restoreWeekIndex = (weekKey: string | null): boolean => {
 }
 
 watch(currentWeekKey, (weekKey) => {
-  if (weekKey) {
+  if (weekKey && hasSyncedInitialWeek.value) {
     selectedWeekKey.value = weekKey
   }
 })
@@ -705,9 +706,9 @@ watch(weekKeys, (keys) => {
   }
 }, { immediate: true })
 
-const refreshSchedulePreservingView = async () => {
+const refreshSchedulePreservingView = async (weekKeyOverride?: string) => {
   // Обновляем данные в фоне, не сбрасываем выбранную неделю и прокрутку.
-  const weekKeyToRestore = selectedWeekKey.value || currentWeekKey.value
+  const weekKeyToRestore = weekKeyOverride || selectedWeekKey.value || currentWeekKey.value
   const scrollX = window.scrollX
   const scrollY = window.scrollY
 
@@ -1338,6 +1339,14 @@ const loadTransferDragPreview = async () => {
     return
   }
 
+  if (isTransferDragSourceSlot(lesson, target)) {
+    transferDragPreviewConflicts.value = []
+    transferDragPreviewError.value = null
+    transferDragPreviewStatus.value = 'valid'
+    isLoadingTransferDragPreview.value = false
+    return
+  }
+
   const generation = ++transferDragPreviewGeneration
   isLoadingTransferDragPreview.value = true
   transferDragPreviewError.value = null
@@ -1644,7 +1653,7 @@ const saveTransferToTarget = async (
   lesson: CellLesson,
   target: TransferTarget,
   room: string | null,
-) => {
+): Promise<boolean> => {
   const dayOfWeek = DAY_TO_NUMBER[target.day]
   const weekStart = getTransferWeekStartValue(target.weekKey, lesson.weekStart ?? null)
 
@@ -1657,17 +1666,17 @@ const saveTransferToTarget = async (
     || isPastWeek(target.weekKey)
   ) {
     await confirmDialog.alert('Выберите день и время для переноса')
-    return
+    return false
   }
 
   if (isHolidayDayInWeek(target.day, target.weekKey)) {
     await confirmDialog.alert('Нельзя перенести пару на праздничный день')
-    return
+    return false
   }
 
   if (isPastWeek(target.weekKey)) {
     await confirmDialog.alert('Нельзя перенести пару на прошедшую неделю')
-    return
+    return false
   }
 
   isTransferSaving.value = true
@@ -1680,9 +1689,11 @@ const saveTransferToTarget = async (
       weekStart,
       room: room ?? undefined,
     })
-    await refreshSchedulePreservingView()
+    await refreshSchedulePreservingView(target.weekKey)
+    return true
   } catch (error) {
     await showScheduleAdminError(error)
+    return false
   } finally {
     isTransferSaving.value = false
   }
@@ -1711,12 +1722,14 @@ const saveTransfer = async () => {
     return
   }
 
-  await saveTransferToTarget(
+  const saved = await saveTransferToTarget(
     transferringLesson.value,
     target,
     formatRoomForApi(transferForm.value.building, transferForm.value.room) ?? null,
   )
-  closeTransferModal()
+  if (saved) {
+    closeTransferModal()
+  }
 }
 
 const getTransferDragTargetKey = (day: string, slot: TimeSlot) =>
@@ -1735,6 +1748,16 @@ const getTransferDragTarget = (day: string, slot: TimeSlot): TransferTarget => (
   endTime: slot.endTime,
   room: draggedTransferLesson.value?.room?.trim() || null,
 })
+
+const isTransferDragSourceSlot = (lesson: CellLesson, target: TransferTarget): boolean => {
+  const dayOfWeek = DAY_TO_NUMBER[target.day]
+  const weekStart = getTransferWeekStartValue(target.weekKey, lesson.weekStart ?? null)
+
+  return dayOfWeek === DAY_TO_NUMBER[lesson.day]
+    && target.startTime === lesson.startTime
+    && target.endTime === lesson.endTime
+    && weekStart === lesson.weekStart
+}
 
 const isTransferDropTarget = (day: string, slot: TimeSlot) =>
   transferDragTarget.value !== null
@@ -1835,6 +1858,13 @@ const handleTransferCellDrop = async (day: string, slot: TimeSlot, event: DragEv
   event.stopPropagation()
   const dragGeneration = ++transferDragPreviewGeneration
   const target = getTransferDragTarget(day, slot)
+
+  if (isTransferDragSourceSlot(lesson, target)) {
+    transferDropInProgress.value = false
+    resetTransferDragState()
+    return
+  }
+
   transferDragTarget.value = target
 
   if (transferDragPreviewTimer) {
@@ -2291,13 +2321,13 @@ const cancelLesson = async () => {
     ? `Удалить консультацию «${lesson.subject}»?`
     : isLectureLessonType(lesson.type)
       ? linkedGroupsLabel
-        ? `Отменить лекцию «${lesson.subject}» для групп ${linkedGroupsLabel}?`
-        : `Отменить лекцию «${lesson.subject}» для всех параллельных групп?`
-      : `Отменить пару «${lesson.subject}»?`
+        ? `Удалить лекцию «${lesson.subject}» для групп ${linkedGroupsLabel}?`
+        : `Удалить лекцию «${lesson.subject}» для всех параллельных групп?`
+      : `Удалить пару «${lesson.subject}»?`
 
   const isConfirmed = await confirmDialog.confirm({
     message: confirmMessage,
-    confirmText: 'Отменить',
+    confirmText: 'Удалить',
     variant: 'danger',
   })
 
@@ -2314,7 +2344,7 @@ const cancelLesson = async () => {
     }
   } else {
     try {
-      await disableScheduleItem(contextLesson.value.id)
+      await deleteScheduleItem(contextLesson.value.id)
       await refreshSchedulePreservingView()
     } catch (error) {
       await showScheduleAdminError(error)
@@ -2562,13 +2592,6 @@ const mapCellLessons = (lessons: DisplayScheduleItem[]): CellLesson[] => {
     return sortCellLessons(lessons.map((lesson) => ({
       ...lesson,
       groups: lesson.teacher ? [lesson.teacher] : [],
-    })))
-  }
-
-  if (scheduleType.value !== 'teachers' && scheduleType.value !== 'auditories') {
-    return sortCellLessons(lessons.map((lesson) => ({
-      ...lesson,
-      groups: resolveLessonGroups(lesson),
     })))
   }
 
@@ -3102,7 +3125,7 @@ onUnmounted(() => {
           </li>
 
           <li v-if="canManagePairs || canEdit" @click="cancelLesson">
-            {{ isConsultationSchedule ? 'Удалить консультацию' : 'Отменить пару' }}
+            {{ isConsultationSchedule ? 'Удалить консультацию' : 'Удалить пару' }}
           </li>
 
         </template>

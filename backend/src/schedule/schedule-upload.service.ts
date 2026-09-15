@@ -1,6 +1,5 @@
 import {
     BadRequestException,
-    ForbiddenException,
     Injectable,
     NotFoundException,
     OnModuleInit,
@@ -847,15 +846,11 @@ export class ScheduleUploadService implements OnModuleInit {
         return this.toResponse(uploadWithUser);
     }
 
-    async deleteUpload(id: number, uploadedById: number): Promise<void> {
+    async deleteUpload(id: number): Promise<void> {
         const upload = await this.uploadsRepository.findOne({ where: { id } });
 
         if (!upload) {
             throw new NotFoundException('Файл не найден');
-        }
-
-        if (upload.uploadedById !== uploadedById) {
-            throw new ForbiddenException('Можно удалять только свои загрузки');
         }
 
         await this.handleOwnedSchedulesBeforeUploadDelete(upload);

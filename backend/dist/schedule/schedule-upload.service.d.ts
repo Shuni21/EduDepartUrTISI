@@ -82,5 +82,5 @@ export declare class ScheduleUploadService implements OnModuleInit {
     private loadOtherGroupsLessons;
     listUploads(): Promise<ScheduleUploadResponse[]>;
     uploadSchedule(uploadedById: number, scheduleTypeRaw: unknown, expectedGroupNameRaw: unknown, facultyNameRaw: unknown, file: Express.Multer.File | undefined): Promise<ScheduleUploadResponse>;
-    deleteUpload(id: number, uploadedById: number): Promise<void>;
+    deleteUpload(id: number): Promise<void>;
 }

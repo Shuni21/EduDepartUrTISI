@@ -106,9 +106,8 @@ export class ScheduleUploadController {
 
     @Delete(':id')
     deleteUpload(
-        @Req() req: AuthenticatedRequest,
         @Param('id', ParseIntPipe) id: number,
     ) {
-        return this.scheduleUploadService.deleteUpload(id, req.user.sub);
+        return this.scheduleUploadService.deleteUpload(id);
     }
 }
