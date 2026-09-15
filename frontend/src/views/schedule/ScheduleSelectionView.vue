@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   fetchScheduleBuildings,
@@ -11,6 +11,7 @@ import {
 import { fetchConsultationDepartments, type DepartmentInfo } from '@/api/consultations'
 import PageFrame from '@/components/PageFrame.vue'
 import { useAuthStore } from '@/stores/auth'
+import { getMyScheduleRoute } from '@/utils/myScheduleNavigation'
 import { getGroupFaculty, scheduleTypeMeta, DISTANCE_BUILDING, DISTANCE_ROOM_LABEL, type ScheduleKind } from './scheduleOptions'
 
 const route = useRoute()
@@ -33,6 +34,7 @@ const isFirstOpen = ref(false)
 const isSecondOpen = ref(false)
 const isFacultyGroupOpen = ref(false)
 const isLoadingOptions = ref(false)
+const isApplyingDefaultSelection = ref(false)
 
 const toggleFirstPicker = () => {
   isFirstOpen.value = !isFirstOpen.value
@@ -79,12 +81,12 @@ const secondLabel = computed(() => {
 })
 
 const groupOptions = computed(() => {
-  if (!firstChoice.value) {
-    return []
-  }
-
   return uploadedGroups.value
     .filter((group) => {
+      if (!firstChoice.value) {
+        return true
+      }
+
       const faculty = group.facultyName ?? getGroupFaculty(group.groupName)
       return faculty === firstChoice.value
     })
@@ -97,7 +99,7 @@ const showSecondPicker = computed(() =>
 
 const isSubmitDisabled = computed(() => {
   if (isStudents.value) {
-    return !firstChoice.value.trim() || !secondChoice.value.trim()
+    return !secondChoice.value.trim()
   }
 
   if (isTeachers.value) {
@@ -121,6 +123,48 @@ const selectSecond = (value: string) => {
   secondChoice.value = value
   isSecondOpen.value = false
 }
+
+const applyDefaultSelection = async () => {
+  const user = authStore.currentUser
+
+  if (!user) {
+    return
+  }
+
+  let first = ''
+  let second = ''
+
+  if (isStudents.value && user.role === 'student') {
+    second = user.group?.trim() ?? ''
+    first = second ? getGroupFaculty(second) : ''
+  } else if (isTeachers.value && user.role === 'teacher') {
+    const route = getMyScheduleRoute(user)
+
+    if (route && typeof route === 'object' && 'query' in route && route.query) {
+      first = String(route.query.first ?? '').trim()
+      second = String(route.query.second ?? '').trim()
+    }
+  }
+
+  if (!second || (isStudents.value && !first)) {
+    return
+  }
+
+  isApplyingDefaultSelection.value = true
+  firstChoice.value = first
+  secondChoice.value = second
+
+  await nextTick()
+  isApplyingDefaultSelection.value = false
+}
+
+watch(
+  [() => authStore.currentUser, () => scheduleType.value],
+  () => {
+    void applyDefaultSelection()
+  },
+  { immediate: true },
+)
 
 const goBackHome = async () => {
   await router.push({ name: 'home' })
@@ -258,10 +302,15 @@ watch(
     void loadTeachers()
     void loadDepartments()
     void loadBuildings()
+    void applyDefaultSelection()
   },
 )
 
 watch(firstChoice, () => {
+  if (isApplyingDefaultSelection.value) {
+    return
+  }
+
   secondChoice.value = ''
 
   if (isAuditories.value) {
@@ -330,6 +379,7 @@ onMounted(() => {
   void loadTeachers()
   void loadDepartments()
   void loadBuildings()
+  void applyDefaultSelection()
 })
 
 onBeforeUnmount(() => {
@@ -528,19 +578,19 @@ onBeforeUnmount(() => {
             <span>{{ secondLabel }}</span>
             <div
                 class="custom-picker"
-                :class="{ disabled: isStudents && !firstChoice }"
+                :class="{ disabled: isStudents && !uploadedGroups.length }"
             >
               <button
                   class="picker-trigger"
                   :class="{ open: isSecondOpen }"
                   type="button"
-                  :disabled="isStudents && !firstChoice"
+                  :disabled="isStudents && !uploadedGroups.length"
                   @click.stop="toggleSecondPicker"
               >
                 <span>{{
                   secondChoice
-                    || (isStudents && !firstChoice
-                      ? 'Сначала выберите факультет'
+                    || (isStudents && !uploadedGroups.length
+                      ? 'Загрузка групп...'
                       : isAuditories && !firstChoice
                         ? 'Сначала выберите корпус'
                         : (isLoadingOptions ? 'Загрузка...' : 'Выберите'))

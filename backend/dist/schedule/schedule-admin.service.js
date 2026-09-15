@@ -12,7 +12,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var ScheduleAdminService_1;
-var _a, _b, _c, _d, _e, _f, _g;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleAdminService = void 0;
 const common_1 = require("@nestjs/common");
@@ -858,7 +857,14 @@ exports.ScheduleAdminService = ScheduleAdminService = ScheduleAdminService_1 = _
     __param(4, (0, typeorm_1.InjectRepository)(subject_entity_1.Subject)),
     __param(5, (0, typeorm_1.InjectRepository)(subgroup_entity_1.Subgroup)),
     __param(6, (0, typeorm_1.InjectRepository)(schedule_preholiday_day_entity_1.SchedulePreholidayDay)),
-    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object, typeof (_b = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _b : Object, typeof (_c = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _c : Object, typeof (_d = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _d : Object, typeof (_e = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _e : Object, typeof (_f = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _f : Object, typeof (_g = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _g : Object, room_resolver_1.RoomResolver,
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        room_resolver_1.RoomResolver,
         teacher_resolver_1.TeacherResolver,
         lesson_type_resolver_1.LessonTypeResolver,
         schedule_notifier_service_1.ScheduleNotifierService,

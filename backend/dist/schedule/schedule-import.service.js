@@ -12,7 +12,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var ScheduleImportService_1;
-var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleImportService = void 0;
 const common_1 = require("@nestjs/common");
@@ -247,7 +246,13 @@ exports.ScheduleImportService = ScheduleImportService = ScheduleImportService_1 
     __param(3, (0, typeorm_1.InjectRepository)(direction_entity_1.Direction)),
     __param(4, (0, typeorm_1.InjectRepository)(subject_entity_1.Subject)),
     __param(5, (0, typeorm_1.InjectRepository)(subgroup_entity_1.Subgroup)),
-    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object, typeof (_b = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _b : Object, typeof (_c = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _c : Object, typeof (_d = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _d : Object, typeof (_e = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _e : Object, typeof (_f = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _f : Object, room_resolver_1.RoomResolver,
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        room_resolver_1.RoomResolver,
         teacher_resolver_1.TeacherResolver,
         lesson_type_resolver_1.LessonTypeResolver])
 ], ScheduleImportService);
