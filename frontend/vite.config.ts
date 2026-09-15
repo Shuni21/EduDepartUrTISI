@@ -125,7 +125,7 @@ export default defineConfig(({ mode }) => {
       host: true,
       port: 5173,
       // DEV-HTTPS: удалить строку https перед продакшеном.
-      https: isHttpsMode ? (manualHttps ?? true) : undefined,
+      https: isHttpsMode ? manualHttps : undefined,   // ← исправлено
       proxy: {
         '/auth': backendProxy,
         '/admin': adminProxy,
@@ -141,7 +141,7 @@ export default defineConfig(({ mode }) => {
     preview: {
       host: true,
       port: 5173,
-      https: isHttpsMode ? (manualHttps ?? true) : undefined,
+      https: isHttpsMode ? manualHttps : undefined,   // ← исправлено
     },
   }
 })

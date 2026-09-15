@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var ConsultationNotificationsService_1;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConsultationNotificationsService = void 0;
 const common_1 = require("@nestjs/common");
@@ -100,10 +101,15 @@ let ConsultationNotificationsService = ConsultationNotificationsService_1 = clas
                 },
             });
         }));
-        for (const notification of notifications) {
+        await Promise.all(notifications.map(async (notification) => {
             this.notificationsGateway.sendToUser(notification.userId, notification);
-            void this.pushNotificationsService.sendToUser(notification.userId, notification);
-        }
+            try {
+                await this.pushNotificationsService.sendToUser(notification.userId, notification);
+            }
+            catch (error) {
+                this.logger.error(`Failed to send consultation push notification: notificationId=${notification.id}`, error instanceof Error ? error.stack : String(error));
+            }
+        }));
     }
     async resolveConsultationRecipients(teacherId, previousTeacherId) {
         const recipientIds = new Set();
@@ -293,9 +299,7 @@ exports.ConsultationNotificationsService = ConsultationNotificationsService = Co
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(notification_entity_1.Notification)),
     __param(1, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository,
-        notifications_gateway_1.NotificationsGateway,
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object, typeof (_b = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _b : Object, notifications_gateway_1.NotificationsGateway,
         push_notifications_service_1.PushNotificationsService,
         consultation_notification_preferences_service_1.ConsultationNotificationPreferencesService])
 ], ConsultationNotificationsService);

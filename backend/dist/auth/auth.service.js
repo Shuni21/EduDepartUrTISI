@@ -44,6 +44,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
@@ -323,8 +324,6 @@ exports.AuthService = AuthService = __decorate([
     __param(3, (0, typeorm_1.InjectRepository)(refresh_token_entity_1.RefreshToken)),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         jwt_1.JwtService,
-        config_1.ConfigService,
-        typeorm_2.Repository,
-        sessions_notifier_service_1.SessionsNotifierService])
+        config_1.ConfigService, typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object, sessions_notifier_service_1.SessionsNotifierService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

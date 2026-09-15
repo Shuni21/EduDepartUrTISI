@@ -14,7 +14,12 @@
     "build": "npm run build --workspace frontend && npm run build --workspace backend",
     "build:web": "npm run build --workspace frontend",
     "build:api": "npm run build --workspace backend",
-    "start:api": "npm run start --workspace backend"
+    "start:api": "npm run start --workspace backend",
+
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "audit": "npm audit --audit-level=high",
+    "type-check": "npm run type-check --workspace frontend"
   },
   "dependencies": {
     "@nestjs/jwt": "^11.0.2",
