@@ -182,6 +182,8 @@ const handleVisibilityChange = async () => {
   await authStore.validateSession()
   syncNotificationsConnection()
 }
+
+const currentYear = new Date().getFullYear()
 </script>
 
 <template>
@@ -289,6 +291,15 @@ const handleVisibilityChange = async () => {
 
     <footer class="bottombar" :class="{ 'bottombar--mobile-nav': showAuthHeader }">
       <MobileBottomNav v-if="showAuthHeader" />
+      <div class="bottombar__info">
+        <p class="bottombar__copyright">
+          © {{ currentYear }} УрТИСИ СибГУТИ
+        </p>
+
+        <p class="bottombar__author">
+          Разработчик: Shuni🌸
+        </p>
+      </div>
     </footer>
 
     <ConfirmDialog />

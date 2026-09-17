@@ -76,7 +76,23 @@ body {
 }
 
 .bottombar {
-  @apply relative z-[1] shrink-0 h-[85px] bg-[#333840] dark:bg-[#1a1d23];
+  @apply relative z-[1] shrink-0 h-[85px] bg-[#333840] text-white flex items-center justify-center dark:bg-[#1a1d23];
+}
+
+.bottombar__info {
+  @apply flex flex-col items-center justify-center w-full gap-1;
+}
+
+.bottombar__copyright {
+  @apply text-sm;
+}
+
+.bottombar__university {
+  @apply text-xs text-gray-300;
+}
+
+.bottombar__author {
+  @apply text-xs text-gray-400;
 }
 
 .mobile-nav {
@@ -336,15 +352,36 @@ body {
   }
 
   .bottombar.bottombar--mobile-nav {
-    @apply fixed bottom-0 left-0 right-0 z-[1000] h-auto min-h-[56px] bg-[#333840] dark:bg-[#1a1d23] border-t border-[rgba(255,255,255,0.08)];
+    @apply fixed bottom-0 left-0 right-0 z-[1000] bg-[#333840] dark:bg-[#1a1d23] text-white border-t border-[rgba(255,255,255,0.08)] flex flex-col;
+
+    height: auto;
+    min-height: 100px;
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .bottombar--mobile-nav .mobile-nav {
-    display: flex;
-    align-items: stretch;
-    width: 100%;
+    @apply flex items-stretch w-full;
+
     min-height: 56px;
     padding: 0 4px;
+  }
+
+  .bottombar--mobile-nav .bottombar__info {
+    @apply flex flex-col items-center justify-center w-full;
+
+    padding: 6px 8px 8px;
+    gap: 2px;
+  }
+
+  .bottombar--mobile-nav .bottombar__copyright {
+    @apply text-[11px] leading-tight;
+  }
+
+  .bottombar--mobile-nav .bottombar__university {
+    @apply text-[10px] leading-tight text-gray-300;
+  }
+
+  .bottombar--mobile-nav .bottombar__author {
+    @apply text-[10px] leading-tight text-gray-400;
   }
 }

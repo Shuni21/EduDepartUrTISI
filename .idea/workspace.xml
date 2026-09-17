@@ -5,23 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91e8ec1a-96e3-4795-8700-f4a880f9a12c" name="Changes" comment="Fixed consultation notification and CSS layers for the pair cancellation and menu.">
-      <change beforePath="$PROJECT_DIR$/backend/dist/app.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/app.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/main.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/main.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule.module.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/schedule/schedule-upload.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/schedule-upload.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/schedule/schedule-upload.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/schedule-upload.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/schedule.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/SchedulePairsSelectDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/SchedulePairsSelectDialog.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/utils/educationDepartmentAccess.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/utils/educationDepartmentAccess.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/schedule/Schedule.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/schedule/Schedule.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/certs/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/certs/generate-certs.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/certs/generate-certs.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/common.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/assets/styles/common.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,35 +54,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Node.js.scheduleOptions.ts.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "javascript.preferred.runtime.type.id": "node",
-    "last_opened_file_path": "C:/Users/User/WebstormProjects/EduDepartUrTISI/frontend/src/mocks",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.Back.executor": "Run",
-    "npm.Front.executor": "Run",
-    "settings.editor.selected.configurable": "settings.sync",
-    "ts.external.directory.path": "C:\\Users\\kiril\\WebstormProjects\\EduDepartUrTISI\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Node.js.scheduleOptions.ts.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/WebstormProjects/EduDepartUrTISI/frontend/src/mocks&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.Back.executor&quot;: &quot;Run&quot;,
+    &quot;npm.Front.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\kiril\\WebstormProjects\\EduDepartUrTISI\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "vue.recent.templates": [
-      "Vue Composition API Component"
+  &quot;keyToStringList&quot;: {
+    &quot;vue.recent.templates&quot;: [
+      &quot;Vue Composition API Component&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\User\WebstormProjects\EduDepartUrTISI\frontend\src\mocks" />
@@ -343,7 +333,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788931974086</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Revert &quot;fix revert&quot;&#10;&#10;This reverts commit 8a628aa5">
+      <option name="closed" value="true" />
+      <created>1789622714864</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1789622714864</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -378,6 +376,7 @@
     <MESSAGE value="Fix for conflict ignoring and confirmation of pair transfer." />
     <MESSAGE value="chore" />
     <MESSAGE value="Fixed consultation notification and CSS layers for the pair cancellation and menu." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed consultation notification and CSS layers for the pair cancellation and menu." />
+    <MESSAGE value="Revert &quot;fix revert&quot;&#10;&#10;This reverts commit 8a628aa5" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revert &quot;fix revert&quot;&#10;&#10;This reverts commit 8a628aa5" />
   </component>
 </project>
