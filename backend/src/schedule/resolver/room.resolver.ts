@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Room } from '../entities/room.entity';
 import { isDistanceRoom, isSharedMultiHallRoom } from '../parser/lesson-cell.parser';
+import { normalizeRomanRoomKey, getRomanBuilding } from '../parser/roman-room.utils';
 
 @Injectable()
 export class RoomResolver {
@@ -17,10 +18,11 @@ export class RoomResolver {
         }
 
         const normalized = rawRoom.trim().toUpperCase();
+        const romanNumber = normalizeRomanRoomKey(normalized);
 
         const match = normalized.match(/^(\d+)\s*(УК\d)/);
-        const number = match?.[1] ?? normalized;
-        const building = match?.[2] ?? null;
+        const number = romanNumber ?? match?.[1] ?? normalized;
+        const building = romanNumber ? getRomanBuilding(rawRoom) : match?.[2] ?? null;
 
         let room = await this.roomsRepository.findOne({
             where: {

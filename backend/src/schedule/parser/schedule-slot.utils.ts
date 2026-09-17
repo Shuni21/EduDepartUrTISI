@@ -1,3 +1,5 @@
+import { normalizeRomanRoomKey } from './roman-room.utils';
+
 export function normalizeWeekStart(value: string): string {
     const trimmed = value.trim();
 
@@ -19,11 +21,13 @@ export function normalizeRoomValue(room: string | null | undefined): string | nu
 }
 
 export function normalizeRoomListKey(label: string): string {
-    return label
+    const normalized = label
         .trim()
         .replace(/\s+/g, ' ')
         .replace(/\.+$/g, '')
         .toUpperCase();
+
+    return normalizeRomanRoomKey(normalized) ?? normalized;
 }
 
 export function pickPreferredRoomLabel(current: string, next: string): string {

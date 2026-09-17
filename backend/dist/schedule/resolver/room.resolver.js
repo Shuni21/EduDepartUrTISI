@@ -18,6 +18,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const room_entity_1 = require("../entities/room.entity");
 const lesson_cell_parser_1 = require("../parser/lesson-cell.parser");
+const roman_room_utils_1 = require("../parser/roman-room.utils");
 let RoomResolver = class RoomResolver {
     roomsRepository;
     constructor(roomsRepository) {
@@ -28,9 +29,10 @@ let RoomResolver = class RoomResolver {
             return null;
         }
         const normalized = rawRoom.trim().toUpperCase();
+        const romanNumber = (0, roman_room_utils_1.normalizeRomanRoomKey)(normalized);
         const match = normalized.match(/^(\d+)\s*(УК\d)/);
-        const number = match?.[1] ?? normalized;
-        const building = match?.[2] ?? null;
+        const number = romanNumber ?? match?.[1] ?? normalized;
+        const building = romanNumber ? (0, roman_room_utils_1.getRomanBuilding)(rawRoom) : match?.[2] ?? null;
         let room = await this.roomsRepository.findOne({
             where: {
                 number,

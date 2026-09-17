@@ -8,6 +8,7 @@ import {
     normalizeTime,
     normalizeWeekStart,
 } from './parser/schedule-slot.utils';
+import { formatRomanRoomLabel } from './parser/roman-room.utils';
 
 const DAY_LABELS: Record<number, string> = {
     1: 'ПН',
@@ -36,14 +37,14 @@ export function formatRoomLabel(room: Room | null): string {
     }
 
     if (room.name?.trim()) {
-        return room.name.trim();
+        return formatRomanRoomLabel(room.name) ?? room.name.trim();
     }
 
-    if (room.building) {
-        return `${room.number} ${room.building}`.trim();
-    }
+    const rawLabel = room.building
+        ? `${room.number} ${room.building}`.trim()
+        : room.number;
 
-    return room.number;
+    return formatRomanRoomLabel(rawLabel) ?? rawLabel;
 }
 
 export function resolveTeacherName(item: ScheduleItem): string {

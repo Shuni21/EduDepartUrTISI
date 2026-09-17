@@ -5,6 +5,7 @@ exports.normalizeTime = normalizeTime;
 exports.normalizeRoomValue = normalizeRoomValue;
 exports.normalizeRoomListKey = normalizeRoomListKey;
 exports.pickPreferredRoomLabel = pickPreferredRoomLabel;
+const roman_room_utils_1 = require("./roman-room.utils");
 function normalizeWeekStart(value) {
     const trimmed = value.trim();
     if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) {
@@ -21,11 +22,12 @@ function normalizeRoomValue(room) {
     return value ? value : null;
 }
 function normalizeRoomListKey(label) {
-    return label
+    const normalized = label
         .trim()
         .replace(/\s+/g, ' ')
         .replace(/\.+$/g, '')
         .toUpperCase();
+    return (0, roman_room_utils_1.normalizeRomanRoomKey)(normalized) ?? normalized;
 }
 function pickPreferredRoomLabel(current, next) {
     const trimmedCurrent = current.trim();

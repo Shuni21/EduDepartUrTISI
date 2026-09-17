@@ -7,6 +7,7 @@ exports.formatTime = formatTime;
 exports.mapItemToDisplayLesson = mapItemToDisplayLesson;
 exports.mapItemToLessonSlot = mapItemToLessonSlot;
 const schedule_slot_utils_1 = require("./parser/schedule-slot.utils");
+const roman_room_utils_1 = require("./parser/roman-room.utils");
 const DAY_LABELS = {
     1: 'ПН',
     2: 'ВТ',
@@ -29,12 +30,12 @@ function formatRoomLabel(room) {
         return 'дист. форм. об.';
     }
     if (room.name?.trim()) {
-        return room.name.trim();
+        return (0, roman_room_utils_1.formatRomanRoomLabel)(room.name) ?? room.name.trim();
     }
-    if (room.building) {
-        return `${room.number} ${room.building}`.trim();
-    }
-    return room.number;
+    const rawLabel = room.building
+        ? `${room.number} ${room.building}`.trim()
+        : room.number;
+    return (0, roman_room_utils_1.formatRomanRoomLabel)(rawLabel) ?? rawLabel;
 }
 function resolveTeacherName(item) {
     if (item.teacher) {
