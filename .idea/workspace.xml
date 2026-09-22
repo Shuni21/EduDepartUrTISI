@@ -6,15 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="91e8ec1a-96e3-4795-8700-f4a880f9a12c" name="Changes" comment="Formatting the README">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/schedule/parser/roman-room.utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/parser/roman-room.utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/schedule/parser/schedule-slot.utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/parser/schedule-slot.utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/schedule/resolver/room.resolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/resolver/room.resolver.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/schedule/schedule-item.mapper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/schedule-item.mapper.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,38 +48,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Node.js.scheduleOptions.ts.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "javascript.preferred.runtime.type.id": "node",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "C:/Users/User/WebstormProjects/EduDepartUrTISI/frontend/src/mocks",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.Back.executor": "Run",
-    "npm.Front.executor": "Run",
-    "settings.editor.selected.configurable": "settings.sync",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\Users\\kiril\\WebstormProjects\\EduDepartUrTISI\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Node.js.scheduleOptions.ts.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/WebstormProjects/EduDepartUrTISI/frontend/src/mocks&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.Back.executor&quot;: &quot;Run&quot;,
+    &quot;npm.Front.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\kiril\\WebstormProjects\\EduDepartUrTISI\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "vue.recent.templates": [
-      "Vue Composition API Component"
+  &quot;keyToStringList&quot;: {
+    &quot;vue.recent.templates&quot;: [
+      &quot;Vue Composition API Component&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\User\WebstormProjects\EduDepartUrTISI\frontend\src\mocks" />
