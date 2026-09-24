@@ -2959,7 +2959,7 @@ onUnmounted(() => {
           </div>
 
           <div v-for="(time, rowIndex) in times" :key="time" class="row">
-            <div class="time time--weekday">{{ time }}</div>
+            <div class="time time--weekday">{{ time }} - {{ PAIR_END_TIMES[time] }}</div>
 
             <template v-for="day in weekdayDays" :key="day">
               <template v-for="daySlot in [getDaySlot(day, rowIndex)]" :key="`${day}-${time}`">
@@ -3014,7 +3014,7 @@ onUnmounted(() => {
 
             <template v-for="saturdaySlot in [getSaturdaySlot(rowIndex)]" :key="`saturday-${time}`">
               <template v-if="saturdaySlot">
-                <div class="time time--saturday">{{ saturdaySlot.startTime }}</div>
+                <div class="time time--saturday">{{ saturdaySlot.startTime }} - {{ saturdaySlot.endTime }}</div>
 
                 <div
                     class="cell"

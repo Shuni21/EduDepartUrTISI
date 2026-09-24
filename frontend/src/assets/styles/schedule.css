@@ -954,8 +954,12 @@
     @apply gap-[8px_14px] mb-[16px] justify-start;
   }
 
+  .schedule-page .legend {
+    @apply gap-[8px_14px] mb-[16px] justify-center flex-wrap;
+  }
+
   .schedule-page .legend-item {
-    @apply text-[12px];
+    @apply text-[12px] justify-center;
   }
 
   .schedule-page .table {
@@ -1169,4 +1173,16 @@
   .context-menu li:last-child {
     @apply mt-[4px] font-semibold text-center bg-[#f5f8fb] dark:bg-[#2a3038];
   }
+}
+
+.time,
+.time--weekday,
+.time--saturday {
+  display: flex;
+  align-items: center;      /* вертикально по центру */
+  justify-content: center;  /* горизонтально по центру */
+  text-align: center;
+  white-space: nowrap;      /* чтобы "08:30 - 10:00" не переносилось */
+  line-height: 1.2;
+  font-size: 0.85em;        /* если текст стал длинным и не влезает */
 }
