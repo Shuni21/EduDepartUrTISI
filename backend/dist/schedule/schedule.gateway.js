@@ -18,6 +18,36 @@ const websockets_1 = require("@nestjs/websockets");
 const common_1 = require("@nestjs/common");
 const socket_io_1 = require("socket.io");
 const network_1 = require("../config/network");
+const schedule_slot_utils_1 = require("./parser/schedule-slot.utils");
+const SCHEDULE_TARGET_TYPES = new Set(['group', 'teacher', 'room']);
+function normalizeScheduleTarget(value) {
+    if (!value || typeof value !== 'object') {
+        throw new websockets_1.WsException('Invalid schedule subscription');
+    }
+    const target = value;
+    if (typeof target.type !== 'string'
+        || !SCHEDULE_TARGET_TYPES.has(target.type)
+        || typeof target.identity !== 'string') {
+        throw new websockets_1.WsException('Invalid schedule subscription');
+    }
+    const identity = target.identity.trim();
+    if (!identity || identity.length > 200 || /[\u0000-\u001F\u007F]/.test(identity)) {
+        throw new websockets_1.WsException('Invalid schedule identity');
+    }
+    const normalizedIdentity = target.type === 'room'
+        ? (0, schedule_slot_utils_1.normalizeRoomListKey)(identity)
+        : identity.toUpperCase();
+    if (!normalizedIdentity) {
+        throw new websockets_1.WsException('Invalid schedule identity');
+    }
+    return {
+        type: target.type,
+        identity: normalizedIdentity,
+    };
+}
+function getScheduleRoom(target) {
+    return `schedule:${target.type}:${encodeURIComponent(target.identity)}`;
+}
 let ScheduleGateway = ScheduleGateway_1 = class ScheduleGateway {
     logger = new common_1.Logger(ScheduleGateway_1.name);
     server;
@@ -27,8 +57,25 @@ let ScheduleGateway = ScheduleGateway_1 = class ScheduleGateway {
     handleDisconnect(client) {
         this.logger.debug(`Schedule a websocket disconnected ${client.id}`);
     }
-    broadcastScheduleChanged(payload) {
-        this.server?.emit(`schedule:changed`, payload);
+    async subscribeToSchedule(client, value) {
+        const target = normalizeScheduleTarget(value);
+        await client.join(getScheduleRoom(target));
+    }
+    async unsubscribeFromSchedule(client, value) {
+        const target = normalizeScheduleTarget(value);
+        await client.leave(getScheduleRoom(target));
+    }
+    broadcastScheduleChanged(payload, targets) {
+        const rooms = Array.from(new Set(targets.map((target) => {
+            const normalizedTarget = normalizeScheduleTarget(target);
+            return getScheduleRoom(normalizedTarget);
+        })));
+        if (rooms.length > 0) {
+            this.server?.to(rooms).emit('schedule:changed', payload);
+        }
+    }
+    broadcastGlobalScheduleChanged(payload) {
+        this.server?.emit('schedule:changed', payload);
     }
     broadcastPreholidayDaysUpdated(preholidayDays) {
         this.server?.emit('schedule:preholiday-days-updated', {
@@ -53,6 +100,22 @@ __decorate([
     __metadata("design:paramtypes", [socket_io_1.Socket]),
     __metadata("design:returntype", void 0)
 ], ScheduleGateway.prototype, "handleDisconnect", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('schedule:subscribe'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.MessageBody)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], ScheduleGateway.prototype, "subscribeToSchedule", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('schedule:unsubscribe'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.MessageBody)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], ScheduleGateway.prototype, "unsubscribeFromSchedule", null);
 exports.ScheduleGateway = ScheduleGateway = ScheduleGateway_1 = __decorate([
     (0, common_1.Injectable)(),
     (0, websockets_1.WebSocketGateway)({

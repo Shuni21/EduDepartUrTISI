@@ -161,6 +161,7 @@ let ScheduleUploadService = class ScheduleUploadService {
             throw new common_1.BadRequestException('Не выбрано ни одной валидной пары');
         }
         const obsoleteUploads = await this.findPeriodUploads(uploadedById, parsed.groupName, parsed.periodStart, parsed.periodEnd);
+        const previousItems = await this.loadScheduleItemsForGroupPeriod(parsed.groupName, parsed.periodStart, parsed.periodEnd);
         const obsoleteUploadIds = obsoleteUploads.map((u) => u.id);
         const excludePeriod = {
             validFrom: this.toDate(parsed.periodStart),
@@ -215,7 +216,14 @@ let ScheduleUploadService = class ScheduleUploadService {
         if (!uploadWithUser) {
             throw new common_1.NotFoundException('Загруженный файл не найден');
         }
-        this.scheduleNotifier.notifyScheduleChanged('schedule-uploaded');
+        const importedItems = await this.loadScheduleItemsByScheduleId(importResult.scheduleId);
+        const previousTargets = await this.scheduleNotifier.getTargetsForItemsAndLinkedLessons(previousItems);
+        const importedTargets = await this.scheduleNotifier.getTargetsForItemsAndLinkedLessons(importedItems);
+        this.scheduleNotifier.notifyScheduleChanged('schedule-uploaded', [
+            { type: 'group', identity: parsed.groupName },
+            ...previousTargets,
+            ...importedTargets,
+        ]);
         await this.notificationsService.notifyScheduleUploaded({
             groupName: parsed.groupName,
             periodStart: parsed.periodStart,
@@ -442,6 +450,44 @@ let ScheduleUploadService = class ScheduleUploadService {
         }
         return qb.getMany();
     }
+    async loadScheduleItemsForGroupPeriod(groupName, periodStart, periodEnd) {
+        return this.itemsRepository
+            .createQueryBuilder('item')
+            .innerJoinAndSelect('item.schedule', 'schedule')
+            .innerJoinAndSelect('schedule.group', 'group')
+            .leftJoinAndSelect('item.subject', 'subject')
+            .leftJoinAndSelect('item.lessonType', 'lessonType')
+            .leftJoinAndSelect('item.subgroup', 'subgroup')
+            .leftJoinAndSelect('item.teacher', 'teacher')
+            .leftJoinAndSelect('item.room', 'room')
+            .where('item.isDisabled = false')
+            .andWhere('schedule.isActive = true')
+            .andWhere('UPPER(TRIM(group.name)) = :groupName', {
+            groupName: this.normalizeGroupName(groupName),
+        })
+            .andWhere('schedule.validFrom = :periodStart', {
+            periodStart: this.toDate(periodStart),
+        })
+            .andWhere('schedule.validTo = :periodEnd', {
+            periodEnd: this.toDate(periodEnd),
+        })
+            .getMany();
+    }
+    async loadScheduleItemsByScheduleId(scheduleId) {
+        return this.itemsRepository
+            .createQueryBuilder('item')
+            .innerJoinAndSelect('item.schedule', 'schedule')
+            .innerJoinAndSelect('schedule.group', 'group')
+            .leftJoinAndSelect('item.subject', 'subject')
+            .leftJoinAndSelect('item.lessonType', 'lessonType')
+            .leftJoinAndSelect('item.subgroup', 'subgroup')
+            .leftJoinAndSelect('item.teacher', 'teacher')
+            .leftJoinAndSelect('item.room', 'room')
+            .where('item.scheduleId = :scheduleId', { scheduleId })
+            .andWhere('item.isDisabled = false')
+            .andWhere('schedule.isActive = true')
+            .getMany();
+    }
     async loadExistingLessons(groupName, excludeUploadIds = [], excludePeriod) {
         const items = await this.loadScheduleItems(excludeUploadIds, groupName, excludePeriod);
         return items.map((item) => (0, schedule_item_mapper_1.mapItemToLessonSlot)(item));
@@ -486,6 +532,7 @@ let ScheduleUploadService = class ScheduleUploadService {
         this.assertGroupMatches(expectedGroupName, parsed.groupName);
         this.assertPeriodDefined(parsed.periodStart, parsed.periodEnd);
         const obsoleteUploads = await this.findPeriodUploads(uploadedById, parsed.groupName, parsed.periodStart, parsed.periodEnd);
+        const previousItems = await this.loadScheduleItemsForGroupPeriod(parsed.groupName, parsed.periodStart, parsed.periodEnd);
         const obsoleteUploadIds = obsoleteUploads.map((upload) => upload.id);
         const excludePeriod = {
             validFrom: this.toDate(parsed.periodStart),
@@ -541,7 +588,14 @@ let ScheduleUploadService = class ScheduleUploadService {
         if (!uploadWithUser) {
             throw new common_1.NotFoundException('Загруженный файл не найден');
         }
-        this.scheduleNotifier.notifyScheduleChanged('schedule-uploaded');
+        const importedItems = await this.loadScheduleItemsByScheduleId(importResult.scheduleId);
+        const previousTargets = await this.scheduleNotifier.getTargetsForItemsAndLinkedLessons(previousItems);
+        const importedTargets = await this.scheduleNotifier.getTargetsForItemsAndLinkedLessons(importedItems);
+        this.scheduleNotifier.notifyScheduleChanged('schedule-uploaded', [
+            { type: 'group', identity: parsed.groupName },
+            ...previousTargets,
+            ...importedTargets,
+        ]);
         await this.notificationsService.notifyScheduleUploaded({
             groupName: parsed.groupName,
             periodStart: parsed.periodStart,
@@ -557,6 +611,13 @@ let ScheduleUploadService = class ScheduleUploadService {
         if (!upload) {
             throw new common_1.NotFoundException('Файл не найден');
         }
+        const ownedSchedule = await this.schedulesRepository.findOne({
+            where: { uploadId: upload.id },
+        });
+        const previousItems = ownedSchedule
+            ? await this.loadScheduleItemsByScheduleId(ownedSchedule.id)
+            : [];
+        const previousTargets = await this.scheduleNotifier.getTargetsForItemsAndLinkedLessons(previousItems);
         await this.handleOwnedSchedulesBeforeUploadDelete(upload);
         const filePath = (0, node_path_1.join)(this.schedulesDir, upload.storedFileName);
         try {
@@ -565,6 +626,18 @@ let ScheduleUploadService = class ScheduleUploadService {
         catch {
         }
         await this.uploadsRepository.delete(id);
+        const restoredItems = upload.groupName && upload.periodStart && upload.periodEnd
+            ? await this.loadScheduleItemsForGroupPeriod(upload.groupName, upload.periodStart, upload.periodEnd)
+            : [];
+        const restoredTargets = await this.scheduleNotifier.getTargetsForItemsAndLinkedLessons(restoredItems);
+        const targets = [
+            ...(upload.groupName
+                ? [{ type: 'group', identity: upload.groupName }]
+                : []),
+            ...previousTargets,
+            ...restoredTargets,
+        ];
+        this.scheduleNotifier.notifyScheduleChanged('schedule-upload-deleted', targets);
     }
 };
 exports.ScheduleUploadService = ScheduleUploadService;

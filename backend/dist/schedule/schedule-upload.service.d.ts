@@ -78,6 +78,8 @@ export declare class ScheduleUploadService implements OnModuleInit {
     private removeUploads;
     private toResponse;
     private loadScheduleItems;
+    private loadScheduleItemsForGroupPeriod;
+    private loadScheduleItemsByScheduleId;
     private loadExistingLessons;
     private loadOtherGroupsLessons;
     listUploads(): Promise<ScheduleUploadResponse[]>;

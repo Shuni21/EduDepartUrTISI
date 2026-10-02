@@ -10,6 +10,12 @@ export type ScheduleChangedPayload = {
         | 'item-deleted'
         | 'preholiday-updated'
         | 'schedule-uploaded'
+        | 'schedule-upload-deleted'
+}
+
+export type ScheduleSubscription = {
+    type: 'group' | 'teacher' | 'room'
+    identity: string
 }
 
 export type PreholidayDaysUpdatedPayload = {

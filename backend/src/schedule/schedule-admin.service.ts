@@ -1104,7 +1104,10 @@ export class ScheduleAdminService {
         const saved = await this.itemsRepository.save(item);
         const savedWithRelations = await this.loadItemWithRelations(saved.id);
 
-        this.scheduleNotifier.notifyScheduleChanged('item-created');
+        this.scheduleNotifier.notifyScheduleChanged(
+            'item-created',
+            this.scheduleNotifier.getTargetsForItems([savedWithRelations]),
+        );
         await this.notificationsService.notifyScheduleItemChanged('created', savedWithRelations);
 
         return mapItemToDisplayLesson(savedWithRelations);
@@ -1117,6 +1120,7 @@ export class ScheduleAdminService {
         const item = await this.loadItemWithRelations(id);
         const linkedItems = await this.findLinkedLectureItems(item);
         const linkedItemIds = linkedItems.map((entry) => entry.id);
+        const previousTargets = this.scheduleNotifier.getTargetsForItems(linkedItems);
         const snapshots = new Map(
             linkedItems.map((linkedItem) => [
                 linkedItem.id,
@@ -1157,7 +1161,10 @@ export class ScheduleAdminService {
             await this.itemsRepository.save(linkedItem);
         }
 
-        this.scheduleNotifier.notifyScheduleChanged('item-updated');
+        this.scheduleNotifier.notifyScheduleChanged(
+            'item-updated',
+            [...previousTargets, ...this.scheduleNotifier.getTargetsForItems(linkedItems)],
+        );
 
         for (const linkedItem of linkedItems) {
             const updatedWithRelations = await this.loadItemWithRelations(linkedItem.id);
@@ -1178,27 +1185,32 @@ export class ScheduleAdminService {
     async disableItem(id: number): Promise<void> {
         const item = await this.loadItemWithRelations(id);
         const linkedItems = await this.findLinkedLectureItems(item);
+        const targets = this.scheduleNotifier.getTargetsForItems(linkedItems);
 
         for (const linkedItem of linkedItems) {
             linkedItem.isDisabled = true;
             await this.itemsRepository.save(linkedItem);
+        }
 
+        this.scheduleNotifier.notifyScheduleChanged('item-disabled', targets);
+
+        for (const linkedItem of linkedItems) {
             const disabledWithRelations = await this.loadItemWithRelations(linkedItem.id);
             await this.notificationsService.notifyScheduleItemChanged(
                 'disabled',
                 disabledWithRelations,
             );
         }
-
-        this.scheduleNotifier.notifyScheduleChanged('item-disabled');
     }
 
     async deleteItem(id: number): Promise<void> {
         const item = await this.loadItemWithRelations(id);
+        const linkedItems = await this.findLinkedLectureItems(item);
+        const targets = this.scheduleNotifier.getTargetsForItems(linkedItems);
 
         await this.itemsRepository.delete(id);
 
-        this.scheduleNotifier.notifyScheduleChanged('item-deleted');
+        this.scheduleNotifier.notifyScheduleChanged('item-deleted', targets);
         await this.notificationsService.notifyScheduleItemChanged('deleted', item);
     }
 }

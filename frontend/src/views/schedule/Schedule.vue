@@ -61,7 +61,7 @@ import {
   resolveLessonGroups,
 } from './scheduleOptions'
 import type { Socket } from 'socket.io-client'
-import { connectScheduleSocket } from '@/api/scheduleSocket'
+import { connectScheduleSocket, type ScheduleSubscription } from '@/api/scheduleSocket'
 import { canManageConsultations } from '@/utils/consultationAccess'
 import PageFrame from "@/components/PageFrame.vue";
 import { usePageTitle } from '@/composables/usePageTitle'
@@ -76,6 +76,7 @@ const authStore = useAuthStore()
 const confirmDialog = useConfirmDialogStore()
 
 let scheduleSocket: Socket | null = null
+let activeScheduleSubscription: ScheduleSubscription | null = null
 let scheduleReloadTimer: ReturnType<typeof setTimeout> | null = null
 let editPreviewTimer: ReturnType<typeof setTimeout> | null = null
 let transferPreviewTimer: ReturnType<typeof setTimeout> | null = null
@@ -98,6 +99,7 @@ const reloadScheduleSoon = () => {
 const connectScheduleLiveUpdates = () => {
   scheduleSocket?.removeAllListeners()
   scheduleSocket?.disconnect()
+  activeScheduleSubscription = null
 
   scheduleSocket = connectScheduleSocket({
     onScheduleChanged: () => {
@@ -110,6 +112,13 @@ const connectScheduleLiveUpdates = () => {
       console.warn('Не удалось подключиться к live-обновлениям расписания')
     },
   })
+  scheduleSocket.on('connect', () => {
+    activeScheduleSubscription = null
+    updateScheduleSubscription()
+  })
+  if (scheduleSocket.connected) {
+    updateScheduleSubscription()
+  }
 }
 
 type TimeSlot = {
@@ -206,6 +215,49 @@ const scheduleType = computed(() => route.params.type as ScheduleKind)
 const firstValue = computed(() => String(route.query.first ?? ''))
 const secondValue = computed(() => String(route.query.second ?? ''))
 const departmentName = computed(() => secondValue.value)
+const scheduleSubscription = computed<ScheduleSubscription | null>(() => {
+  const identity = secondValue.value.trim()
+  if (!identity) {
+    return null
+  }
+
+  if (scheduleType.value === 'students') {
+    return { type: 'group', identity }
+  }
+  if (scheduleType.value === 'teachers') {
+    return { type: 'teacher', identity }
+  }
+  if (scheduleType.value === 'auditories') {
+    return { type: 'room', identity }
+  }
+
+  return null
+})
+
+function updateScheduleSubscription() {
+  if (!scheduleSocket) {
+    return
+  }
+
+  const nextSubscription = scheduleSubscription.value
+  if (
+    activeScheduleSubscription?.type === nextSubscription?.type
+    && activeScheduleSubscription?.identity === nextSubscription?.identity
+  ) {
+    return
+  }
+
+  if (activeScheduleSubscription) {
+    scheduleSocket.emit('schedule:unsubscribe', activeScheduleSubscription)
+  }
+
+  activeScheduleSubscription = nextSubscription
+  if (nextSubscription) {
+    scheduleSocket.emit('schedule:subscribe', nextSubscription)
+  }
+}
+
+watch(scheduleSubscription, updateScheduleSubscription)
 
 type CellLesson = DisplayScheduleItem & {
   groups: string[]
@@ -2786,9 +2838,13 @@ onUnmounted(() => {
     clearTimeout(transferDragPreviewTimer)
   }
 
+  if (activeScheduleSubscription) {
+    scheduleSocket?.emit('schedule:unsubscribe', activeScheduleSubscription)
+  }
   scheduleSocket?.removeAllListeners()
   scheduleSocket?.disconnect()
   scheduleSocket = null
+  activeScheduleSubscription = null
   resetTransferDragState()
 })
 </script>
