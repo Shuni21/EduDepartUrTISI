@@ -13,7 +13,7 @@ import { Notification, NotificationType } from './notification.entity';
 import { NotificationsGateway } from './notifications.gateway';
 import { PushNotificationsService } from './push-notifications.service';
 
-type ScheduleNotificationAction = 'created' | 'updated' | 'disabled' | 'deleted';
+type ScheduleNotificationAction = 'created' | 'updated' | 'disabled' | 'cancelled' | 'deleted';
 
 type ScheduleItemNotificationSnapshot = {
     id: number;
@@ -349,6 +349,8 @@ export class NotificationsService {
                 return 'Изменена пара';
             case 'disabled':
                 return 'Пара отменена';
+            case 'cancelled':
+                return 'Пара отменена';
             case 'deleted':
                 return 'Пара удалена';
         }
@@ -415,7 +417,7 @@ export class NotificationsService {
             return this.buildCreatedScheduleMessage(item, audience);
         }
 
-        if (action === 'disabled') {
+        if (action === 'disabled' || action === 'cancelled') {
             return `${base}. Пара отменена`;
         }
 

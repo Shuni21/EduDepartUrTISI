@@ -59,7 +59,7 @@ const SATURDAY_PAIR_TIMES: Record<number, { startTime: string; endTime: string }
     3: { startTime: '12:00', endTime: '13:30' },
     4: { startTime: '13:45', endTime: '15:15' },
     5: { startTime: '15:30', endTime: '17:00' },
-    6: { startTime: '17:10', endTime: '18:40' },
+    6: { startTime: '17:40', endTime: '19:05' },
 };
 
 export interface ParseScheduleResult {

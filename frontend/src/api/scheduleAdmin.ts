@@ -115,7 +115,7 @@ export async function disableScheduleItem(id: number): Promise<void> {
   await api.patch(`/education-department/schedules/items/${id}/disable`)
 }
 
-export async function deleteScheduleItem(id: number): Promise<void> {
+export async function cancelScheduleItem(id: number): Promise<void> {
   await api.delete(`/education-department/schedules/items/${id}`)
 }
 

@@ -19,7 +19,7 @@ import {
 } from '@/api/consultations'
 import {
   createScheduleItem,
-  deleteScheduleItem,
+  cancelScheduleItem,
   fetchScheduleItemLinkedGroups,
   fetchScheduleTransferRecommendations,
   previewScheduleItemChanges,
@@ -149,7 +149,7 @@ const saturdayTimeSlots: TimeSlot[] = [
   { pairNumber: 3, startTime: '12:00', endTime: '13:30' },
   { pairNumber: 4, startTime: '13:45', endTime: '15:15' },
   { pairNumber: 5, startTime: '15:30', endTime: '17:00' },
-  { pairNumber: 6, startTime: '17:10', endTime: '18:40' },
+  { pairNumber: 6, startTime: '17:40', endTime: '19:05' },
 ]
 
 const preholidayTimeSlots: TimeSlot[] = [
@@ -2369,17 +2369,18 @@ const cancelLesson = async () => {
   const linkedGroupsLabel = lesson.groups.length > 1
     ? lesson.groups.join(', ')
     : null
-  const confirmMessage = scheduleType.value === 'consults'
+  const isConsultation = scheduleType.value === 'consults'
+  const confirmMessage = isConsultation
     ? `Удалить консультацию «${lesson.subject}»?`
     : isLectureLessonType(lesson.type)
       ? linkedGroupsLabel
-        ? `Удалить лекцию «${lesson.subject}» для групп ${linkedGroupsLabel}?`
-        : `Удалить лекцию «${lesson.subject}» для всех параллельных групп?`
-      : `Удалить пару «${lesson.subject}»?`
+        ? `Отменить лекцию «${lesson.subject}» для групп ${linkedGroupsLabel}?`
+        : `Отменить лекцию «${lesson.subject}» для всех параллельных групп?`
+      : `Отменить пару «${lesson.subject}»?`
 
   const isConfirmed = await confirmDialog.confirm({
     message: confirmMessage,
-    confirmText: 'Удалить',
+    confirmText: isConsultation ? 'Удалить' : 'Отменить',
     variant: 'danger',
   })
 
@@ -2396,7 +2397,7 @@ const cancelLesson = async () => {
     }
   } else {
     try {
-      await deleteScheduleItem(contextLesson.value.id)
+      await cancelScheduleItem(contextLesson.value.id)
       await refreshSchedulePreservingView()
     } catch (error) {
       await showScheduleAdminError(error)
@@ -3181,7 +3182,7 @@ onUnmounted(() => {
           </li>
 
           <li v-if="canManagePairs || canEdit" @click="cancelLesson">
-            {{ isConsultationSchedule ? 'Удалить консультацию' : 'Удалить пару' }}
+            {{ isConsultationSchedule ? 'Удалить консультацию' : 'Отменить пару' }}
           </li>
 
         </template>

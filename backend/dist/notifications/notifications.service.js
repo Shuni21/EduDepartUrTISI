@@ -251,6 +251,8 @@ let NotificationsService = NotificationsService_1 = class NotificationsService {
                 return 'Изменена пара';
             case 'disabled':
                 return 'Пара отменена';
+            case 'cancelled':
+                return 'Пара отменена';
             case 'deleted':
                 return 'Пара удалена';
         }
@@ -292,7 +294,7 @@ let NotificationsService = NotificationsService_1 = class NotificationsService {
         if (action === 'created') {
             return this.buildCreatedScheduleMessage(item, audience);
         }
-        if (action === 'disabled') {
+        if (action === 'disabled' || action === 'cancelled') {
             return `${base}. Пара отменена`;
         }
         if (action === 'deleted') {

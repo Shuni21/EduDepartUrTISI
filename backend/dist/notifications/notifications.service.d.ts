@@ -4,7 +4,7 @@ import { User } from '../users/entities/user.entity';
 import { Notification } from './notification.entity';
 import { NotificationsGateway } from './notifications.gateway';
 import { PushNotificationsService } from './push-notifications.service';
-type ScheduleNotificationAction = 'created' | 'updated' | 'disabled' | 'deleted';
+type ScheduleNotificationAction = 'created' | 'updated' | 'disabled' | 'cancelled' | 'deleted';
 type ScheduleItemNotificationSnapshot = {
     id: number;
     groupId: number | null;

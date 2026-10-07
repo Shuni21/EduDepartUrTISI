@@ -68,7 +68,7 @@ const SATURDAY_TRANSFER_TIME_SLOTS = [
     { startTime: '12:00', endTime: '13:30' },
     { startTime: '13:45', endTime: '15:15' },
     { startTime: '15:30', endTime: '17:00' },
-    { startTime: '17:10', endTime: '18:40' },
+    { startTime: '17:40', endTime: '19:05' },
 ];
 const PREHOLIDAY_TRANSFER_TIME_SLOTS = [
     { startTime: '08:30', endTime: '10:00' },
@@ -850,7 +850,7 @@ let ScheduleAdminService = class ScheduleAdminService {
         const targets = this.scheduleNotifier.getTargetsForItems(linkedItems);
         await this.itemsRepository.delete(id);
         this.scheduleNotifier.notifyScheduleChanged('item-deleted', targets);
-        await this.notificationsService.notifyScheduleItemChanged('deleted', item);
+        await this.notificationsService.notifyScheduleItemChanged('cancelled', item);
     }
 };
 exports.ScheduleAdminService = ScheduleAdminService;
