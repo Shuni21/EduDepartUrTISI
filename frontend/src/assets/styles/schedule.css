@@ -159,6 +159,13 @@
   border-radius: 999px;
 }
 
+
+.page-content:has(.picker-trigger.open) {
+  position: relative;
+  z-index: 1100;
+}
+
+
 .selection-page .picker-option {
   @apply w-full py-[10px] px-[16px] border-0 bg-transparent text-[#5f6977] dark:text-[#9aa3ad] text-[16px] text-left cursor-pointer;
 }
@@ -888,6 +895,12 @@
     @apply text-[15px] mb-[22px];
   }
 
+  .selection-page .picker-panel {
+    z-index: 1300;
+    max-height: min(180px, calc(100dvh - 300px));
+    -webkit-overflow-scrolling: touch;
+  }
+
   .selection-page .form-grid {
     @apply max-w-full gap-[18px] overflow-visible;
   }
@@ -900,10 +913,6 @@
     @apply min-h-[48px] text-[15px] rounded-[12px] px-[14px];
   }
 
-  .selection-page .picker-panel {
-    max-height: min(240px, 45dvh);
-    -webkit-overflow-scrolling: touch;
-  }
 
   .selection-page .picker-option {
     @apply py-[9px] px-[14px] text-[15px];
