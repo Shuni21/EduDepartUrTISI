@@ -583,7 +583,7 @@
 
   .admin-edit-page .form-input,
   .admin-edit-page .form-select {
-    @apply py-[9px] px-[12px] text-[13px];
+    @apply w-full max-w-full box-border;
   }
 
   .admin-edit-page .table-header,
