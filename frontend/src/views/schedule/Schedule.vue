@@ -674,23 +674,29 @@ const syncWeekIndex = () => {
       return today >= start && today <= end
     })
 
-    currentWeekIndex.value = initialIndex !== -1 ? initialIndex : 0
+    // В воскресенье сразу переключаем на следующую неделю
+    if (today.getDay() === 0 && initialIndex !== -1 && initialIndex + 1 < consultationAcademicWeeks.value.length) {
+      currentWeekIndex.value = initialIndex + 1
+    } else {
+      currentWeekIndex.value = initialIndex !== -1 ? initialIndex : 0
+    }
     return
   }
 
   const initialIndex = weekKeys.value.findIndex((key) => {
     const { start, end } = parseWeekRange(key)
-
-    // Тоже обнуляем
     start.setHours(0, 0, 0, 0)
     end.setHours(0, 0, 0, 0)
 
     return today >= start && today <= end
   })
 
-  currentWeekIndex.value = initialIndex !== -1
-      ? initialIndex
-      : 0
+  // Переключение с воскресенье на понедельник сразу
+  if (today.getDay() === 0 && initialIndex !== -1 && initialIndex + 1 < weekKeys.value.length) {
+    currentWeekIndex.value = initialIndex + 1
+  } else {
+    currentWeekIndex.value = initialIndex !== -1 ? initialIndex : 0
+  }
 }
 
 const currentWeekKey = computed(() => weekKeys.value[currentWeekIndex.value] ?? '')
