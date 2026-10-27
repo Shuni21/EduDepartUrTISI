@@ -13,6 +13,7 @@ import { useNotificationsStore } from '@/stores/notifications'
 import { hasScheduleManageAccess } from '@/utils/educationDepartmentAccess'
 import MobileBottomNav from '@/components/MobileBottomNav.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import PrivacyPolicyDialog from '@/components/PrivacyPolicyDialog.vue'
 
 const notificationsStore = useNotificationsStore()
 
@@ -184,6 +185,7 @@ const handleVisibilityChange = async () => {
 }
 
 const currentYear = new Date().getFullYear()
+const isPrivacyPolicyOpen = ref(false)
 </script>
 
 <template>
@@ -299,10 +301,19 @@ const currentYear = new Date().getFullYear()
         <p class="bottombar__author">
           Разработчик: Shuni🌸
         </p>
+
+        <button
+          type="button"
+          class="bottombar__policy"
+          aria-haspopup="dialog"
+          @click="isPrivacyPolicyOpen = true"
+        >
+          Политика конфиденциальности
+        </button>
       </div>
     </footer>
 
     <ConfirmDialog />
+    <PrivacyPolicyDialog v-model="isPrivacyPolicyOpen" />
   </div>
 </template>
-

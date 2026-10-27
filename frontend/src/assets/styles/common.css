@@ -95,6 +95,19 @@ body {
   @apply text-xs text-gray-400;
 }
 
+.bottombar__policy {
+  @apply text-xs text-gray-300 underline underline-offset-2;
+
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.bottombar__policy:focus-visible {
+  @apply rounded-sm outline outline-2 outline-offset-2 outline-white;
+}
+
 .mobile-nav {
   display: none;
 }
@@ -383,5 +396,9 @@ body {
 
   .bottombar--mobile-nav .bottombar__author {
     @apply text-[10px] leading-tight text-gray-400;
+  }
+
+  .bottombar--mobile-nav .bottombar__policy {
+    @apply text-[10px] leading-tight;
   }
 }
