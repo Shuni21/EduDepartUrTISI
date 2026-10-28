@@ -7,11 +7,16 @@ export interface ParsedLessonPart {
     isSameCellParallel: boolean;
 }
 
-const TEACHER_POSITIONS = [
-    'ст. преподаватель',
-    'доцент',
-    'профессор',
-    'преподаватель',
+const TEACHER_POSITION_PATTERNS = [
+    /^ст\.?(?:\s*преподаватель)(?=\s|$|[.,;:])/i,
+    /^старший\s+преподаватель(?=\s|$|[.,;:])/i,
+    /^преподаватель\s+высш(?:\.|ей)?(?:\s*кат(?:\.|егории)?)?(?=\s|$|[.,;:])/i,
+    /^преподаватель\s+[123]\s*кат(?:\.|егории)?(?=\s|$|[.,;:])/i,
+    /^преподаватель\s+[123](?=\s|$|[.,;:])/i,
+    /^доцент(?=\s|$|[.,;:])/i,
+    /^профессор(?=\s|$|[.,;:])/i,
+    /^преподаватель(?=\s|$|[.,;:])/i,
+    /^ассистент(?=\s|$|[.,;:])/i,
 ] as const;
 
 const TEACHER_NAME_PATTERN = /([А-ЯЁ][а-яё-]+)([А-ЯЁ]\.[А-ЯЁ]\.?)$/u;
@@ -114,12 +119,15 @@ function extractPositionAndTeacher(part: string): {
     text = subgroupResult.cleaned;
 
     let teacherPosition = '';
-    for (const position of TEACHER_POSITIONS) {
-        if (text.toLowerCase().startsWith(position)) {
-            teacherPosition = position;
-            text = text.slice(position.length).trim();
-            break;
+    for (const pattern of TEACHER_POSITION_PATTERNS) {
+        const match = text.match(pattern);
+        if (!match) {
+            continue;
         }
+
+        teacherPosition = match[0].trim();
+        text = text.slice(match[0].length).trim();
+        break;
     }
 
     return {

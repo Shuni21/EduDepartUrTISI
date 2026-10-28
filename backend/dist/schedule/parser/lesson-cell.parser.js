@@ -6,11 +6,16 @@ exports.isDistanceRoom = isDistanceRoom;
 exports.isAuditoriumRoomLabel = isAuditoriumRoomLabel;
 exports.isSharedMultiHallRoom = isSharedMultiHallRoom;
 exports.splitRoomForSubgroups = splitRoomForSubgroups;
-const TEACHER_POSITIONS = [
-    'ст. преподаватель',
-    'доцент',
-    'профессор',
-    'преподаватель',
+const TEACHER_POSITION_PATTERNS = [
+    /^ст\.?(?:\s*преподаватель)(?=\s|$|[.,;:])/i,
+    /^старший\s+преподаватель(?=\s|$|[.,;:])/i,
+    /^преподаватель\s+высш(?:\.|ей)?(?:\s*кат(?:\.|егории)?)?(?=\s|$|[.,;:])/i,
+    /^преподаватель\s+[123]\s*кат(?:\.|егории)?(?=\s|$|[.,;:])/i,
+    /^преподаватель\s+[123](?=\s|$|[.,;:])/i,
+    /^доцент(?=\s|$|[.,;:])/i,
+    /^профессор(?=\s|$|[.,;:])/i,
+    /^преподаватель(?=\s|$|[.,;:])/i,
+    /^ассистент(?=\s|$|[.,;:])/i,
 ];
 const TEACHER_NAME_PATTERN = /([А-ЯЁ][а-яё-]+)([А-ЯЁ]\.[А-ЯЁ]\.?)$/u;
 const SUBGROUP_VALUE_PATTERN = '(?:1|2|I{1,2}|Ⅰ|Ⅱ)';
@@ -91,12 +96,14 @@ function extractPositionAndTeacher(part) {
     const subgroup = subgroupResult.subgroup;
     text = subgroupResult.cleaned;
     let teacherPosition = '';
-    for (const position of TEACHER_POSITIONS) {
-        if (text.toLowerCase().startsWith(position)) {
-            teacherPosition = position;
-            text = text.slice(position.length).trim();
-            break;
+    for (const pattern of TEACHER_POSITION_PATTERNS) {
+        const match = text.match(pattern);
+        if (!match) {
+            continue;
         }
+        teacherPosition = match[0].trim();
+        text = text.slice(match[0].length).trim();
+        break;
     }
     return {
         teacherPosition,

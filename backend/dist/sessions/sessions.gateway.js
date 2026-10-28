@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var SessionsGateway_1;
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionsGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
@@ -112,8 +113,7 @@ exports.SessionsGateway = SessionsGateway = SessionsGateway_1 = __decorate([
             credentials: true,
         },
     }),
-    __metadata("design:paramtypes", [jwt_1.JwtService,
-        config_1.ConfigService,
+    __metadata("design:paramtypes", [typeof (_a = typeof jwt_1.JwtService !== "undefined" && jwt_1.JwtService) === "function" ? _a : Object, config_1.ConfigService,
         users_service_1.UsersService,
         sessions_service_1.SessionsService])
 ], SessionsGateway);

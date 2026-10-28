@@ -1,9 +1,6 @@
-import { Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-declare const RefreshTokenStrategy_base: new (...args: [opt: import("passport-jwt").StrategyOptionsWithoutRequest] | [opt: import("passport-jwt").StrategyOptionsWithRequest]) => Strategy & {
-    validate(...args: any[]): unknown;
-};
+declare const RefreshTokenStrategy_base: any;
 export declare class RefreshTokenStrategy extends RefreshTokenStrategy_base {
     private readonly configService;
     constructor(configService: ConfigService);
