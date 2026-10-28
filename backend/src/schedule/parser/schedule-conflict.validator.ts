@@ -1,5 +1,5 @@
 import { areParallelGroups } from './group-parallel.utils';
-import { isSharedMultiHallRoom } from './lesson-cell.parser';
+import { isSharedMultiHallRoom, splitPhysicalRoomLabels } from './lesson-cell.parser';
 import {
     normalizeRoomValue,
     normalizeTime,
@@ -65,10 +65,14 @@ function subgroupsConflict(first: ScheduleLessonSlot, second: ScheduleLessonSlot
 }
 
 function hasSameRoom(first: ScheduleLessonSlot, second: ScheduleLessonSlot): boolean {
-    const firstRoom = normalizeRoomValue(first.room);
-    const secondRoom = normalizeRoomValue(second.room);
-
-    return Boolean(firstRoom && secondRoom && firstRoom === secondRoom);
+    const firstRooms = new Set(
+        splitPhysicalRoomLabels(first.room)
+            .map(normalizeRoomValue)
+            .filter((room): room is string => room !== null),
+    );
+    return splitPhysicalRoomLabels(second.room)
+        .map(normalizeRoomValue)
+        .some((room) => room !== null && firstRooms.has(room));
 }
 
 function isSharedHall(first: ScheduleLessonSlot, second: ScheduleLessonSlot): boolean {
