@@ -158,10 +158,10 @@ function parseLessonBlock(block: string): ParsedLessonPart[] {
 
     const { cleaned: cleanedType, subgroup: typeSubgroup } = extractSubgroupFromText(typePart);
     const lessonType = normalizeLessonType(cleanedType);
-    const teacherParts = teachersPart
+    const teacherParts = protectSubgroupSlash(teachersPart)
         .replace(/\s*\/\s*$/g, '')
         .split(/\s*\/\s*/)
-        .map((part) => part.trim())
+        .map((part) => restoreSubgroupSlash(part.trim()))
         .filter(Boolean);
 
     if (teacherParts.length === 0) {
