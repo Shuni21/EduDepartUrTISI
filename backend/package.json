@@ -15,7 +15,7 @@
     "migration:baseline": "ts-node src/database/baseline-migrations.ts",
     "migration:baseline:prod": "node dist/database/baseline-migrations.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "node --test",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
   },

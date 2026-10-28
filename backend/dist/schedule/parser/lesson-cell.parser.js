@@ -76,7 +76,11 @@ function extractSubgroupFromText(text) {
         if (match && subgroup) {
             return {
                 subgroup,
-                cleaned: text.replace(match[0], ' ').replace(/\s+/g, ' ').trim(),
+                cleaned: text
+                    .replace(match[0], ' ')
+                    .replace(/^[\s;:,]+|[\s;:,]+$/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim(),
             };
         }
     }
@@ -121,10 +125,10 @@ function parseLessonBlock(block) {
     }
     const { cleaned: cleanedType, subgroup: typeSubgroup } = extractSubgroupFromText(typePart);
     const lessonType = normalizeLessonType(cleanedType);
-    const teacherParts = teachersPart
+    const teacherParts = protectSubgroupSlash(teachersPart)
         .replace(/\s*\/\s*$/g, '')
         .split(/\s*\/\s*/)
-        .map((part) => part.trim())
+        .map((part) => restoreSubgroupSlash(part.trim()))
         .filter(Boolean);
     if (teacherParts.length === 0) {
         return [];

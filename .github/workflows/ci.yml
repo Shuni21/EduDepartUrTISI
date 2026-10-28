@@ -32,6 +32,9 @@ jobs:
       - name: Build backend
         run: npm run build --workspace backend
 
+      - name: Test backend
+        run: npm test --workspace backend
+
       - name: Security audit
         run: npm audit --audit-level=high
         continue-on-error: true   # пока оставляем из-за xlsx
