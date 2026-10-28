@@ -367,6 +367,37 @@ export function isSharedMultiHallRoom(room: string | null | undefined): boolean 
     return isAuditoriumRoomLabel(room);
 }
 
+export function splitPhysicalRoomLabels(room: string | null | undefined): string[] {
+    if (!room?.trim()) {
+        return [];
+    }
+
+    const trimmed = room.trim();
+    if (isAuditoriumRoomLabel(trimmed)) {
+        return [trimmed];
+    }
+
+    const roomParts = trimmed
+        .split(/\s*[,/]\s*/)
+        .map((part) => part.trim())
+        .filter(Boolean);
+
+    if (roomParts.length < 2 || roomParts.some((part) => !/^(?:\d+[А-ЯA-Z]?(?:\s+УК\s*\d+)?|[IVXLCDM]+(?:\s+УК\s*\d+)?)$/iu.test(part))) {
+        return [trimmed];
+    }
+
+    const buildingMatch = roomParts[roomParts.length - 1]?.match(/\s+(УК\s*\d+)$/iu);
+    const building = buildingMatch?.[1].replace(/\s+/g, '').toUpperCase();
+    const normalizedRoomParts = roomParts.map((part) => {
+        const normalized = part.replace(/\s+/g, ' ').trim();
+        return building && !/\s+УК\s*\d+$/iu.test(normalized)
+            ? `${normalized} ${building}`
+            : normalized.replace(/\s+УК\s*(\d+)$/iu, ' УК$1');
+    });
+
+    return normalizedRoomParts;
+}
+
 export function splitRoomForSubgroups(
     room: string | null | undefined,
     partsCount: number,
@@ -379,37 +410,24 @@ export function splitRoomForSubgroups(
     }
 
     const trimmed = room.trim();
+    const roomLabels = splitPhysicalRoomLabels(trimmed);
 
-    if (isAuditoriumRoomLabel(trimmed)) {
+    if (roomLabels.length < 2) {
         return Array.from({ length: count }, () => trimmed);
     }
 
-    const roomParts = trimmed
-        .split(/\s*[,/]\s*/)
-        .map((part) => part.trim())
-        .filter(Boolean);
-
-    if (roomParts.length < 2 || roomParts.some((part) => !/^(?:\d+[А-ЯA-Z]?(?:\s+УК\s*\d+)?|[IVXLCDM]+(?:\s+УК\s*\d+)?)$/iu.test(part))) {
-        return Array.from({ length: count }, () => trimmed);
+    if (count === 1) {
+        return [roomLabels.join(', ')];
     }
-
-    const buildingMatch = roomParts[roomParts.length - 1]?.match(/\s+(УК\s*\d+)$/iu);
-    const building = buildingMatch?.[1].replace(/\s+/g, '').toUpperCase();
-    const normalizedRoomParts = roomParts.map((part) => {
-        const normalized = part.replace(/\s+/g, ' ').trim();
-        return building && !/\s+УК\s*\d+$/iu.test(normalized)
-            ? `${normalized} ${building}`
-            : normalized.replace(/\s+УК\s*(\d+)$/iu, ' УК$1');
-    });
 
     return Array.from({ length: count }, (_, index) => {
         const subgroup = subgroups[index];
-        if ((subgroup === 1 || subgroup === 2) && normalizedRoomParts[subgroup - 1]) {
-            return normalizedRoomParts[subgroup - 1];
+        if ((subgroup === 1 || subgroup === 2) && roomLabels[subgroup - 1]) {
+            return roomLabels[subgroup - 1];
         }
 
-        if (normalizedRoomParts.length === count) {
-            return normalizedRoomParts[index];
+        if (roomLabels.length === count) {
+            return roomLabels[index];
         }
 
         return trimmed;

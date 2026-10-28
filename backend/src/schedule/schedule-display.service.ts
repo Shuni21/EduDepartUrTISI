@@ -21,6 +21,7 @@ import {
     normalizeRoomListKey,
     pickPreferredRoomLabel,
 } from './parser/schedule-slot.utils';
+import { splitPhysicalRoomLabels } from './parser/lesson-cell.parser';
 import { resolveSchedulePeriodMeta } from './parser/schedule-period.utils';
 import { LinkedLessonService } from './linked-lesson.service';
 const DISTANCE_BUILDING = 'Дистанционное';
@@ -406,20 +407,22 @@ export class ScheduleDisplayService {
                 continue;
             }
 
-            const roomKey = normalizeRoomListKey(label);
+            for (const roomLabel of splitPhysicalRoomLabels(label)) {
+                const roomKey = normalizeRoomListKey(roomLabel);
 
-            if (this.isDistanceRoom(label)) {
-                const existing = distanceRooms.get(roomKey);
-                distanceRooms.set(
-                    roomKey,
-                    existing ? pickPreferredRoomLabel(existing, label) : label,
-                );
-            } else {
-                const existing = physicalRooms.get(roomKey);
-                physicalRooms.set(
-                    roomKey,
-                    existing ? pickPreferredRoomLabel(existing, label) : label,
-                );
+                if (this.isDistanceRoom(roomLabel)) {
+                    const existing = distanceRooms.get(roomKey);
+                    distanceRooms.set(
+                        roomKey,
+                        existing ? pickPreferredRoomLabel(existing, roomLabel) : roomLabel,
+                    );
+                } else {
+                    const existing = physicalRooms.get(roomKey);
+                    physicalRooms.set(
+                        roomKey,
+                        existing ? pickPreferredRoomLabel(existing, roomLabel) : roomLabel,
+                    );
+                }
             }
         }
 
@@ -460,13 +463,12 @@ export class ScheduleDisplayService {
 
         const items = await this.baseItemsQuery().getMany();
         const matchedItems = items.filter((item) =>
-            normalizeRoomListKey(formatRoomLabel(item.room)) === normalizedRoomName,
+            splitPhysicalRoomLabels(formatRoomLabel(item.room))
+                .some((label) => normalizeRoomListKey(label) === normalizedRoomName),
         );
 
         return {
-            room: matchedItems[0]
-                ? formatRoomLabel(matchedItems[0].room)
-                : roomName.trim(),
+            room: roomName.trim(),
             weeks: await this.buildWeeksFromItems(matchedItems),
             ...resolveSchedulePeriodMeta(matchedItems),
         };
