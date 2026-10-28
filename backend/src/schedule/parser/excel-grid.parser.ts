@@ -437,7 +437,11 @@ function parseSheetGrid(
                         );
                     }
 
-                    const roomParts = splitRoomForSubgroups(room, parsedParts.length);
+                    const roomParts = splitRoomForSubgroups(
+                        room,
+                        parsedParts.length,
+                        parsedParts.map((part) => part.subgroup),
+                    );
 
                     for (const [index, part] of parsedParts.entries()) {
                         const assignedRoom = roomParts[index] ?? roomParts[0] ?? room;

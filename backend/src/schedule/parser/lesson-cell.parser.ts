@@ -370,6 +370,7 @@ export function isSharedMultiHallRoom(room: string | null | undefined): boolean 
 export function splitRoomForSubgroups(
     room: string | null | undefined,
     partsCount: number,
+    subgroups: (number | null)[] = [],
 ): (string | null)[] {
     const count = Math.max(partsCount, 1);
 
@@ -383,18 +384,34 @@ export function splitRoomForSubgroups(
         return Array.from({ length: count }, () => trimmed);
     }
 
-    if (count <= 1) {
-        return [trimmed];
-    }
-
-    const slashParts = trimmed
-        .split(/\s*\/\s*/)
+    const roomParts = trimmed
+        .split(/\s*[,/]\s*/)
         .map((part) => part.trim())
         .filter(Boolean);
 
-    if (slashParts.length === count && !slashParts.some((part) => isAuditoriumRoomLabel(part))) {
-        return slashParts;
+    if (roomParts.length < 2 || roomParts.some((part) => !/^(?:\d+[А-ЯA-Z]?(?:\s+УК\s*\d+)?|[IVXLCDM]+(?:\s+УК\s*\d+)?)$/iu.test(part))) {
+        return Array.from({ length: count }, () => trimmed);
     }
 
-    return Array.from({ length: count }, () => trimmed);
+    const buildingMatch = roomParts[roomParts.length - 1]?.match(/\s+(УК\s*\d+)$/iu);
+    const building = buildingMatch?.[1].replace(/\s+/g, '').toUpperCase();
+    const normalizedRoomParts = roomParts.map((part) => {
+        const normalized = part.replace(/\s+/g, ' ').trim();
+        return building && !/\s+УК\s*\d+$/iu.test(normalized)
+            ? `${normalized} ${building}`
+            : normalized.replace(/\s+УК\s*(\d+)$/iu, ' УК$1');
+    });
+
+    return Array.from({ length: count }, (_, index) => {
+        const subgroup = subgroups[index];
+        if ((subgroup === 1 || subgroup === 2) && normalizedRoomParts[subgroup - 1]) {
+            return normalizedRoomParts[subgroup - 1];
+        }
+
+        if (normalizedRoomParts.length === count) {
+            return normalizedRoomParts[index];
+        }
+
+        return trimmed;
+    });
 }
