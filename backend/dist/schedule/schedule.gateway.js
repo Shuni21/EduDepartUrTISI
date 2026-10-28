@@ -31,7 +31,7 @@ function normalizeScheduleTarget(value) {
         throw new websockets_1.WsException('Invalid schedule subscription');
     }
     const identity = target.identity.trim();
-    if (!identity || identity.length > 200 || /[\u0000-\u001F\u007F]/.test(identity)) {
+    if (identity.length === 0 || identity.length > 200 || /[\u0000-\u001F\u007F]/.test(identity)) {
         throw new websockets_1.WsException('Invalid schedule identity');
     }
     const normalizedIdentity = target.type === 'room'

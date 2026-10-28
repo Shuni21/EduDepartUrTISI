@@ -48,7 +48,7 @@ function normalizeScheduleTarget(value: unknown): ScheduleTarget {
     }
 
     const identity = target.identity.trim()
-    if (!identity || identity.length > 200 || /[\u0000-\u001F\u007F]/.test(identity)) {
+    if (identity.length === 0 || identity.length > 200 || /[\u0000-\u001F\u007F]/.test(identity)) {
         throw new WsException('Invalid schedule identity')
     }
 
