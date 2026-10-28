@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var NotificationsGateway_1;
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationsGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
@@ -98,7 +99,6 @@ exports.NotificationsGateway = NotificationsGateway = NotificationsGateway_1 = _
             credentials: true,
         },
     }),
-    __metadata("design:paramtypes", [jwt_1.JwtService,
-        config_1.ConfigService])
+    __metadata("design:paramtypes", [typeof (_a = typeof jwt_1.JwtService !== "undefined" && jwt_1.JwtService) === "function" ? _a : Object, config_1.ConfigService])
 ], NotificationsGateway);
 //# sourceMappingURL=notifications.gateway.js.map
