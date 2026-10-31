@@ -26,9 +26,16 @@ function generatePassword(length = 12): string {
   const symbols = '!@#$%&*'
   const all = upper + lower + digits + symbols
 
-  // Гарантируем хотя бы по одному символу каждого типа
-  const pick = (chars: string) => chars[Math.floor(Math.random() * chars.length)]
-  let password = pick(upper) + pick(lower) + pick(digits) + pick(symbols)
+  const pick = (chars: string): string => {
+    const index = Math.floor(Math.random() * chars.length)
+    return chars.charAt(index) // charAt всегда возвращает string
+  }
+
+  let password =
+      pick(upper) +
+      pick(lower) +
+      pick(digits) +
+      pick(symbols)
 
   for (let i = password.length; i < length; i++) {
     password += pick(all)
