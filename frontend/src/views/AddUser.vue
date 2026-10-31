@@ -292,11 +292,12 @@ const resetForm = () => {
                   Пароль <span class="required">*</span>
                 </label>
                 <PasswordInput
-                  id="password"
-                  v-model="form.password"
-                  placeholder="Введите пароль"
-                  :disabled="isSubmitting"
-                  :error="!!errors.password"
+                    id="password"
+                    v-model="form.password"
+                    placeholder="Введите пароль"
+                    :disabled="isSubmitting"
+                    :error="!!errors.password"
+                    show-generate
                 />
                 <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
               </div>

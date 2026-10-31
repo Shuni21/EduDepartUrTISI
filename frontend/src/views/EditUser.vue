@@ -356,11 +356,12 @@ const goBack = () => router.push({ name: 'admin-edit-user' })
                 <div class="form-group">
                   <label for="password" class="form-label">Новый пароль</label>
                   <PasswordInput
-                    id="password"
-                    v-model="form.password"
-                    placeholder="Оставьте пустым, чтобы не менять"
-                    :disabled="isSubmitting"
-                    :error="!!errors.password"
+                      id="password"
+                      v-model="form.password"
+                      placeholder="Введите пароль"
+                      :disabled="isSubmitting"
+                      :error="!!errors.password"
+                      show-generate
                   />
                   <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
                 </div>

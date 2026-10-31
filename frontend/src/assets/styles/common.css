@@ -202,6 +202,45 @@ body {
   @apply absolute top-[1px] right-[1px] min-w-[20px] h-[20px] rounded-full px-[5px] bg-[#ef4444] text-white text-[11px] leading-[20px] text-center;
 }
 
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field__input {
+  width: 100%;
+  padding-right: 4.5rem; /* место под две кнопки */
+}
+
+.password-field__generate,
+.password-field__toggle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+
+.password-field__generate:hover,
+.password-field__toggle:hover {
+  opacity: 1;
+}
+
+.password-field__generate {
+  right: 2.5rem;   /* слева от кнопки глаза */
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.password-field__toggle {
+  right: 0.6rem;
+}
+
 @media (min-width: 1024px) {
   .item {
     @apply mt-0 pt-[0.4rem] pb-[1rem];
