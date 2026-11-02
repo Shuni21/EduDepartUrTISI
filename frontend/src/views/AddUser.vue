@@ -8,6 +8,7 @@ import { getErrorRoute } from '@/config/errorPages'
 import PageFrame from '@/components/PageFrame.vue'
 import PasswordInput from '@/components/PasswordInput.vue'
 import type { UserRole } from '@/stores/auth'
+import { generateUniqueLogin } from '@/utils/loginGenerator'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -15,6 +16,8 @@ const usersStore = useUsersStore()
 
 const submitMessage = ref<{ type: 'success' | 'error'; text: string } | null>(null)
 const teacherDepartments = ref<TeacherDepartmentInfo[]>([])
+const loginManuallyEdited = ref(false)
+
 
 onMounted(async () => {
   if (!authStore.isAuthenticated || authStore.currentUser?.role !== 'admin') {
@@ -26,6 +29,12 @@ onMounted(async () => {
     teacherDepartments.value = await fetchTeacherDepartments()
   } catch {
     teacherDepartments.value = []
+  }
+
+  try {
+    await usersStore.loadUsers()
+  } catch {
+    // можно проигнорировать
   }
 })
 
@@ -120,6 +129,23 @@ watch(() => form.value.role, (newRole) => {
     form.value.course = 1
   }
 }, { immediate: true })
+
+// Автогенерация логина при изменении ФИО
+watch(
+    () => [form.value.surname, form.value.name, form.value.patronymic],
+    () => {
+      if (loginManuallyEdited.value) return
+      if (!form.value.surname.trim() || !form.value.name.trim()) return
+
+      const existing = usersStore.users.map((u) => u.login)
+      form.value.login = generateUniqueLogin(
+          form.value.surname,
+          form.value.name,
+          form.value.patronymic,
+          existing,
+      )
+    },
+)
 
 // Валидация
 const validate = (): boolean => {
@@ -244,6 +270,7 @@ const resetForm = () => {
   clearPhotoSelection()
   errors.value = {}
   submitMessage.value = null
+  loginManuallyEdited.value = false
 }
 </script>
 
@@ -276,13 +303,14 @@ const resetForm = () => {
                   Логин <span class="required">*</span>
                 </label>
                 <input
-                  id="login"
-                  v-model="form.login"
-                  type="text"
-                  class="form-input"
-                  :class="{ error: errors.login }"
-                  placeholder="Введите логин"
-                  :disabled="isSubmitting"
+                    id="login"
+                    v-model="form.login"
+                    type="text"
+                    class="form-input"
+                    :class="{ error: errors.login }"
+                    placeholder="Введите логин"
+                    :disabled="isSubmitting"
+                    @input="loginManuallyEdited = true"
                 />
                 <span v-if="errors.login" class="error-message">{{ errors.login }}</span>
               </div>
