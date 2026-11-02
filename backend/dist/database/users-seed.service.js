@@ -116,7 +116,6 @@ let UsersSeedService = UsersSeedService_1 = class UsersSeedService {
             surname: seedUser.surname,
             name: seedUser.name,
             patronymic: seedUser.patronymic,
-            photoUrl: null,
             isActive: true,
         });
         await this.staffProfileRepository.save({

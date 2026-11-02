@@ -56,7 +56,6 @@ interface UserForm {
   
   // Для student
   group?: string
-  direction?: string
   educationForm?: string
   course?: number
 }
@@ -72,14 +71,11 @@ const initialForm: UserForm = {
   position: '',
   cabinet: '',
   group: '',
-  direction: '',
   educationForm: 'Очная',
   course: 1,
 }
 
 const form = ref<UserForm>({ ...initialForm })
-const photoFile = ref<File | null>(null)
-const photoPreview = ref<string | null>(null)
 const errors = ref<Partial<Record<keyof UserForm, string>>>({})
 const isSubmitting = ref(false)
 
@@ -98,19 +94,6 @@ const educationFormOptions = [
 
 const courseOptions = [1, 2, 3, 4, 5, 6]
 
-const onPhotoSelected = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0] ?? null
-
-  photoFile.value = file
-  photoPreview.value = file ? URL.createObjectURL(file) : null
-}
-
-const clearPhotoSelection = () => {
-  photoFile.value = null
-  photoPreview.value = null
-}
-
 // Очистка специфичных полей при смене роли
 watch(() => form.value.role, (newRole) => {
   // Очищаем ВСЕ специфичные поля
@@ -119,7 +102,6 @@ watch(() => form.value.role, (newRole) => {
   form.value.position = ''
   form.value.cabinet = ''
   form.value.group = ''
-  form.value.direction = ''
   form.value.educationForm = 'Очная'
   form.value.course = 1
   
@@ -177,9 +159,6 @@ const validate = (): boolean => {
     if (!form.value.group?.trim()) {
       errors.value.group = 'Введите группу'
     }
-    if (!form.value.direction?.trim()) {
-      errors.value.direction = 'Введите направление подготовки'
-    }
     if (!form.value.course || form.value.course < 1 || form.value.course > 6) {
       errors.value.course = 'Выберите курс (1-6)'
     }
@@ -228,7 +207,6 @@ const handleSubmit = async () => {
       name: form.value.name.trim(),
       patronymic: form.value.patronymic.trim() || undefined,
       group: form.value.group?.trim(),
-      direction: form.value.direction?.trim(),
       educationForm: form.value.educationForm,
       course: form.value.course,
       department: ['employee', 'admin'].includes(form.value.role)
@@ -239,7 +217,7 @@ const handleSubmit = async () => {
       cabinet: form.value.cabinet?.trim(),
     }
 
-    await usersStore.addUser(payload, photoFile.value)
+    await usersStore.addUser(payload)
     
     const roleLabel = roleOptions.find(r => r.value === form.value.role)?.label
     submitMessage.value = {
@@ -267,7 +245,6 @@ const goBack = () => router.push({ name: 'admin-panel' })
 
 const resetForm = () => {
   form.value = { ...initialForm }
-  clearPhotoSelection()
   errors.value = {}
   submitMessage.value = null
   loginManuallyEdited.value = false
@@ -332,7 +309,7 @@ const resetForm = () => {
             </div>
 
             <div class="form-row">
-              <div class="form-group">
+              <div class="form-group full-width">
                 <label for="role" class="form-label">
                   Роль <span class="required">*</span>
                 </label>
@@ -348,30 +325,6 @@ const resetForm = () => {
                 </select>
               </div>
 
-              <div class="form-group full-width">
-                <label for="photo" class="form-label">
-                  Фото пользователя
-                </label>
-                <input
-                  id="photo"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  class="form-input"
-                  :disabled="isSubmitting"
-                  @change="onPhotoSelected"
-                />
-                <div v-if="photoPreview" class="avatar-preview-row">
-                  <img :src="photoPreview" alt="Предпросмотр фото" class="avatar-preview" />
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    :disabled="isSubmitting"
-                    @click="clearPhotoSelection"
-                  >
-                    Убрать фото
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -443,7 +396,7 @@ const resetForm = () => {
                   type="text"
                   class="form-input"
                   :class="{ error: errors.group }"
-                  placeholder="Например: ИС-21"
+                  placeholder="Существующая группа, например: ИС-21"
                   :disabled="isSubmitting"
                 />
                 <span v-if="errors.group" class="error-message">{{ errors.group }}</span>
@@ -466,24 +419,6 @@ const resetForm = () => {
                   </option>
                 </select>
                 <span v-if="errors.course" class="error-message">{{ errors.course }}</span>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group full-width">
-                <label for="direction" class="form-label">
-                  Направление <span class="required">*</span>
-                </label>
-                <input
-                  id="direction"
-                  v-model="form.direction"
-                  type="text"
-                  class="form-input"
-                  :class="{ error: errors.direction }"
-                  placeholder="Например: 09.03.01 Информатика и вычислительная техника"
-                  :disabled="isSubmitting"
-                />
-                <span v-if="errors.direction" class="error-message">{{ errors.direction }}</span>
               </div>
             </div>
 
@@ -693,4 +628,3 @@ const resetForm = () => {
     </section>
   </PageFrame>
 </template>
-

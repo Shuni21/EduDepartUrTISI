@@ -8,14 +8,12 @@ import { TeacherProfile } from '../users/entities/teacher-profile.entity';
 import { StaffProfile } from '../users/entities/staff-profile.entity';
 import { DepartmentsService } from '../academic/departments.service';
 import { Department } from '../academic/entities/department.entity';
-import { Direction } from '../academic/entities/direction.entity';
 import { Group } from '../academic/entities/group.entity';
 import { AdminSessionResponse } from '../sessions/sessions.types';
 import { SessionsService } from '../sessions/sessions.service';
 import { SessionsNotifierService } from '../sessions/sessions-notifier.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AvatarService } from '../uploads/avatar.service';
 import { ConsultationNotificationPreference } from '../notifications/consultation-notification-preference.entity';
 import { Consultation } from '../schedule/entities/consultation.entity';
 import { Schedule } from '../schedule/entities/schedule.entity';
@@ -29,7 +27,6 @@ export declare class AdminService {
     private readonly usersService;
     private readonly sessionsService;
     private readonly sessionsNotifier;
-    private readonly avatarService;
     private readonly departmentsService;
     private readonly roleRepository;
     private readonly refreshTokenRepository;
@@ -37,19 +34,18 @@ export declare class AdminService {
     private readonly teacherProfileRepository;
     private readonly staffProfileRepository;
     private readonly departmentRepository;
-    private readonly directionRepository;
     private readonly groupRepository;
     private readonly consultationsRepository;
     private readonly scheduleItemsRepository;
     private readonly schedulesRepository;
     private readonly scheduleUploadsRepository;
     private readonly consultationPreferencesRepository;
-    constructor(usersService: UsersService, sessionsService: SessionsService, sessionsNotifier: SessionsNotifierService, avatarService: AvatarService, departmentsService: DepartmentsService, roleRepository: Repository<Role>, refreshTokenRepository: Repository<RefreshToken>, studentProfileRepository: Repository<StudentProfile>, teacherProfileRepository: Repository<TeacherProfile>, staffProfileRepository: Repository<StaffProfile>, departmentRepository: Repository<Department>, directionRepository: Repository<Direction>, groupRepository: Repository<Group>, consultationsRepository: Repository<Consultation>, scheduleItemsRepository: Repository<ScheduleItem>, schedulesRepository: Repository<Schedule>, scheduleUploadsRepository: Repository<ScheduleUpload>, consultationPreferencesRepository: Repository<ConsultationNotificationPreference>);
+    constructor(usersService: UsersService, sessionsService: SessionsService, sessionsNotifier: SessionsNotifierService, departmentsService: DepartmentsService, roleRepository: Repository<Role>, refreshTokenRepository: Repository<RefreshToken>, studentProfileRepository: Repository<StudentProfile>, teacherProfileRepository: Repository<TeacherProfile>, staffProfileRepository: Repository<StaffProfile>, departmentRepository: Repository<Department>, groupRepository: Repository<Group>, consultationsRepository: Repository<Consultation>, scheduleItemsRepository: Repository<ScheduleItem>, schedulesRepository: Repository<Schedule>, scheduleUploadsRepository: Repository<ScheduleUpload>, consultationPreferencesRepository: Repository<ConsultationNotificationPreference>);
     listUsers(): Promise<AdminUserResponse[]>;
     listStaffDepartments(): Promise<import("../academic/departments.service").StaffDepartmentInfo[]>;
     getUser(id: number): Promise<AdminUserResponse>;
-    updateUser(id: number, dto: UpdateUserDto, currentUserId: number, photo?: Express.Multer.File): Promise<AdminUserResponse>;
-    createUser(dto: CreateUserDto, photo?: Express.Multer.File): Promise<AdminUserResponse>;
+    updateUser(id: number, dto: UpdateUserDto, currentUserId: number): Promise<AdminUserResponse>;
+    createUser(dto: CreateUserDto): Promise<AdminUserResponse>;
     deleteUser(id: number, currentUserId: number): Promise<{
         success: true;
     }>;
@@ -61,6 +57,7 @@ export declare class AdminService {
     }>;
     private revokeUserSessions;
     private validateProfileFields;
+    private validateStudentGroup;
     private createProfile;
     private createStudentProfile;
     private createTeacherProfile;
@@ -69,9 +66,8 @@ export declare class AdminService {
     private updateProfile;
     private removeAllProfiles;
     private findOrCreateDepartment;
-    private findOrCreateDirection;
-    private static readonly GROUP_LEGACY_COURSE;
-    private findOrCreateGroup;
+    private resolveStudentGroup;
+    private findExistingGroup;
     private mapEducationForm;
     private formatFullName;
 }

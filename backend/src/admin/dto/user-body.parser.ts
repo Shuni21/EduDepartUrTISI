@@ -1,5 +1,4 @@
 import { BadRequestException } from '@nestjs/common';
-import type { Request } from 'express';
 
 import { RoleCode } from '../../users/entities/role.entity';
 import { CreateUserDto } from './create-user.dto';
@@ -88,7 +87,6 @@ export function parseCreateUserBody(
         name: readRequiredString(body, 'name'),
         patronymic: readString(body, 'patronymic'),
         group: readString(body, 'group'),
-        direction: readString(body, 'direction'),
         educationForm: readString(body, 'educationForm'),
         course: readCourse(body),
         departmentId: readDepartmentId(body),
@@ -109,9 +107,7 @@ export function parseUpdateUserBody(
         name: readRequiredString(body, 'name'),
         patronymic: readString(body, 'patronymic'),
         isActive: readBoolean(body, 'isActive'),
-        removePhoto: readBoolean(body, 'removePhoto'),
         group: readString(body, 'group'),
-        direction: readString(body, 'direction'),
         educationForm: readString(body, 'educationForm'),
         course: readCourse(body),
         departmentId: readDepartmentId(body),
@@ -120,26 +116,3 @@ export function parseUpdateUserBody(
         cabinet: readString(body, 'cabinet'),
     };
 }
-
-export const avatarUploadOptions = {
-    limits: { fileSize: 5 * 1024 * 1024 },
-    fileFilter: (
-        _req: Request,
-        file: Express.Multer.File,
-        callback: (error: Error | null, acceptFile: boolean) => void,
-    ) => {
-        const allowed = ['image/jpeg', 'image/png', 'image/webp'];
-
-        if (!allowed.includes(file.mimetype)) {
-            callback(
-                new BadRequestException(
-                    'Допустимы только изображения JPG, PNG или WebP',
-                ),
-                false,
-            );
-            return;
-        }
-
-        callback(null, true);
-    },
-};

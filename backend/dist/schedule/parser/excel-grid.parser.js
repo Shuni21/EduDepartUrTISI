@@ -352,7 +352,7 @@ function parseSheetGrid(grid, groupName, period, warnings) {
                             + `${pairTime.startTime}, неделя ${weekStart}): `
                             + subjects.join(' / '));
                     }
-                    const roomParts = (0, lesson_cell_parser_1.splitRoomForSubgroups)(room, parsedParts.length);
+                    const roomParts = (0, lesson_cell_parser_1.splitRoomForSubgroups)(room, parsedParts.length, parsedParts.map((part) => part.subgroup));
                     for (const [index, part] of parsedParts.entries()) {
                         const assignedRoom = roomParts[index] ?? roomParts[0] ?? room;
                         lessons.push({

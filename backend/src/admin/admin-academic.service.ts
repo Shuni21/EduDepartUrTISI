@@ -8,19 +8,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Department } from '../academic/entities/department.entity';
-import { Direction } from '../academic/entities/direction.entity';
 import { EducationForm, Group } from '../academic/entities/group.entity';
 import { Subgroup } from '../academic/entities/subgroup.entity';
-import {
-    buildDirectionDisplayName,
-    buildDirectionStorageCode,
-    validateDirectionInput,
-} from '../academic/direction.utils';
-import { CreateDirectionDto } from './dto/create-direction.dto';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { CreateTeacherDepartmentDto } from './dto/create-teacher-department.dto';
 import { CreateStaffDepartmentDto } from './dto/create-staff-department.dto';
-import { StudentProfile } from '../users/entities/student-profile.entity';
 import { Schedule } from '../schedule/entities/schedule.entity';
 import { User } from '../users/entities/user.entity';
 import { TeacherProfile } from '../users/entities/teacher-profile.entity';
@@ -51,44 +43,28 @@ export type AcademicGroup = {
     id: number;
     name: string;
     educationForm: EducationForm;
-    directionId: number;
-    directionName: string;
     students: AcademicMember[];
-};
-
-export type AcademicDirection = {
-    id: number;
-    code: string;
-    name: string;
-    groups: AcademicGroup[];
 };
 
 export type AcademicStructureOverview = {
     teacherDepartments: AcademicDepartment[];
     staffDepartments: AcademicDepartment[];
-    directions: AcademicDirection[];
+    groups: AcademicGroup[];
 };
 
 @Injectable()
 export class AdminAcademicService {
     private static readonly STAFF_DEPARTMENT_MARKERS = ['учебный отдел'];
-    private static readonly IMPORT_DIRECTION_CODE = 'SCHEDULE_IMPORT';
 
     constructor(
         @InjectRepository(Department)
         private readonly departmentRepository: Repository<Department>,
-
-        @InjectRepository(Direction)
-        private readonly directionRepository: Repository<Direction>,
 
         @InjectRepository(Group)
         private readonly groupRepository: Repository<Group>,
 
         @InjectRepository(Subgroup)
         private readonly subgroupRepository: Repository<Subgroup>,
-
-        @InjectRepository(StudentProfile)
-        private readonly studentProfileRepository: Repository<StudentProfile>,
 
         @InjectRepository(Schedule)
         private readonly scheduleRepository: Repository<Schedule>,
@@ -149,51 +125,38 @@ export class AdminAcademicService {
             ),
         );
 
-        const directions = await this.directionRepository.find({
+        const groups = await this.groupRepository.find({
             relations: {
-                groups: {
-                    studentProfiles: {
-                        user: {
-                            role: true,
-                        },
+                studentProfiles: {
+                    user: {
+                        role: true,
                     },
                 },
             },
-            order: { name: 'ASC' },
+            order: { name: 'ASC', educationForm: 'ASC' },
         });
 
         return {
             teacherDepartments,
             staffDepartments,
-            directions: directions
-                .filter((direction) =>
-                    direction.code !== AdminAcademicService.IMPORT_DIRECTION_CODE,
-                )
-                .map((direction) => ({
-                    id: direction.id,
-                    code: direction.code,
-                    name: direction.name,
-                    groups: direction.groups
-                        .map((group) => ({
-                            id: group.id,
-                            name: group.name,
-                            educationForm: group.educationForm,
-                            directionId: direction.id,
-                            directionName: direction.name,
-                            students: group.studentProfiles
-                                .map((profile) => this.mapStudentMember(profile))
-                                .sort((left, right) =>
-                                    left.fullName.localeCompare(right.fullName, 'ru', {
-                                        sensitivity: 'base',
-                                    }),
-                                ),
-                        }))
+            groups: groups
+                .map((group) => ({
+                    id: group.id,
+                    name: group.name,
+                    educationForm: group.educationForm,
+                    students: group.studentProfiles
+                        .map((profile) => this.mapStudentMember(profile))
                         .sort((left, right) =>
-                            left.name.localeCompare(right.name, 'ru', {
+                            left.fullName.localeCompare(right.fullName, 'ru', {
                                 sensitivity: 'base',
                             }),
                         ),
-                })),
+                }))
+                .sort((left, right) =>
+                    left.name.localeCompare(right.name, 'ru', {
+                        sensitivity: 'base',
+                    }),
+                ),
         };
     }
 
@@ -341,69 +304,21 @@ export class AdminAcademicService {
         return this.mapDepartment(department, false);
     }
 
-    async createDirection(dto: CreateDirectionDto): Promise<AcademicDirection> {
-        const trimmed = dto.name.trim();
-        const validation = validateDirectionInput(trimmed);
-
-        if (!validation.valid) {
-            throw new BadRequestException(validation.message);
-        }
-
-        const displayName = buildDirectionDisplayName(trimmed);
-        const storageCode = buildDirectionStorageCode(trimmed);
-
-        if (storageCode === AdminAcademicService.IMPORT_DIRECTION_CODE) {
-            throw new BadRequestException('Недопустимое название направления');
-        }
-
-        const existingByCode = await this.directionRepository.findOne({
-            where: { code: storageCode },
-        });
-
-        if (existingByCode) {
-            throw new ConflictException('Направление с таким кодом уже существует');
-        }
-
-        const direction = await this.directionRepository.save({
-            name: displayName,
-            code: storageCode,
-        });
-
-        return this.mapDirection(direction, []);
-    }
-
-    async createGroup(
-        directionId: number,
-        dto: CreateGroupDto,
-    ): Promise<AcademicGroup> {
-        const direction = await this.directionRepository.findOne({
-            where: { id: directionId },
-        });
-
-        if (!direction) {
-            throw new NotFoundException('Направление не найдено');
-        }
-
-        if (direction.code === AdminAcademicService.IMPORT_DIRECTION_CODE) {
-            throw new BadRequestException('Нельзя добавлять группы в служебное направление');
-        }
-
+    async createGroup(dto: CreateGroupDto): Promise<AcademicGroup> {
         const groupName = dto.name.trim();
         const existing = await this.groupRepository.findOne({
             where: {
                 name: groupName,
-                directionId,
                 educationForm: dto.educationForm,
             },
         });
 
         if (existing) {
-            throw new ConflictException('Такая группа уже существует в этом направлении');
+            throw new ConflictException('Такая группа уже существует');
         }
 
         const group = await this.groupRepository.save({
             name: groupName,
-            directionId,
             course: 1,
             educationForm: dto.educationForm,
         });
@@ -412,8 +327,6 @@ export class AdminAcademicService {
             id: group.id,
             name: group.name,
             educationForm: group.educationForm,
-            directionId: direction.id,
-            directionName: direction.name,
             students: [],
         };
     }
@@ -450,48 +363,6 @@ export class AdminAcademicService {
         return { success: true };
     }
 
-    async deleteDirection(directionId: number): Promise<{ success: true }> {
-        const direction = await this.directionRepository.findOne({
-            where: { id: directionId },
-            relations: { groups: { studentProfiles: true } },
-        });
-
-        if (!direction) {
-            throw new NotFoundException('Направление не найдено');
-        }
-
-        if (direction.code === AdminAcademicService.IMPORT_DIRECTION_CODE) {
-            throw new BadRequestException('Это служебное направление удалить нельзя');
-        }
-
-        for (const group of direction.groups) {
-            if (group.studentProfiles.length > 0) {
-                throw new BadRequestException(
-                    'Нельзя удалить направление: в его группах есть студенты',
-                );
-            }
-
-            const schedulesCount = await this.scheduleRepository.count({
-                where: { groupId: group.id },
-            });
-
-            if (schedulesCount > 0) {
-                throw new BadRequestException(
-                    'Нельзя удалить направление: к его группам привязано расписание',
-                );
-            }
-        }
-
-        for (const group of direction.groups) {
-            await this.subgroupRepository.delete({ groupId: group.id });
-        }
-
-        await this.groupRepository.delete({ directionId });
-        await this.directionRepository.delete(directionId);
-
-        return { success: true };
-    }
-
     async deleteDepartment(departmentId: number): Promise<{ success: true }> {
         const department = await this.departmentRepository.findOne({
             where: { id: departmentId },
@@ -520,63 +391,6 @@ export class AdminAcademicService {
         }
 
         await this.departmentRepository.delete(departmentId);
-
-        return { success: true };
-    }
-
-    async mergeDirections(
-        sourceDirectionId: number,
-        targetDirectionId: number,
-    ): Promise<{ success: true }> {
-        if (sourceDirectionId === targetDirectionId) {
-            throw new BadRequestException('Нельзя объединить направление с самим собой');
-        }
-
-        const source = await this.directionRepository.findOne({
-            where: { id: sourceDirectionId },
-            relations: { groups: true },
-        });
-
-        const target = await this.directionRepository.findOne({
-            where: { id: targetDirectionId },
-            relations: { groups: true },
-        });
-
-        if (!source || !target) {
-            throw new NotFoundException('Направление не найдено');
-        }
-
-        if (source.code === AdminAcademicService.IMPORT_DIRECTION_CODE) {
-            throw new BadRequestException('Служебное направление объединить нельзя');
-        }
-
-        for (const sourceGroup of source.groups) {
-            const targetGroup = target.groups.find((group) =>
-                group.name === sourceGroup.name
-                && group.educationForm === sourceGroup.educationForm,
-            );
-
-            if (targetGroup) {
-                await this.studentProfileRepository.update(
-                    { groupId: sourceGroup.id },
-                    { groupId: targetGroup.id },
-                );
-
-                await this.scheduleRepository.update(
-                    { groupId: sourceGroup.id },
-                    { groupId: targetGroup.id },
-                );
-
-                await this.subgroupRepository.delete({ groupId: sourceGroup.id });
-                await this.groupRepository.delete(sourceGroup.id);
-            } else {
-                await this.groupRepository.update(sourceGroup.id, {
-                    directionId: targetDirectionId,
-                });
-            }
-        }
-
-        await this.directionRepository.delete(sourceDirectionId);
 
         return { success: true };
     }
@@ -665,18 +479,6 @@ export class AdminAcademicService {
             position: `Курс ${profile.course}`,
             cabinet: null,
             isActive: profile.user.isActive,
-        };
-    }
-
-    private mapDirection(
-        direction: Direction,
-        groups: AcademicGroup[],
-    ): AcademicDirection {
-        return {
-            id: direction.id,
-            code: direction.code,
-            name: direction.name,
-            groups,
         };
     }
 

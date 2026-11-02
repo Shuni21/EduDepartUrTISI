@@ -7,7 +7,6 @@ import caretIcon from '@/assets/Down.png'
 import notificationIcon from '@/assets/notification.svg'
 import { useAuthStore } from '@/stores/auth'
 import type { ScheduleKind } from '@/views/schedule/scheduleOptions'
-import { getPhotoUrl } from '@/config/api'
 import { unregisterPushSubscription } from '@/api/pushNotifications'
 import { useNotificationsStore } from '@/stores/notifications'
 import { hasScheduleManageAccess } from '@/utils/educationDepartmentAccess'
@@ -23,7 +22,6 @@ const authStore = useAuthStore()
 const showAuthHeader = computed(() => authStore.isAuthenticated)
 const currentUserName = computed(() => authStore.currentUser?.name ?? '')
 const currentUserRole = computed(() => authStore.roleLabel)
-const currentUserPhoto = computed(() => getPhotoUrl(authStore.currentUser?.photoUrl))
 
 const isAdmin = computed(() => authStore.currentUser?.role === 'admin')
 const canManageSchedule = computed(() => hasScheduleManageAccess(authStore.currentUser))
@@ -222,7 +220,7 @@ const isPrivacyPolicyOpen = ref(false)
             <button class="profile-btn" type="button" @click="toggleProfileMenu">
               <img
                 class="profile-icon"
-                :src="currentUserPhoto || avatarIcon"
+                :src="avatarIcon"
                 alt=""
               />
               <span class="profile-name">{{ currentUserName }}</span>

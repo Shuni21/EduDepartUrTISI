@@ -3,27 +3,11 @@
 }
 
 .profile-card {
-  @apply w-full max-w-[850px] min-h-[470px] bg-[#ececec] dark:bg-[#1e2228] border border-[#4ea3d7] rounded-[18px] shadow-[0_6px_14px_rgba(0,0,0,0.15)] dark:shadow-[0_6px_14px_rgba(0,0,0,0.35)] flex gap-[30px] p-[42px] relative z-[2];
-}
-
-.photo-block {
-  @apply flex items-start;
-}
-
-.photo-placeholder {
-  @apply w-[240px] h-[320px] border-2 border-[#4ea3d7] rounded-[16px] bg-[#ececec] dark:bg-[#252a31] flex justify-center items-center shadow-[0_4px_10px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_10px_rgba(0,0,0,0.35)];
-}
-
-.photo-placeholder span {
-  @apply rotate-[-45deg] text-[18px] text-[#24313f] dark:text-[#d5dde6];
-}
-
-.profile-photo {
-  @apply w-[240px] h-[320px] border-2 border-[#4ea3d7] rounded-[16px] object-cover bg-white dark:bg-[#252a31] shadow-[0_4px_10px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_10px_rgba(0,0,0,0.35)];
+  @apply w-full max-w-[850px] bg-[#ececec] dark:bg-[#1e2228] border border-[#4ea3d7] rounded-[18px] shadow-[0_6px_14px_rgba(0,0,0,0.15)] dark:shadow-[0_6px_14px_rgba(0,0,0,0.35)] p-[42px] relative z-[2];
 }
 
 .profile-info {
-  @apply flex-1 flex flex-col;
+  @apply flex flex-col;
 }
 
 .fullname {
@@ -64,12 +48,7 @@
 
 @media (max-width: 900px) {
   .profile-card {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .profile-info {
-    width: 100%;
+    @apply p-[24px];
   }
 
   .divider {
@@ -82,14 +61,6 @@
 }
 
 @media (max-width: 600px) {
-  .photo-placeholder {
-    @apply w-[200px] h-[260px];
-  }
-
-  .profile-card {
-    @apply p-[24px];
-  }
-
   .action-btn {
     @apply w-full;
   }

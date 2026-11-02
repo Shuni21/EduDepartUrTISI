@@ -19,19 +19,12 @@ import { TeacherProfile } from '../users/entities/teacher-profile.entity';
 import { StaffProfile } from '../users/entities/staff-profile.entity';
 import { DepartmentsService } from '../academic/departments.service';
 import { Department } from '../academic/entities/department.entity';
-import { Direction } from '../academic/entities/direction.entity';
 import { EducationForm, Group } from '../academic/entities/group.entity';
-import {
-    buildDirectionDisplayName,
-    buildDirectionStorageCode,
-    validateDirectionInput,
-} from '../academic/direction.utils';
 import { AdminSessionResponse } from '../sessions/sessions.types';
 import { SessionsService } from '../sessions/sessions.service';
 import { SessionsNotifierService } from '../sessions/sessions-notifier.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AvatarService } from '../uploads/avatar.service';
 import { ConsultationNotificationPreference } from '../notifications/consultation-notification-preference.entity';
 import { Consultation } from '../schedule/entities/consultation.entity';
 import { Schedule } from '../schedule/entities/schedule.entity';
@@ -50,7 +43,6 @@ export class AdminService {
         private readonly usersService: UsersService,
         private readonly sessionsService: SessionsService,
         private readonly sessionsNotifier: SessionsNotifierService,
-        private readonly avatarService: AvatarService,
         private readonly departmentsService: DepartmentsService,
 
         @InjectRepository(Role)
@@ -70,9 +62,6 @@ export class AdminService {
 
         @InjectRepository(Department)
         private readonly departmentRepository: Repository<Department>,
-
-        @InjectRepository(Direction)
-        private readonly directionRepository: Repository<Direction>,
 
         @InjectRepository(Group)
         private readonly groupRepository: Repository<Group>,
@@ -119,7 +108,6 @@ export class AdminService {
         id: number,
         dto: UpdateUserDto,
         currentUserId: number,
-        photo?: Express.Multer.File,
     ): Promise<AdminUserResponse> {
         const user = await this.usersService.findByIdWithDetails(id);
         const trimmedLogin = dto.login.trim();
@@ -160,6 +148,7 @@ export class AdminService {
         }
 
         this.validateProfileFields(dto);
+        await this.validateStudentGroup(dto);
 
         const updateData: {
             login: string;
@@ -167,7 +156,6 @@ export class AdminService {
             surname: string;
             name: string;
             patronymic: string;
-            photoUrl: string | null;
             isActive: boolean;
             passwordHash?: string;
         } = {
@@ -176,7 +164,6 @@ export class AdminService {
             surname: dto.surname.trim(),
             name: dto.name.trim(),
             patronymic: dto.patronymic?.trim() || '',
-            photoUrl: user.photoUrl,
             isActive: dto.isActive ?? user.isActive,
         };
 
@@ -185,17 +172,6 @@ export class AdminService {
                 dto.password.trim(),
                 10,
             );
-        }
-
-        if (photo) {
-            updateData.photoUrl = await this.avatarService.saveAvatar(
-                id,
-                photo,
-                user.photoUrl,
-            );
-        } else if (dto.removePhoto) {
-            await this.avatarService.deleteAvatar(id, user.photoUrl);
-            updateData.photoUrl = null;
         }
 
         await this.usersService.update(id, updateData);
@@ -222,10 +198,7 @@ export class AdminService {
         };
     }
 
-    async createUser(
-        dto: CreateUserDto,
-        photo?: Express.Multer.File,
-    ): Promise<AdminUserResponse> {
+    async createUser(dto: CreateUserDto): Promise<AdminUserResponse> {
         const existingUser = await this.usersService.findByLogin(dto.login);
 
         if (existingUser) {
@@ -245,6 +218,7 @@ export class AdminService {
         }
 
         this.validateProfileFields(dto);
+        await this.validateStudentGroup(dto);
 
         const passwordHash = await bcrypt.hash(dto.password, 10);
 
@@ -255,20 +229,10 @@ export class AdminService {
             surname: dto.surname.trim(),
             name: dto.name.trim(),
             patronymic: dto.patronymic?.trim() || '',
-            photoUrl: null,
             isActive: true,
         });
 
         await this.createProfile(user.id, dto);
-
-        if (photo) {
-            const photoUrl = await this.avatarService.saveAvatar(
-                user.id,
-                photo,
-            );
-
-            await this.usersService.update(user.id, { photoUrl });
-        }
 
         const createdUser =
             await this.usersService.findByIdWithDetails(user.id);
@@ -286,9 +250,7 @@ export class AdminService {
             );
         }
 
-        const user = await this.usersService.findByIdWithDetails(id);
         await this.cleanupUserReferences(id);
-        await this.avatarService.deleteAvatar(id, user.photoUrl);
 
         try {
             await this.usersService.remove(id);
@@ -383,24 +345,18 @@ export class AdminService {
     private validateProfileFields(dto: {
         role: RoleCode;
         group?: string;
-        direction?: string;
         course?: number;
         departmentId?: number;
         department?: string;
         position?: string;
     }): void {
         if (dto.role === RoleCode.STUDENT) {
-            if (!dto.group?.trim() || !dto.direction?.trim() || !dto.course) {
+            if (!dto.group?.trim() || !dto.course) {
                 throw new BadRequestException(
-                    'Для студента нужны группа, направление и курс',
+                    'Для студента нужны группа и курс',
                 );
             }
 
-            const directionValidation = validateDirectionInput(dto.direction);
-
-            if (!directionValidation.valid) {
-                throw new BadRequestException(directionValidation.message);
-            }
         }
 
         if (dto.role === RoleCode.TEACHER) {
@@ -432,6 +388,19 @@ export class AdminService {
         }
     }
 
+    private async validateStudentGroup(
+        dto: CreateUserDto | UpdateUserDto,
+    ): Promise<void> {
+        if (dto.role !== RoleCode.STUDENT) {
+            return;
+        }
+
+        await this.findExistingGroup(
+            dto.group!.trim(),
+            this.mapEducationForm(dto.educationForm),
+        );
+    }
+
     private async createProfile(
         userId: number,
         dto: CreateUserDto | UpdateUserDto,
@@ -456,13 +425,8 @@ export class AdminService {
         userId: number,
         dto: CreateUserDto | UpdateUserDto,
     ): Promise<void> {
-        const direction = await this.findOrCreateDirection(dto.direction!.trim());
         const educationForm = this.mapEducationForm(dto.educationForm);
-        const group = await this.findOrCreateGroup(
-            dto.group!.trim(),
-            direction.id,
-            educationForm,
-        );
+        const group = await this.resolveStudentGroup(dto, educationForm);
 
         await this.studentProfileRepository.save({
             userId,
@@ -534,15 +498,8 @@ export class AdminService {
                     return;
                 }
 
-                const direction = await this.findOrCreateDirection(
-                    dto.direction!.trim(),
-                );
                 const educationForm = this.mapEducationForm(dto.educationForm);
-                const group = await this.findOrCreateGroup(
-                    dto.group!.trim(),
-                    direction.id,
-                    educationForm,
-                );
+                const group = await this.resolveStudentGroup(dto, educationForm);
 
                 await this.studentProfileRepository.update(profile.id, {
                     groupId: group.id,
@@ -618,61 +575,34 @@ export class AdminService {
         });
     }
 
-    private async findOrCreateDirection(name: string): Promise<Direction> {
-        const trimmed = name.trim();
-        const validation = validateDirectionInput(trimmed);
-
-        if (!validation.valid) {
-            throw new BadRequestException(validation.message);
-        }
-
-        const displayName = buildDirectionDisplayName(trimmed);
-        const storageCode = buildDirectionStorageCode(trimmed);
-
-        const existingByCode = await this.directionRepository.findOne({
-            where: { code: storageCode },
-        });
-
-        if (existingByCode) {
-            if (existingByCode.name !== displayName) {
-                existingByCode.name = displayName;
-                await this.directionRepository.save(existingByCode);
-            }
-
-            return existingByCode;
-        }
-
-        return this.directionRepository.save({
-            name: displayName,
-            code: storageCode,
-        });
-    }
-
-    private static readonly GROUP_LEGACY_COURSE = 1;
-
-    private async findOrCreateGroup(
-        name: string,
-        directionId: number,
+    private async resolveStudentGroup(
+        dto: CreateUserDto | UpdateUserDto,
         educationForm: EducationForm,
     ): Promise<Group> {
-        const existing = await this.groupRepository.findOne({
-            where: {
-                name,
-                directionId,
-                educationForm,
-            },
+        return this.findExistingGroup(dto.group!.trim(), educationForm);
+    }
+
+    private async findExistingGroup(
+        name: string,
+        educationForm: EducationForm,
+    ): Promise<Group> {
+        const groups = await this.groupRepository.find({
+            where: { name, educationForm },
         });
 
-        if (existing) {
-            return existing;
+        if (groups.length === 0) {
+            throw new BadRequestException(
+                `Группа «${name}» не найдена. Сначала добавьте её в академическую структуру.`,
+            );
         }
 
-        return this.groupRepository.save({
-            name,
-            directionId,
-            course: AdminService.GROUP_LEGACY_COURSE,
-            educationForm,
-        });
+        if (groups.length > 1) {
+            throw new BadRequestException(
+                `Найдено несколько групп «${name}». Уточните академическую структуру перед добавлением студента.`,
+            );
+        }
+
+        return groups[0];
     }
 
     private mapEducationForm(label?: string): EducationForm {

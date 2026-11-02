@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Group } from '../academic/entities/group.entity';
-import { Direction } from '../academic/entities/direction.entity';
 import { Subject } from '../academic/entities/subject.entity';
 import { Subgroup } from '../academic/entities/subgroup.entity';
 import { AcademicModule } from '../academic/academic.module';
@@ -58,7 +57,6 @@ import { NotificationsModule } from '../notifications/notifications.module';
             LessonType,
             Consultation,
             Group,
-            Direction,
             Subject,
             Subgroup,
             User,

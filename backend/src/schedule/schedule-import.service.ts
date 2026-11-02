@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Group, EducationForm } from '../academic/entities/group.entity';
-import { Direction } from '../academic/entities/direction.entity';
 import { Subject } from '../academic/entities/subject.entity';
 import { Subgroup } from '../academic/entities/subgroup.entity';
 
@@ -20,8 +19,6 @@ import { LessonTypeResolver } from './resolver/lesson-type.resolver';
 
 @Injectable()
 export class ScheduleImportService {
-    private static readonly IMPORT_DIRECTION_CODE = 'SCHEDULE_IMPORT';
-
     constructor(
         @InjectRepository(Schedule)
         private readonly schedulesRepository: Repository<Schedule>,
@@ -31,9 +28,6 @@ export class ScheduleImportService {
 
         @InjectRepository(Group)
         private readonly groupsRepository: Repository<Group>,
-
-        @InjectRepository(Direction)
-        private readonly directionsRepository: Repository<Direction>,
 
         @InjectRepository(Subject)
         private readonly subjectsRepository: Repository<Subject>,
@@ -46,23 +40,6 @@ export class ScheduleImportService {
         private readonly lessonTypeResolver: LessonTypeResolver,
     ) {}
 
-    private async findOrCreateImportDirection(): Promise<Direction> {
-        let direction = await this.directionsRepository.findOne({
-            where: { code: ScheduleImportService.IMPORT_DIRECTION_CODE },
-        });
-
-        if (!direction) {
-            direction = await this.directionsRepository.save(
-                this.directionsRepository.create({
-                    code: ScheduleImportService.IMPORT_DIRECTION_CODE,
-                    name: 'Импорт расписания',
-                }),
-            );
-        }
-
-        return direction;
-    }
-
     private async findOrCreateGroup(groupName: string): Promise<Group> {
         const trimmed = groupName.trim();
 
@@ -74,12 +51,9 @@ export class ScheduleImportService {
             return existing;
         }
 
-        const direction = await this.findOrCreateImportDirection();
-
         return this.groupsRepository.save(
             this.groupsRepository.create({
                 name: trimmed,
-                directionId: direction.id,
                 course: 1,
                 educationForm: EducationForm.FULL_TIME,
             }),

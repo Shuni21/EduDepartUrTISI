@@ -25,7 +25,6 @@ let User = class User {
     surname;
     name;
     patronymic;
-    photoUrl;
     isActive;
     createdAt;
     updatedAt;
@@ -68,10 +67,6 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], User.prototype, "patronymic", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "photoUrl", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: true }),
     __metadata("design:type", Boolean)

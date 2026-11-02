@@ -41,17 +41,9 @@ export class UpdateUserDto {
     @IsOptional()
     isActive?: boolean;
 
-    @IsBoolean()
-    @IsOptional()
-    removePhoto?: boolean;
-
     @IsString()
     @IsOptional()
     group?: string;
-
-    @IsString()
-    @IsOptional()
-    direction?: string;
 
     @IsString()
     @IsOptional()
@@ -83,7 +75,6 @@ export class UpdateUserDto {
 export type UserProfileInput = {
     role: RoleCode;
     group?: string;
-    direction?: string;
     educationForm?: string;
     course?: number;
     departmentId?: number;

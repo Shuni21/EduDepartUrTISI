@@ -64,7 +64,6 @@ let UsersService = class UsersService {
         'role',
         'studentProfile',
         'studentProfile.group',
-        'studentProfile.group.direction',
         'teacherProfile',
         'teacherProfile.department',
         'staffProfile',

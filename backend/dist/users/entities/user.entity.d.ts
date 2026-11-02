@@ -12,7 +12,6 @@ export declare class User {
     surname: string;
     name: string;
     patronymic: string;
-    photoUrl: string | null;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;

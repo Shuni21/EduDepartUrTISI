@@ -25,22 +25,13 @@ export type AcademicGroup = {
   id: number
   name: string
   educationForm: 'full_time' | 'part_time' | 'distance'
-  directionId: number
-  directionName: string
   students: AcademicMember[]
-}
-
-export type AcademicDirection = {
-  id: number
-  code: string
-  name: string
-  groups: AcademicGroup[]
 }
 
 export type AcademicStructureOverview = {
   teacherDepartments: AcademicDepartment[]
   staffDepartments: AcademicDepartment[]
-  directions: AcademicDirection[]
+  groups: AcademicGroup[]
 }
 
 export async function fetchAcademicOverview(): Promise<AcademicStructureOverview> {
@@ -48,28 +39,16 @@ export async function fetchAcademicOverview(): Promise<AcademicStructureOverview
   return response.data
 }
 
-export type CreateDirectionPayload = {
-  name: string
-}
-
 export type CreateGroupPayload = {
   name: string
   educationForm: AcademicGroup['educationForm']
 }
 
-export async function createAcademicDirection(
-    payload: CreateDirectionPayload,
-): Promise<AcademicDirection> {
-  const response = await api.post<AcademicDirection>('/admin/academic/directions', payload)
-  return response.data
-}
-
 export async function createAcademicGroup(
-    directionId: number,
     payload: CreateGroupPayload,
 ): Promise<AcademicGroup> {
   const response = await api.post<AcademicGroup>(
-      `/admin/academic/directions/${directionId}/groups`,
+      '/admin/academic/groups',
       payload,
   )
   return response.data
@@ -100,21 +79,8 @@ export async function deleteAcademicGroup(groupId: number): Promise<void> {
   await api.delete(`/admin/academic/groups/${groupId}`)
 }
 
-export async function deleteAcademicDirection(directionId: number): Promise<void> {
-  await api.delete(`/admin/academic/directions/${directionId}`)
-}
-
 export async function deleteAcademicDepartment(departmentId: number): Promise<void> {
   await api.delete(`/admin/academic/departments/${departmentId}`)
-}
-
-export async function mergeAcademicDirections(
-    sourceDirectionId: number,
-    targetDirectionId: number,
-): Promise<void> {
-  await api.post(
-      `/admin/academic/directions/${sourceDirectionId}/merge-into/${targetDirectionId}`,
-  )
 }
 
 export const educationFormLabels: Record<AcademicGroup['educationForm'], string> = {

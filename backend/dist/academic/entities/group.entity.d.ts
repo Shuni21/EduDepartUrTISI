@@ -1,4 +1,3 @@
-import { Direction } from './direction.entity';
 import { Subgroup } from './subgroup.entity';
 import { StudentProfile } from '../../users/entities/student-profile.entity';
 import { Schedule } from '../../schedule/entities/schedule.entity';
@@ -10,8 +9,6 @@ export declare enum EducationForm {
 export declare class Group {
     id: number;
     name: string;
-    directionId: number;
-    direction: Direction;
     course: number;
     educationForm: EducationForm;
     subgroups: Subgroup[];

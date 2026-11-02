@@ -20,9 +20,7 @@ class UpdateUserDto {
     name;
     patronymic;
     isActive;
-    removePhoto;
     group;
-    direction;
     educationForm;
     course;
     departmentId;
@@ -67,20 +65,10 @@ __decorate([
     __metadata("design:type", Boolean)
 ], UpdateUserDto.prototype, "isActive", void 0);
 __decorate([
-    (0, class_validator_1.IsBoolean)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Boolean)
-], UpdateUserDto.prototype, "removePhoto", void 0);
-__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "group", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], UpdateUserDto.prototype, "direction", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),

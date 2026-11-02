@@ -22,28 +22,47 @@ const schedule_slot_utils_1 = require("./parser/schedule-slot.utils");
 const SCHEDULE_TARGET_TYPES = new Set(['group', 'teacher', 'room']);
 function normalizeScheduleTarget(value) {
     if (!value || typeof value !== 'object') {
-        throw new websockets_1.WsException('Invalid schedule subscription');
+        throw new websockets_1.WsException('Invalid schedule subscription: expected an object');
     }
     const target = value;
-    if (typeof target.type !== 'string'
-        || !SCHEDULE_TARGET_TYPES.has(target.type)
-        || typeof target.identity !== 'string') {
-        throw new websockets_1.WsException('Invalid schedule subscription');
+    if (typeof target.type !== 'string' || !SCHEDULE_TARGET_TYPES.has(target.type)) {
+        throw new websockets_1.WsException('Invalid schedule subscription: type must be group, teacher, or room');
     }
-    const identity = target.identity.trim();
-    if (!identity || identity.length > 200 || /[\u0000-\u001F\u007F]/.test(identity)) {
-        throw new websockets_1.WsException('Invalid schedule identity');
+    if (typeof target.identity !== 'string') {
+        throw new websockets_1.WsException('Invalid schedule identity: expected a string');
+    }
+    const unsupportedControlCharacter = target.identity.match(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/);
+    if (unsupportedControlCharacter) {
+        const codePoint = unsupportedControlCharacter[0].codePointAt(0)?.toString(16).padStart(4, '0');
+        throw new websockets_1.WsException(`Invalid schedule identity: unsupported control character U+${codePoint}`);
+    }
+    const identity = target.identity
+        .replace(/[\t\r\n]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    if (!identity) {
+        throw new websockets_1.WsException('Invalid schedule identity: empty after whitespace normalization');
+    }
+    if (identity.length > 200) {
+        throw new websockets_1.WsException(`Invalid schedule identity: length ${identity.length} exceeds 200 characters`);
     }
     const normalizedIdentity = target.type === 'room'
         ? (0, schedule_slot_utils_1.normalizeRoomListKey)(identity)
         : identity.toUpperCase();
     if (!normalizedIdentity) {
-        throw new websockets_1.WsException('Invalid schedule identity');
+        throw new websockets_1.WsException(`Invalid schedule identity: no usable ${target.type} key after normalization`);
     }
     return {
         type: target.type,
         identity: normalizedIdentity,
     };
+}
+function getIdentityForLog(value) {
+    if (typeof value !== 'string') {
+        return '<non-string>';
+    }
+    const preview = value.slice(0, 80);
+    return `${JSON.stringify(preview)}${value.length > preview.length ? '…' : ''} (length=${value.length})`;
 }
 function getScheduleRoom(target) {
     return `schedule:${target.type}:${encodeURIComponent(target.identity)}`;
@@ -66,12 +85,21 @@ let ScheduleGateway = ScheduleGateway_1 = class ScheduleGateway {
         await client.leave(getScheduleRoom(target));
     }
     broadcastScheduleChanged(payload, targets) {
-        const rooms = Array.from(new Set(targets.map((target) => {
-            const normalizedTarget = normalizeScheduleTarget(target);
-            return getScheduleRoom(normalizedTarget);
-        })));
-        if (rooms.length > 0) {
-            this.server?.to(rooms).emit('schedule:changed', payload);
+        const rooms = new Set();
+        for (const target of targets) {
+            try {
+                rooms.add(getScheduleRoom(normalizeScheduleTarget(target)));
+            }
+            catch (error) {
+                if (!(error instanceof websockets_1.WsException)) {
+                    throw error;
+                }
+                this.logger.warn(`Skipping invalid schedule broadcast target: ${error.message}; `
+                    + `type=${JSON.stringify(target?.type)}, identity=${getIdentityForLog(target?.identity)}`);
+            }
+        }
+        if (rooms.size > 0) {
+            this.server?.to(Array.from(rooms)).emit('schedule:changed', payload);
         }
     }
     broadcastGlobalScheduleChanged(payload) {

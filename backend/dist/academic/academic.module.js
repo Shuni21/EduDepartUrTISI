@@ -13,7 +13,6 @@ const departments_controller_1 = require("./departments.controller");
 const departments_seed_service_1 = require("./departments-seed.service");
 const departments_service_1 = require("./departments.service");
 const department_entity_1 = require("./entities/department.entity");
-const direction_entity_1 = require("./entities/direction.entity");
 const group_entity_1 = require("./entities/group.entity");
 const subgroup_entity_1 = require("./entities/subgroup.entity");
 const subject_entity_1 = require("./entities/subject.entity");
@@ -25,7 +24,6 @@ exports.AcademicModule = AcademicModule = __decorate([
         imports: [
             typeorm_1.TypeOrmModule.forFeature([
                 department_entity_1.Department,
-                direction_entity_1.Direction,
                 group_entity_1.Group,
                 subgroup_entity_1.Subgroup,
                 subject_entity_1.Subject,

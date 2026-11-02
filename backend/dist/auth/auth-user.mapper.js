@@ -16,13 +16,11 @@ function mapUserToAuthResponse(user) {
         surname: user.surname,
         name: user.name,
         patronymic: user.patronymic,
-        photoUrl: user.photoUrl,
     };
     if (user.studentProfile) {
         return {
             ...base,
             group: user.studentProfile.group.name,
-            direction: user.studentProfile.group.direction.name,
             educationForm: educationFormLabels[user.studentProfile.educationForm],
             course: user.studentProfile.course,
         };

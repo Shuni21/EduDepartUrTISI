@@ -15,19 +15,19 @@ export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
     register(dto: RegisterDto): Promise<{
-        accessToken: any;
-        refreshToken: any;
+        accessToken: string;
+        refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
     login(dto: LoginDto): Promise<{
-        accessToken: any;
-        refreshToken: any;
+        accessToken: string;
+        refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
     me(req: AuthenticatedRequest): Promise<import("./auth-user.mapper").AuthUserResponse>;
     refresh(req: AuthenticatedRequest): Promise<{
-        accessToken: any;
-        refreshToken: any;
+        accessToken: string;
+        refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
     logout(req: AuthenticatedRequest): Promise<{
@@ -44,8 +44,8 @@ export declare class AuthController {
     } | {
         success: boolean;
         loggedOutAllDevices: boolean;
-        accessToken: any;
-        refreshToken: any;
+        accessToken: string;
+        refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
 }

@@ -200,14 +200,6 @@
   @apply flex items-center gap-[10px] text-[14px] text-[#24313f] dark:text-[#d5dde6] cursor-pointer;
 }
 
-.admin-edit-page .avatar-preview-row {
-  @apply flex items-center gap-[16px] flex-wrap;
-}
-
-.admin-edit-page .avatar-preview {
-  @apply w-[96px] h-[96px] rounded-full object-cover border-2 border-[#4ea3d7] bg-white dark:bg-[#252a31];
-}
-
 .topbar .profile-icon {
   @apply object-cover;
 }
@@ -456,10 +448,6 @@
   @apply bg-white dark:bg-[#252a31] border border-[#d7e0e9] dark:border-[#3a424d] rounded-[10px] p-[20px] mb-[20px];
 }
 
-.admin-edit-page .academic-create-panel--nested {
-  @apply mt-[16px] mb-0 bg-[#f8fbfd] dark:bg-[#2a3038];
-}
-
 .admin-edit-page .academic-create-panel__title {
   @apply m-0 mb-[14px] text-[16px] font-semibold text-[#24313f] dark:text-[#d5dde6];
 }
@@ -484,18 +472,6 @@
 
 .admin-edit-page .academic-group__header {
   @apply flex flex-wrap items-start justify-between gap-[12px] mb-[12px];
-}
-
-.admin-edit-page .academic-direction-actions {
-  @apply flex flex-col gap-[10px] min-w-[260px];
-}
-
-.admin-edit-page .academic-merge-row {
-  @apply flex flex-wrap gap-[10px];
-}
-
-.admin-edit-page .academic-merge-row .form-select {
-  @apply flex-1 min-w-[180px];
 }
 
 .admin-edit-page .academic-delete-btn {

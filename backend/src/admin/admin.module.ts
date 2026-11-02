@@ -5,7 +5,6 @@ import { UsersModule } from '../users/users.module';
 import { AcademicModule } from '../academic/academic.module';
 import { AuthModule } from '../auth/auth.module';
 import { SessionsModule } from '../sessions/sessions.module';
-import { UploadsModule } from '../uploads/uploads.module';
 
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
@@ -26,7 +25,6 @@ import { TeacherProfile } from '../users/entities/teacher-profile.entity';
 import { StaffProfile } from '../users/entities/staff-profile.entity';
 import { User } from '../users/entities/user.entity';
 import { Department } from '../academic/entities/department.entity';
-import { Direction } from '../academic/entities/direction.entity';
 import { Group } from '../academic/entities/group.entity';
 import { Subgroup } from '../academic/entities/subgroup.entity';
 
@@ -36,7 +34,6 @@ import { Subgroup } from '../academic/entities/subgroup.entity';
         AcademicModule,
         AuthModule,
         SessionsModule,
-        UploadsModule,
         TypeOrmModule.forFeature([
             RefreshToken,
             Role,
@@ -45,7 +42,6 @@ import { Subgroup } from '../academic/entities/subgroup.entity';
             TeacherProfile,
             StaffProfile,
             Department,
-            Direction,
             Group,
             Subgroup,
             Schedule,

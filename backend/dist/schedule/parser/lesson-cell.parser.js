@@ -5,6 +5,7 @@ exports.parseLessonCell = parseLessonCell;
 exports.isDistanceRoom = isDistanceRoom;
 exports.isAuditoriumRoomLabel = isAuditoriumRoomLabel;
 exports.isSharedMultiHallRoom = isSharedMultiHallRoom;
+exports.splitPhysicalRoomLabels = splitPhysicalRoomLabels;
 exports.splitRoomForSubgroups = splitRoomForSubgroups;
 const TEACHER_POSITION_PATTERNS = [
     /^ст\.?(?:\s*преподаватель)(?=\s|$|[.,;:])/i,
@@ -128,10 +129,10 @@ function parseLessonBlock(block) {
     }
     const { cleaned: cleanedType, subgroup: typeSubgroup } = extractSubgroupFromText(typePart);
     const lessonType = normalizeLessonType(cleanedType);
-    const teacherParts = teachersPart
+    const teacherParts = protectSubgroupSlash(teachersPart)
         .replace(/\s*\/\s*$/g, '')
         .split(/\s*\/\s*/)
-        .map((part) => part.trim())
+        .map((part) => restoreSubgroupSlash(part.trim()))
         .filter(Boolean);
     if (teacherParts.length === 0) {
         return [];
@@ -294,25 +295,66 @@ function isAuditoriumRoomLabel(room) {
 function isSharedMultiHallRoom(room) {
     return isAuditoriumRoomLabel(room);
 }
-function splitRoomForSubgroups(room, partsCount) {
+const PHYSICAL_ROOM_LABEL_PATTERN = /^(?:\d+[А-ЯA-Z]?(?:\s+УК\s*\d+)?|[IVXLCDM]+(?:\s+УК\s*\d+)?)$/iu;
+function splitPhysicalRoomLabels(room) {
+    if (!room?.trim()) {
+        return [];
+    }
+    const trimmed = room.trim();
+    if (isAuditoriumRoomLabel(trimmed)) {
+        return [trimmed];
+    }
+    const roomParts = trimmed
+        .split(/\s*,\s*/)
+        .map((part) => part.trim())
+        .filter(Boolean);
+    if (roomParts.length < 2 || roomParts.some((part) => !PHYSICAL_ROOM_LABEL_PATTERN.test(part))) {
+        return [trimmed];
+    }
+    const buildingMatch = roomParts[roomParts.length - 1]?.match(/\s+(УК\s*\d+)$/iu);
+    const building = buildingMatch?.[1].replace(/\s+/g, '').toUpperCase();
+    const normalizedRoomParts = roomParts.map((part) => {
+        const normalized = part.replace(/\s+/g, ' ').trim();
+        return building && !/\s+УК\s*\d+$/iu.test(normalized)
+            ? `${normalized} ${building}`
+            : normalized.replace(/\s+УК\s*(\d+)$/iu, ' УК$1');
+    });
+    return normalizedRoomParts;
+}
+function splitRoomForSubgroups(room, partsCount, subgroups = []) {
     const count = Math.max(partsCount, 1);
     if (!room?.trim()) {
         return Array.from({ length: count }, () => null);
     }
     const trimmed = room.trim();
-    if (isAuditoriumRoomLabel(trimmed)) {
+    if (count === 1 || isAuditoriumRoomLabel(trimmed)) {
         return Array.from({ length: count }, () => trimmed);
     }
-    if (count <= 1) {
-        return [trimmed];
-    }
-    const slashParts = trimmed
+    const subgroupRoomParts = trimmed
         .split(/\s*\/\s*/)
         .map((part) => part.trim())
         .filter(Boolean);
-    if (slashParts.length === count && !slashParts.some((part) => isAuditoriumRoomLabel(part))) {
-        return slashParts;
+    if (subgroupRoomParts.length !== count) {
+        return Array.from({ length: count }, () => trimmed);
     }
-    return Array.from({ length: count }, () => trimmed);
+    const building = trimmed.match(/\s+(УК\s*\d+)\s*$/iu)?.[1];
+    const subgroupRooms = subgroupRoomParts.map((part) => {
+        const normalizedPart = building && !/\s+УК\s*\d+\s*$/iu.test(part)
+            ? `${part} ${building}`
+            : part;
+        const labels = splitPhysicalRoomLabels(normalizedPart);
+        const parts = normalizedPart.split(/\s*,\s*/).map((label) => label.trim()).filter(Boolean);
+        return parts.every((label) => PHYSICAL_ROOM_LABEL_PATTERN.test(label))
+            ? labels.join(', ')
+            : null;
+    });
+    if (subgroupRooms.some((part) => part === null)) {
+        return Array.from({ length: count }, () => trimmed);
+    }
+    return Array.from({ length: count }, (_, index) => {
+        const subgroup = subgroups[index];
+        const roomIndex = subgroup === 1 || subgroup === 2 ? subgroup - 1 : index;
+        return subgroupRooms[roomIndex] ?? subgroupRooms[index] ?? trimmed;
+    });
 }
 //# sourceMappingURL=lesson-cell.parser.js.map

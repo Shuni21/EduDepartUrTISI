@@ -10,7 +10,6 @@ import PageFrame from '@/components/PageFrame.vue'
 import PasswordInput from '@/components/PasswordInput.vue'
 import type { AdminUser } from '@/api/admin'
 import type { UserRole } from '@/stores/auth'
-import { getPhotoUrl } from '@/config/api'
 
 const route = useRoute()
 const router = useRouter()
@@ -33,7 +32,6 @@ interface UserForm {
   position?: string
   cabinet?: string
   group?: string
-  direction?: string
   educationForm?: string
   course?: number
 }
@@ -50,15 +48,10 @@ const form = ref<UserForm>({
   position: '',
   cabinet: '',
   group: '',
-  direction: '',
   educationForm: 'Очная',
   course: 1,
 })
 
-const photoFile = ref<File | null>(null)
-const photoPreview = ref<string | null>(null)
-const currentPhotoUrl = ref<string | null>(null)
-const removePhoto = ref(false)
 const errors = ref<Partial<Record<keyof UserForm, string>>>({})
 const isSubmitting = ref(false)
 const isLoading = ref(true)
@@ -82,39 +75,8 @@ const educationFormOptions = [
 
 const courseOptions = [1, 2, 3, 4, 5, 6]
 
-const displayedPhoto = computed(() => {
-  if (photoPreview.value) {
-    return photoPreview.value
-  }
-
-  if (!removePhoto.value) {
-    return currentPhotoUrl.value
-  }
-
-  return null
-})
-
-const onPhotoSelected = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0] ?? null
-
-  photoFile.value = file
-  photoPreview.value = file ? URL.createObjectURL(file) : null
-  removePhoto.value = false
-}
-
-const markPhotoForRemoval = () => {
-  photoFile.value = null
-  photoPreview.value = null
-  removePhoto.value = true
-}
-
 const fillFormFromUser = async (user: AdminUser) => {
   skipRoleReset.value = true
-  removePhoto.value = false
-  photoFile.value = null
-  photoPreview.value = null
-  currentPhotoUrl.value = getPhotoUrl(user.photoUrl)
   form.value = {
     login: user.login,
     password: '',
@@ -128,7 +90,6 @@ const fillFormFromUser = async (user: AdminUser) => {
     position: user.position || '',
     cabinet: user.cabinet || '',
     group: user.group || '',
-    direction: user.direction || '',
     educationForm: user.educationForm || 'Очная',
     course: user.course || 1,
   }
@@ -147,7 +108,6 @@ watch(() => form.value.role, (newRole, oldRole) => {
   form.value.position = ''
   form.value.cabinet = ''
   form.value.group = ''
-  form.value.direction = ''
   form.value.educationForm = 'Очная'
   form.value.course = 1
 
@@ -236,7 +196,6 @@ const validate = (): boolean => {
 
   if (form.value.role === 'student') {
     if (!form.value.group?.trim()) errors.value.group = 'Введите группу'
-    if (!form.value.direction?.trim()) errors.value.direction = 'Введите направление подготовки'
     if (!form.value.course || form.value.course < 1 || form.value.course > 6) {
       errors.value.course = 'Выберите курс (1-6)'
     }
@@ -273,10 +232,8 @@ const handleSubmit = async () => {
       name: form.value.name.trim(),
       patronymic: form.value.patronymic.trim() || undefined,
       isActive: form.value.isActive,
-      removePhoto: removePhoto.value,
       password: form.value.password.trim() || undefined,
       group: form.value.group?.trim(),
-      direction: form.value.direction?.trim(),
       educationForm: form.value.educationForm,
       course: form.value.course,
       department: ['employee', 'admin'].includes(form.value.role)
@@ -287,7 +244,7 @@ const handleSubmit = async () => {
       cabinet: form.value.cabinet?.trim(),
     }
 
-    await usersStore.editUser(userId.value, payload, photoFile.value)
+    await usersStore.editUser(userId.value, payload)
 
     if (isSelf.value) {
       await authStore.validateSession()
@@ -368,7 +325,7 @@ const goBack = () => router.push({ name: 'admin-edit-user' })
               </div>
 
               <div class="form-row">
-                <div class="form-group">
+                <div class="form-group full-width">
                   <label for="role" class="form-label">Роль <span class="required">*</span></label>
                   <select
                     id="role"
@@ -382,31 +339,6 @@ const goBack = () => router.push({ name: 'admin-edit-user' })
                   </select>
                 </div>
 
-                <div class="form-group">
-                  <label for="photo" class="form-label">Фото пользователя</label>
-                  <input
-                    id="photo"
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    class="form-input"
-                    :disabled="isSubmitting"
-                    @change="onPhotoSelected"
-                  />
-                </div>
-              </div>
-
-              <div v-if="displayedPhoto" class="form-row">
-                <div class="form-group full-width avatar-preview-row">
-                  <img :src="displayedPhoto" alt="Фото пользователя" class="avatar-preview" />
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    :disabled="isSubmitting"
-                    @click="markPhotoForRemoval"
-                  >
-                    Удалить фото
-                  </button>
-                </div>
               </div>
 
               <div class="form-row">
@@ -455,21 +387,6 @@ const goBack = () => router.push({ name: 'admin-edit-user' })
                     <option v-for="c in courseOptions" :key="c" :value="c">{{ c }} курс</option>
                   </select>
                   <span v-if="errors.course" class="error-message">{{ errors.course }}</span>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group full-width">
-                  <label for="direction" class="form-label">Направление подготовки <span class="required">*</span></label>
-                  <input
-                    id="direction"
-                    v-model="form.direction"
-                    type="text"
-                    class="form-input"
-                    :class="{ error: errors.direction }"
-                    placeholder="09.03.01 Информатика и вычислительная техника"
-                    :disabled="isSubmitting"
-                  />
-                  <span v-if="errors.direction" class="error-message">{{ errors.direction }}</span>
                 </div>
               </div>
               <div class="form-row">

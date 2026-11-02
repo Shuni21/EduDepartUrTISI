@@ -18,11 +18,8 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const department_entity_1 = require("../academic/entities/department.entity");
-const direction_entity_1 = require("../academic/entities/direction.entity");
 const group_entity_1 = require("../academic/entities/group.entity");
 const subgroup_entity_1 = require("../academic/entities/subgroup.entity");
-const direction_utils_1 = require("../academic/direction.utils");
-const student_profile_entity_1 = require("../users/entities/student-profile.entity");
 const schedule_entity_1 = require("../schedule/entities/schedule.entity");
 const user_entity_1 = require("../users/entities/user.entity");
 const teacher_profile_entity_1 = require("../users/entities/teacher-profile.entity");
@@ -30,22 +27,17 @@ const staff_profile_entity_1 = require("../users/entities/staff-profile.entity")
 let AdminAcademicService = class AdminAcademicService {
     static { AdminAcademicService_1 = this; }
     departmentRepository;
-    directionRepository;
     groupRepository;
     subgroupRepository;
-    studentProfileRepository;
     scheduleRepository;
     usersRepository;
     teacherProfileRepository;
     staffProfileRepository;
     static STAFF_DEPARTMENT_MARKERS = ['учебный отдел'];
-    static IMPORT_DIRECTION_CODE = 'SCHEDULE_IMPORT';
-    constructor(departmentRepository, directionRepository, groupRepository, subgroupRepository, studentProfileRepository, scheduleRepository, usersRepository, teacherProfileRepository, staffProfileRepository) {
+    constructor(departmentRepository, groupRepository, subgroupRepository, scheduleRepository, usersRepository, teacherProfileRepository, staffProfileRepository) {
         this.departmentRepository = departmentRepository;
-        this.directionRepository = directionRepository;
         this.groupRepository = groupRepository;
         this.subgroupRepository = subgroupRepository;
-        this.studentProfileRepository = studentProfileRepository;
         this.scheduleRepository = scheduleRepository;
         this.usersRepository = usersRepository;
         this.teacherProfileRepository = teacherProfileRepository;
@@ -84,43 +76,32 @@ let AdminAcademicService = class AdminAcademicService {
             }
         }
         teacherDepartments.sort((left, right) => (left.shortName ?? left.name).localeCompare(right.shortName ?? right.name, 'ru', { sensitivity: 'base' }));
-        const directions = await this.directionRepository.find({
+        const groups = await this.groupRepository.find({
             relations: {
-                groups: {
-                    studentProfiles: {
-                        user: {
-                            role: true,
-                        },
+                studentProfiles: {
+                    user: {
+                        role: true,
                     },
                 },
             },
-            order: { name: 'ASC' },
+            order: { name: 'ASC', educationForm: 'ASC' },
         });
         return {
             teacherDepartments,
             staffDepartments,
-            directions: directions
-                .filter((direction) => direction.code !== AdminAcademicService_1.IMPORT_DIRECTION_CODE)
-                .map((direction) => ({
-                id: direction.id,
-                code: direction.code,
-                name: direction.name,
-                groups: direction.groups
-                    .map((group) => ({
-                    id: group.id,
-                    name: group.name,
-                    educationForm: group.educationForm,
-                    directionId: direction.id,
-                    directionName: direction.name,
-                    students: group.studentProfiles
-                        .map((profile) => this.mapStudentMember(profile))
-                        .sort((left, right) => left.fullName.localeCompare(right.fullName, 'ru', {
-                        sensitivity: 'base',
-                    })),
-                }))
-                    .sort((left, right) => left.name.localeCompare(right.name, 'ru', {
+            groups: groups
+                .map((group) => ({
+                id: group.id,
+                name: group.name,
+                educationForm: group.educationForm,
+                students: group.studentProfiles
+                    .map((profile) => this.mapStudentMember(profile))
+                    .sort((left, right) => left.fullName.localeCompare(right.fullName, 'ru', {
                     sensitivity: 'base',
                 })),
+            }))
+                .sort((left, right) => left.name.localeCompare(right.name, 'ru', {
+                sensitivity: 'base',
             })),
         };
     }
@@ -228,53 +209,19 @@ let AdminAcademicService = class AdminAcademicService {
         department.staffProfiles = [];
         return this.mapDepartment(department, false);
     }
-    async createDirection(dto) {
-        const trimmed = dto.name.trim();
-        const validation = (0, direction_utils_1.validateDirectionInput)(trimmed);
-        if (!validation.valid) {
-            throw new common_1.BadRequestException(validation.message);
-        }
-        const displayName = (0, direction_utils_1.buildDirectionDisplayName)(trimmed);
-        const storageCode = (0, direction_utils_1.buildDirectionStorageCode)(trimmed);
-        if (storageCode === AdminAcademicService_1.IMPORT_DIRECTION_CODE) {
-            throw new common_1.BadRequestException('Недопустимое название направления');
-        }
-        const existingByCode = await this.directionRepository.findOne({
-            where: { code: storageCode },
-        });
-        if (existingByCode) {
-            throw new common_1.ConflictException('Направление с таким кодом уже существует');
-        }
-        const direction = await this.directionRepository.save({
-            name: displayName,
-            code: storageCode,
-        });
-        return this.mapDirection(direction, []);
-    }
-    async createGroup(directionId, dto) {
-        const direction = await this.directionRepository.findOne({
-            where: { id: directionId },
-        });
-        if (!direction) {
-            throw new common_1.NotFoundException('Направление не найдено');
-        }
-        if (direction.code === AdminAcademicService_1.IMPORT_DIRECTION_CODE) {
-            throw new common_1.BadRequestException('Нельзя добавлять группы в служебное направление');
-        }
+    async createGroup(dto) {
         const groupName = dto.name.trim();
         const existing = await this.groupRepository.findOne({
             where: {
                 name: groupName,
-                directionId,
                 educationForm: dto.educationForm,
             },
         });
         if (existing) {
-            throw new common_1.ConflictException('Такая группа уже существует в этом направлении');
+            throw new common_1.ConflictException('Такая группа уже существует');
         }
         const group = await this.groupRepository.save({
             name: groupName,
-            directionId,
             course: 1,
             educationForm: dto.educationForm,
         });
@@ -282,8 +229,6 @@ let AdminAcademicService = class AdminAcademicService {
             id: group.id,
             name: group.name,
             educationForm: group.educationForm,
-            directionId: direction.id,
-            directionName: direction.name,
             students: [],
         };
     }
@@ -308,35 +253,6 @@ let AdminAcademicService = class AdminAcademicService {
         await this.groupRepository.delete(groupId);
         return { success: true };
     }
-    async deleteDirection(directionId) {
-        const direction = await this.directionRepository.findOne({
-            where: { id: directionId },
-            relations: { groups: { studentProfiles: true } },
-        });
-        if (!direction) {
-            throw new common_1.NotFoundException('Направление не найдено');
-        }
-        if (direction.code === AdminAcademicService_1.IMPORT_DIRECTION_CODE) {
-            throw new common_1.BadRequestException('Это служебное направление удалить нельзя');
-        }
-        for (const group of direction.groups) {
-            if (group.studentProfiles.length > 0) {
-                throw new common_1.BadRequestException('Нельзя удалить направление: в его группах есть студенты');
-            }
-            const schedulesCount = await this.scheduleRepository.count({
-                where: { groupId: group.id },
-            });
-            if (schedulesCount > 0) {
-                throw new common_1.BadRequestException('Нельзя удалить направление: к его группам привязано расписание');
-            }
-        }
-        for (const group of direction.groups) {
-            await this.subgroupRepository.delete({ groupId: group.id });
-        }
-        await this.groupRepository.delete({ directionId });
-        await this.directionRepository.delete(directionId);
-        return { success: true };
-    }
     async deleteDepartment(departmentId) {
         const department = await this.departmentRepository.findOne({
             where: { id: departmentId },
@@ -356,42 +272,6 @@ let AdminAcademicService = class AdminAcademicService {
             throw new common_1.BadRequestException('Нельзя удалить отдел: в нём есть сотрудники');
         }
         await this.departmentRepository.delete(departmentId);
-        return { success: true };
-    }
-    async mergeDirections(sourceDirectionId, targetDirectionId) {
-        if (sourceDirectionId === targetDirectionId) {
-            throw new common_1.BadRequestException('Нельзя объединить направление с самим собой');
-        }
-        const source = await this.directionRepository.findOne({
-            where: { id: sourceDirectionId },
-            relations: { groups: true },
-        });
-        const target = await this.directionRepository.findOne({
-            where: { id: targetDirectionId },
-            relations: { groups: true },
-        });
-        if (!source || !target) {
-            throw new common_1.NotFoundException('Направление не найдено');
-        }
-        if (source.code === AdminAcademicService_1.IMPORT_DIRECTION_CODE) {
-            throw new common_1.BadRequestException('Служебное направление объединить нельзя');
-        }
-        for (const sourceGroup of source.groups) {
-            const targetGroup = target.groups.find((group) => group.name === sourceGroup.name
-                && group.educationForm === sourceGroup.educationForm);
-            if (targetGroup) {
-                await this.studentProfileRepository.update({ groupId: sourceGroup.id }, { groupId: targetGroup.id });
-                await this.scheduleRepository.update({ groupId: sourceGroup.id }, { groupId: targetGroup.id });
-                await this.subgroupRepository.delete({ groupId: sourceGroup.id });
-                await this.groupRepository.delete(sourceGroup.id);
-            }
-            else {
-                await this.groupRepository.update(sourceGroup.id, {
-                    directionId: targetDirectionId,
-                });
-            }
-        }
-        await this.directionRepository.delete(sourceDirectionId);
         return { success: true };
     }
     isTeacherDepartment(department) {
@@ -456,14 +336,6 @@ let AdminAcademicService = class AdminAcademicService {
             isActive: profile.user.isActive,
         };
     }
-    mapDirection(direction, groups) {
-        return {
-            id: direction.id,
-            code: direction.code,
-            name: direction.name,
-            groups,
-        };
-    }
     formatFullName(user) {
         return [user.surname, user.name, user.patronymic]
             .filter(Boolean)
@@ -474,17 +346,13 @@ exports.AdminAcademicService = AdminAcademicService;
 exports.AdminAcademicService = AdminAcademicService = AdminAcademicService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(department_entity_1.Department)),
-    __param(1, (0, typeorm_1.InjectRepository)(direction_entity_1.Direction)),
-    __param(2, (0, typeorm_1.InjectRepository)(group_entity_1.Group)),
-    __param(3, (0, typeorm_1.InjectRepository)(subgroup_entity_1.Subgroup)),
-    __param(4, (0, typeorm_1.InjectRepository)(student_profile_entity_1.StudentProfile)),
-    __param(5, (0, typeorm_1.InjectRepository)(schedule_entity_1.Schedule)),
-    __param(6, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
-    __param(7, (0, typeorm_1.InjectRepository)(teacher_profile_entity_1.TeacherProfile)),
-    __param(8, (0, typeorm_1.InjectRepository)(staff_profile_entity_1.StaffProfile)),
+    __param(1, (0, typeorm_1.InjectRepository)(group_entity_1.Group)),
+    __param(2, (0, typeorm_1.InjectRepository)(subgroup_entity_1.Subgroup)),
+    __param(3, (0, typeorm_1.InjectRepository)(schedule_entity_1.Schedule)),
+    __param(4, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
+    __param(5, (0, typeorm_1.InjectRepository)(teacher_profile_entity_1.TeacherProfile)),
+    __param(6, (0, typeorm_1.InjectRepository)(staff_profile_entity_1.StaffProfile)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository,
-        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,

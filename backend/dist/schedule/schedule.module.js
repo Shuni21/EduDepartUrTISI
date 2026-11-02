@@ -10,7 +10,6 @@ exports.ScheduleModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const group_entity_1 = require("../academic/entities/group.entity");
-const direction_entity_1 = require("../academic/entities/direction.entity");
 const subject_entity_1 = require("../academic/entities/subject.entity");
 const subgroup_entity_1 = require("../academic/entities/subgroup.entity");
 const academic_module_1 = require("../academic/academic.module");
@@ -64,7 +63,6 @@ exports.ScheduleModule = ScheduleModule = __decorate([
                 lesson_type_entity_1.LessonType,
                 consultation_entity_1.Consultation,
                 group_entity_1.Group,
-                direction_entity_1.Direction,
                 subject_entity_1.Subject,
                 subgroup_entity_1.Subgroup,
                 user_entity_1.User,

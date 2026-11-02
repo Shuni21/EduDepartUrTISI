@@ -9,8 +9,8 @@ const storage_1 = require("./config/storage");
 const bootstrap = async () => {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useWebSocketAdapter(new platform_socket_io_1.IoAdapter(app));
-    app.useStaticAssets((0, storage_1.getStorageRoot)(), {
-        prefix: '/uploads/',
+    app.useStaticAssets((0, storage_1.getSchedulesDir)(), {
+        prefix: '/uploads/schedules/',
     });
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,

@@ -10,10 +10,8 @@ export type AuthUserResponse = {
     surname: string;
     name: string;
     patronymic: string;
-    photoUrl: string | null;
     canManageSchedule?: boolean;
     group?: string;
-    direction?: string;
     educationForm?: string;
     course?: number;
     position?: string;
@@ -36,14 +34,12 @@ export function mapUserToAuthResponse(user: User): AuthUserResponse {
         surname: user.surname,
         name: user.name,
         patronymic: user.patronymic,
-        photoUrl: user.photoUrl,
     };
 
     if (user.studentProfile) {
         return {
             ...base,
             group: user.studentProfile.group.name,
-            direction: user.studentProfile.group.direction.name,
             educationForm: educationFormLabels[user.studentProfile.educationForm],
             course: user.studentProfile.course,
         };

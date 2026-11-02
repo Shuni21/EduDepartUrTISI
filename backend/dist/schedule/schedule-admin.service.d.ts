@@ -1,6 +1,5 @@
 import { Repository } from 'typeorm';
 import { Group } from '../academic/entities/group.entity';
-import { Direction } from '../academic/entities/direction.entity';
 import { Subject } from '../academic/entities/subject.entity';
 import { Subgroup } from '../academic/entities/subgroup.entity';
 import { CreateScheduleItemDto, ScheduleItemPreviewDto, ScheduleItemPreviewResultDto, ScheduleTransferRecommendationDto, UpdateScheduleItemDto } from './dto/schedule-item.dto';
@@ -18,7 +17,6 @@ export declare class ScheduleAdminService {
     private readonly itemsRepository;
     private readonly schedulesRepository;
     private readonly groupsRepository;
-    private readonly directionsRepository;
     private readonly subjectsRepository;
     private readonly subgroupsRepository;
     private readonly preholidayDaysRepository;
@@ -28,11 +26,9 @@ export declare class ScheduleAdminService {
     private readonly scheduleNotifier;
     private readonly notificationsService;
     private readonly linkedLessonService;
-    private static readonly IMPORT_DIRECTION_CODE;
-    constructor(itemsRepository: Repository<ScheduleItem>, schedulesRepository: Repository<Schedule>, groupsRepository: Repository<Group>, directionsRepository: Repository<Direction>, subjectsRepository: Repository<Subject>, subgroupsRepository: Repository<Subgroup>, preholidayDaysRepository: Repository<SchedulePreholidayDay>, roomResolver: RoomResolver, teacherResolver: TeacherResolver, lessonTypeResolver: LessonTypeResolver, scheduleNotifier: ScheduleNotifierService, notificationsService: NotificationsService, linkedLessonService: LinkedLessonService);
+    constructor(itemsRepository: Repository<ScheduleItem>, schedulesRepository: Repository<Schedule>, groupsRepository: Repository<Group>, subjectsRepository: Repository<Subject>, subgroupsRepository: Repository<Subgroup>, preholidayDaysRepository: Repository<SchedulePreholidayDay>, roomResolver: RoomResolver, teacherResolver: TeacherResolver, lessonTypeResolver: LessonTypeResolver, scheduleNotifier: ScheduleNotifierService, notificationsService: NotificationsService, linkedLessonService: LinkedLessonService);
     private toDate;
     private normalizeTeacherLabel;
-    private findOrCreateImportDirection;
     private findOrCreateGroup;
     private findOrCreateSubject;
     private findSubgroup;

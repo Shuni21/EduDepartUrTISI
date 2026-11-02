@@ -89,7 +89,6 @@ export class UsersSeedService implements OnModuleInit {
             surname: seedUser.surname,
             name: seedUser.name,
             patronymic: seedUser.patronymic,
-            photoUrl: null,
             isActive: true,
         });
 

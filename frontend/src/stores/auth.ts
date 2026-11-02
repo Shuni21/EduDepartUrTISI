@@ -17,10 +17,8 @@ export type AuthUser = {
   surname: string
   name: string
   patronymic: string
-  photoUrl?: string | null
   canManageSchedule?: boolean
   group?: string
-  direction?: string
   educationForm?: string
   course?: number
   position?: string

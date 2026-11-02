@@ -35,9 +35,12 @@ function subgroupsConflict(first, second) {
     return first.subgroup === second.subgroup;
 }
 function hasSameRoom(first, second) {
-    const firstRoom = (0, schedule_slot_utils_1.normalizeRoomValue)(first.room);
-    const secondRoom = (0, schedule_slot_utils_1.normalizeRoomValue)(second.room);
-    return Boolean(firstRoom && secondRoom && firstRoom === secondRoom);
+    const firstRooms = new Set((0, lesson_cell_parser_1.splitPhysicalRoomLabels)(first.room)
+        .map(schedule_slot_utils_1.normalizeRoomValue)
+        .filter((room) => room !== null));
+    return (0, lesson_cell_parser_1.splitPhysicalRoomLabels)(second.room)
+        .map(schedule_slot_utils_1.normalizeRoomValue)
+        .some((room) => room !== null && firstRooms.has(room));
 }
 function isSharedHall(first, second) {
     return first.isSharedMultiHall === true

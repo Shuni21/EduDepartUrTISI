@@ -16,13 +16,13 @@ export declare class AuthService {
     private readonly sessionsNotifier;
     constructor(usersService: UsersService, jwtService: JwtService, configService: ConfigService, refreshTokenRepository: Repository<RefreshToken>, sessionsNotifier: SessionsNotifierService);
     register(dto: RegisterDto): Promise<{
-        accessToken: any;
-        refreshToken: any;
+        accessToken: string;
+        refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
     login(dto: LoginDto): Promise<{
-        accessToken: any;
-        refreshToken: any;
+        accessToken: string;
+        refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
     changePassword(userId: number, currentSessionId: number, dto: ChangePasswordDto): Promise<{
@@ -31,8 +31,8 @@ export declare class AuthService {
     } | {
         success: boolean;
         loggedOutAllDevices: boolean;
-        accessToken: any;
-        refreshToken: any;
+        accessToken: string;
+        refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
     listUserSessions(userId: number, currentSessionId: number): Promise<UserSessionResponse[]>;
@@ -42,8 +42,8 @@ export declare class AuthService {
     }>;
     getCurrentUser(userId: number): Promise<import("./auth-user.mapper").AuthUserResponse>;
     refresh(userId: number, refreshToken: string): Promise<{
-        accessToken: any;
-        refreshToken: any;
+        accessToken: string;
+        refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
     logout(userId: number, sessionId: number): Promise<{

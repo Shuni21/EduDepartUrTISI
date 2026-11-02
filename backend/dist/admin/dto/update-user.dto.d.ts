@@ -7,9 +7,7 @@ export declare class UpdateUserDto {
     name: string;
     patronymic?: string;
     isActive?: boolean;
-    removePhoto?: boolean;
     group?: string;
-    direction?: string;
     educationForm?: string;
     course?: number;
     departmentId?: number;
@@ -20,7 +18,6 @@ export declare class UpdateUserDto {
 export type UserProfileInput = {
     role: RoleCode;
     group?: string;
-    direction?: string;
     educationForm?: string;
     course?: number;
     departmentId?: number;

@@ -42,9 +42,6 @@ export class User {
     @Column()
     patronymic!: string;
 
-    @Column({ type: 'varchar', nullable: true })
-    photoUrl!: string | null;
-
     @Column({ default: true })
     isActive!: boolean;
 

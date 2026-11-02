@@ -8,15 +8,15 @@ import {
     getLocalIpAddresses,
     isAllowedCorsOrigin,
 } from './config/network';
-import { getStorageRoot } from './config/storage';
+import { getSchedulesDir } from './config/storage';
 
 const bootstrap = async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useWebSocketAdapter(new IoAdapter(app));
 
-  app.useStaticAssets(getStorageRoot(), {
-    prefix: '/uploads/',
+  app.useStaticAssets(getSchedulesDir(), {
+    prefix: '/uploads/schedules/',
   });
 
   app.useGlobalPipes(new ValidationPipe({

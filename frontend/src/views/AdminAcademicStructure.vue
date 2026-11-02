@@ -6,20 +6,16 @@ import { useAuthStore } from '@/stores/auth'
 import { useConfirmDialogStore } from '@/stores/confirmDialog'
 import { getErrorRoute } from '@/config/errorPages'
 import {
-  createAcademicDirection,
   createAcademicGroup,
   createStaffDepartment,
   createTeacherDepartment,
-  deleteAcademicDirection,
   deleteAcademicDepartment,
   deleteAcademicGroup,
   educationFormLabels,
   fetchAcademicOverview,
-  mergeAcademicDirections,
   roleLabels,
   selectableEducationFormOptions,
   type AcademicDepartment,
-  type AcademicDirection,
   type AcademicGroup,
   type AcademicStructureOverview,
 } from '@/api/adminAcademic'
@@ -35,18 +31,16 @@ const overview = ref<AcademicStructureOverview | null>(null)
 const isLoading = ref(false)
 const pageError = ref('')
 const structureSearch = ref('')
-const mergeTargetByDirection = ref<Record<number, string>>({})
 const deletingGroupId = ref<number | null>(null)
-const deletingDirectionId = ref<number | null>(null)
 const deletingDepartmentId = ref<number | null>(null)
-const mergingDirectionId = ref<number | null>(null)
-const newDirectionName = ref('')
-const isCreatingDirection = ref(false)
-const creatingGroupForDirectionId = ref<number | null>(null)
-const newGroupForms = ref<Record<number, {
+const isCreatingGroup = ref(false)
+const newGroupForm = ref<{
   name: string
   educationForm: AcademicGroup['educationForm']
-}>>({})
+}>({
+  name: '',
+  educationForm: 'full_time',
+})
 
 const newTeacherDepartment = ref({
   shortName: '',
@@ -102,24 +96,18 @@ const filteredStaffDepartments = computed(() =>
     filterDepartments(overview.value?.staffDepartments ?? []),
 )
 
-const filteredDirections = computed(() => {
+const filteredGroups = computed(() => {
   const query = structureSearch.value.trim().toLowerCase()
-  const directions = overview.value?.directions ?? []
+  const groups = overview.value?.groups ?? []
 
   if (!query) {
-    return directions
+    return groups
   }
 
-  return directions
-      .map((direction) => ({
-        ...direction,
-        groups: direction.groups.filter((group) =>
-            group.name.toLowerCase().includes(query)
-            || direction.name.toLowerCase().includes(query)
-            || group.students.some((student) => matchesMember(student, query)),
-        ),
-      }))
-      .filter((direction) => direction.groups.length > 0)
+  return groups.filter((group) =>
+    group.name.toLowerCase().includes(query)
+    || group.students.some((student) => matchesMember(student, query)),
+  )
 })
 
 function filterDepartments(departments: AcademicDepartment[]) {
@@ -172,24 +160,12 @@ const membersCountLabel = (department: AcademicDepartment) => {
   return `${count} сотрудников`
 }
 
-function directionHasStudents(direction: AcademicDirection): boolean {
-  return direction.groups.some((group) => group.students.length > 0)
-}
-
-function canDeleteDirection(direction: AcademicDirection): boolean {
-  return !directionHasStudents(direction)
-}
-
 function canDeleteGroup(group: AcademicGroup): boolean {
   return group.students.length === 0
 }
 
 function canDeleteDepartment(department: AcademicDepartment): boolean {
   return department.members.length === 0
-}
-
-function otherDirections(directionId: number): AcademicDirection[] {
-  return (overview.value?.directions ?? []).filter((direction) => direction.id !== directionId)
 }
 
 async function deleteDepartment(department: AcademicDepartment) {
@@ -249,103 +225,6 @@ async function deleteGroup(group: AcademicGroup) {
   }
 }
 
-async function deleteDirection(direction: AcademicDirection) {
-  if (!canDeleteDirection(direction)) {
-    return
-  }
-
-  const confirmed = await confirmDialog.confirm({
-    message: `Удалить направление «${direction.name}»?`,
-    confirmText: 'Удалить',
-    variant: 'danger',
-  })
-
-  if (!confirmed) {
-    return
-  }
-
-  deletingDirectionId.value = direction.id
-  pageError.value = ''
-
-  try {
-    await deleteAcademicDirection(direction.id)
-    await loadOverview()
-  } catch (err: any) {
-    pageError.value = err.response?.data?.message || 'Не удалось удалить направление'
-  } finally {
-    deletingDirectionId.value = null
-  }
-}
-
-async function mergeDirection(sourceDirection: AcademicDirection) {
-  const targetId = Number(mergeTargetByDirection.value[sourceDirection.id])
-
-  if (!targetId) {
-    return
-  }
-
-  const target = overview.value?.directions.find((direction) => direction.id === targetId)
-
-  if (!target) {
-    return
-  }
-
-  const confirmed = await confirmDialog.confirm({
-    message: `Объединить «${sourceDirection.name}» с «${target.name}»? Группы и студенты будут перенесены.`,
-    confirmText: 'Объединить',
-  })
-
-  if (!confirmed) {
-    return
-  }
-
-  mergingDirectionId.value = sourceDirection.id
-  pageError.value = ''
-
-  try {
-    await mergeAcademicDirections(sourceDirection.id, targetId)
-    mergeTargetByDirection.value[sourceDirection.id] = ''
-    await loadOverview()
-  } catch (err: any) {
-    pageError.value = err.response?.data?.message || 'Не удалось объединить направления'
-  } finally {
-    mergingDirectionId.value = null
-  }
-}
-
-function getGroupForm(directionId: number) {
-  if (!newGroupForms.value[directionId]) {
-    newGroupForms.value[directionId] = {
-      name: '',
-      educationForm: 'full_time',
-    }
-  }
-
-  return newGroupForms.value[directionId]
-}
-
-async function createDirection() {
-  const name = newDirectionName.value.trim()
-
-  if (!name) {
-    pageError.value = 'Введите название направления'
-    return
-  }
-
-  isCreatingDirection.value = true
-  pageError.value = ''
-
-  try {
-    await createAcademicDirection({ name })
-    newDirectionName.value = ''
-    await loadOverview()
-  } catch (err: any) {
-    pageError.value = err.response?.data?.message || 'Не удалось создать направление'
-  } finally {
-    isCreatingDirection.value = false
-  }
-}
-
 async function createTeacherDepartmentSubmit() {
   const shortName = newTeacherDepartment.value.shortName.trim()
   const name = newTeacherDepartment.value.name.trim()
@@ -391,34 +270,29 @@ async function createStaffDepartmentSubmit() {
   }
 }
 
-async function createGroup(directionId: number) {
-  const form = getGroupForm(directionId)
-  const name = form.name.trim()
+async function createGroup() {
+  const name = newGroupForm.value.name.trim()
 
   if (!name) {
     pageError.value = 'Введите название группы'
     return
   }
 
-  creatingGroupForDirectionId.value = directionId
+  isCreatingGroup.value = true
   pageError.value = ''
 
   try {
-    await createAcademicGroup(directionId, {
+    await createAcademicGroup({
       name,
-      educationForm: form.educationForm,
+      educationForm: newGroupForm.value.educationForm,
     })
 
-    newGroupForms.value[directionId] = {
-      name: '',
-      educationForm: form.educationForm,
-    }
-
+    newGroupForm.value.name = ''
     await loadOverview()
   } catch (err: any) {
     pageError.value = err.response?.data?.message || 'Не удалось создать группу'
   } finally {
-    creatingGroupForDirectionId.value = null
+    isCreatingGroup.value = false
   }
 }
 </script>
@@ -464,87 +338,49 @@ async function createGroup(directionId: number) {
         <template v-else-if="overview">
           <template v-if="activeTab === 'groups'">
             <div class="academic-create-panel">
-              <h2 class="academic-create-panel__title">Новое направление</h2>
-              <div class="academic-create-row">
+              <h2 class="academic-create-panel__title">Новая группа</h2>
+              <div class="academic-create-group-form">
                 <input
-                  v-model="newDirectionName"
+                  v-model="newGroupForm.name"
                   class="form-input"
                   type="text"
-                  placeholder="Например: 09.03.01 Информатика и вычислительная техника"
-                  :disabled="isCreatingDirection"
+                  placeholder="Например: ПЕ-316"
+                  :disabled="isCreatingGroup"
                 >
+                <select
+                  v-model="newGroupForm.educationForm"
+                  class="form-select"
+                  :disabled="isCreatingGroup"
+                >
+                  <option
+                    v-for="option in educationFormOptions"
+                    :key="option.value"
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
                 <button
                   type="button"
                   class="btn btn-primary"
-                  :disabled="isCreatingDirection || !newDirectionName.trim()"
-                  @click="createDirection"
+                  :disabled="isCreatingGroup || !newGroupForm.name.trim()"
+                  @click="createGroup"
                 >
-                  {{ isCreatingDirection ? '...' : 'Добавить направление' }}
+                  {{ isCreatingGroup ? '...' : 'Добавить группу' }}
                 </button>
               </div>
             </div>
 
-            <p v-if="filteredDirections.length === 0" class="card-subtitle">
-              Направления не найдены
+            <p v-if="filteredGroups.length === 0" class="card-subtitle">
+              Группы не найдены
             </p>
 
             <div v-else class="academic-sections">
               <article
-                v-for="direction in filteredDirections"
-                :key="direction.id"
+                v-for="group in filteredGroups"
+                :key="group.id"
                 class="academic-section"
               >
-                <div class="academic-section__header">
-                  <div>
-                    <h2 class="academic-section__title">{{ direction.name }}</h2>
-                    <p class="academic-section__meta">
-                      {{ direction.groups.length }} групп
-                    </p>
-                  </div>
-
-                  <div class="academic-direction-actions">
-                    <div v-if="otherDirections(direction.id).length > 0" class="academic-merge-row">
-                      <select
-                        v-model="mergeTargetByDirection[direction.id]"
-                        class="form-select"
-                        :disabled="mergingDirectionId === direction.id"
-                      >
-                        <option value="">Объединить с...</option>
-                        <option
-                          v-for="target in otherDirections(direction.id)"
-                          :key="target.id"
-                          :value="String(target.id)"
-                        >
-                          {{ target.name }}
-                        </option>
-                      </select>
-                      <button
-                        type="button"
-                        class="btn btn-secondary"
-                        :disabled="!mergeTargetByDirection[direction.id] || mergingDirectionId === direction.id"
-                        @click="mergeDirection(direction)"
-                      >
-                        {{ mergingDirectionId === direction.id ? '...' : 'Объединить' }}
-                      </button>
-                    </div>
-
-                    <button
-                      v-if="canDeleteDirection(direction)"
-                      type="button"
-                      class="btn btn-secondary academic-delete-btn"
-                      :disabled="deletingDirectionId === direction.id"
-                      @click="deleteDirection(direction)"
-                    >
-                      {{ deletingDirectionId === direction.id ? '...' : 'Удалить направление' }}
-                    </button>
-                  </div>
-                </div>
-
-                <div
-                  v-for="group in direction.groups"
-                  :key="group.id"
-                  class="academic-group"
-                >
                   <div class="academic-group__header">
                     <div>
                       <h3 class="academic-group__title">{{ group.name }}</h3>
@@ -580,41 +416,6 @@ async function createGroup(directionId: number) {
                       <div class="academic-member__login">{{ student.login }}</div>
                     </li>
                   </ul>
-                </div>
-
-                <div class="academic-create-panel academic-create-panel--nested">
-                  <h3 class="academic-create-panel__title">Новая группа</h3>
-                  <div class="academic-create-group-form">
-                    <input
-                      v-model="getGroupForm(direction.id).name"
-                      class="form-input"
-                      type="text"
-                      placeholder="Например: ПЕ-31б"
-                      :disabled="creatingGroupForDirectionId === direction.id"
-                    >
-                    <select
-                      v-model="getGroupForm(direction.id).educationForm"
-                      class="form-select"
-                      :disabled="creatingGroupForDirectionId === direction.id"
-                    >
-                      <option
-                        v-for="option in educationFormOptions"
-                        :key="option.value"
-                        :value="option.value"
-                      >
-                        {{ option.label }}
-                      </option>
-                    </select>
-                    <button
-                      type="button"
-                      class="btn btn-primary"
-                      :disabled="creatingGroupForDirectionId === direction.id || !getGroupForm(direction.id).name.trim()"
-                      @click="createGroup(direction.id)"
-                    >
-                      {{ creatingGroupForDirectionId === direction.id ? '...' : 'Добавить группу' }}
-                    </button>
-                  </div>
-                </div>
               </article>
             </div>
           </template>

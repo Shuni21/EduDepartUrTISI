@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import PageFrame from '@/components/PageFrame.vue'
-import { getPhotoUrl } from '@/config/api'
 import { getMyScheduleRoute } from '@/utils/myScheduleNavigation'
 
 const authStore = useAuthStore()
@@ -11,7 +10,6 @@ const router = useRouter()
 
 const user = computed(() => authStore.currentUser)
 const role = computed(() => user.value?.role)
-const userPhoto = computed(() => getPhotoUrl(user.value?.photoUrl))
 
 async function goToMySchedule() {
   const route = getMyScheduleRoute(user.value)
@@ -30,7 +28,6 @@ const profileFields = computed(() => {
     case 'student':
       return [
         { label: 'Группа', value: user.value.group },
-        { label: 'Направление', value: user.value.direction },
         { label: 'Форма обучения', value: user.value.educationForm },
         { label: 'Курс', value: user.value.course },
       ]
@@ -86,18 +83,6 @@ const buttons = computed(() => {
   <PageFrame>
     <section class="profile-page">
       <div class="profile-card">
-        <div class="photo-block">
-          <img
-            v-if="userPhoto"
-            :src="userPhoto"
-            alt="Фото пользователя"
-            class="profile-photo"
-          />
-          <div v-else class="photo-placeholder">
-            <span>ФОТО</span>
-          </div>
-        </div>
-
         <div class="profile-info">
           <div class="fullname">
             <p>{{ user?.surname || 'Фамилия' }}</p>
@@ -133,4 +118,3 @@ const buttons = computed(() => {
     </section>
   </PageFrame>
 </template>
-

@@ -1,5 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Direction } from './direction.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Subgroup } from './subgroup.entity';
 import { StudentProfile } from '../../users/entities/student-profile.entity';
 import { Schedule } from '../../schedule/entities/schedule.entity';
@@ -17,13 +16,6 @@ export class Group {
 
     @Column()
     name!: string;
-
-    @Column()
-    directionId!: number;
-
-    @ManyToOne(() => Direction, (direction) => direction.groups, { nullable: false })
-    @JoinColumn({ name: 'directionId' })
-    direction!: Direction;
 
     @Column({ type: 'smallint' })
     course!: number;

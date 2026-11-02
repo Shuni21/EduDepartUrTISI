@@ -1,6 +1,5 @@
 import { Repository } from 'typeorm';
 import { Group } from '../academic/entities/group.entity';
-import { Direction } from '../academic/entities/direction.entity';
 import { Subject } from '../academic/entities/subject.entity';
 import { Subgroup } from '../academic/entities/subgroup.entity';
 import { ParseScheduleResult } from './parser/excel-grid.parser';
@@ -14,15 +13,12 @@ export declare class ScheduleImportService {
     private readonly schedulesRepository;
     private readonly itemsRepository;
     private readonly groupsRepository;
-    private readonly directionsRepository;
     private readonly subjectsRepository;
     private readonly subgroupsRepository;
     private readonly roomResolver;
     private readonly teacherResolver;
     private readonly lessonTypeResolver;
-    private static readonly IMPORT_DIRECTION_CODE;
-    constructor(schedulesRepository: Repository<Schedule>, itemsRepository: Repository<ScheduleItem>, groupsRepository: Repository<Group>, directionsRepository: Repository<Direction>, subjectsRepository: Repository<Subject>, subgroupsRepository: Repository<Subgroup>, roomResolver: RoomResolver, teacherResolver: TeacherResolver, lessonTypeResolver: LessonTypeResolver);
-    private findOrCreateImportDirection;
+    constructor(schedulesRepository: Repository<Schedule>, itemsRepository: Repository<ScheduleItem>, groupsRepository: Repository<Group>, subjectsRepository: Repository<Subject>, subgroupsRepository: Repository<Subgroup>, roomResolver: RoomResolver, teacherResolver: TeacherResolver, lessonTypeResolver: LessonTypeResolver);
     private findOrCreateGroup;
     private findOrCreateSubject;
     private findSubgroup;

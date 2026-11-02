@@ -11,4 +11,5 @@ export declare function parseLessonCell(rawText: string): ParsedLessonPart[];
 export declare function isDistanceRoom(room: string | null | undefined): boolean;
 export declare function isAuditoriumRoomLabel(room: string | null | undefined): boolean;
 export declare function isSharedMultiHallRoom(room: string | null | undefined): boolean;
-export declare function splitRoomForSubgroups(room: string | null | undefined, partsCount: number): (string | null)[];
+export declare function splitPhysicalRoomLabels(room: string | null | undefined): string[];
+export declare function splitRoomForSubgroups(room: string | null | undefined, partsCount: number, subgroups?: (number | null)[]): (string | null)[];

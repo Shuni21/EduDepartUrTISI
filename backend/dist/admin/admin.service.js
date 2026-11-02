@@ -44,7 +44,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var AdminService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const common_1 = require("@nestjs/common");
@@ -60,23 +59,18 @@ const teacher_profile_entity_1 = require("../users/entities/teacher-profile.enti
 const staff_profile_entity_1 = require("../users/entities/staff-profile.entity");
 const departments_service_1 = require("../academic/departments.service");
 const department_entity_1 = require("../academic/entities/department.entity");
-const direction_entity_1 = require("../academic/entities/direction.entity");
 const group_entity_1 = require("../academic/entities/group.entity");
-const direction_utils_1 = require("../academic/direction.utils");
 const sessions_service_1 = require("../sessions/sessions.service");
 const sessions_notifier_service_1 = require("../sessions/sessions-notifier.service");
-const avatar_service_1 = require("../uploads/avatar.service");
 const consultation_notification_preference_entity_1 = require("../notifications/consultation-notification-preference.entity");
 const consultation_entity_1 = require("../schedule/entities/consultation.entity");
 const schedule_entity_1 = require("../schedule/entities/schedule.entity");
 const schedule_item_entity_1 = require("../schedule/entities/schedule-item.entity");
 const schedule_upload_entity_1 = require("../schedule/entities/schedule-upload.entity");
 let AdminService = class AdminService {
-    static { AdminService_1 = this; }
     usersService;
     sessionsService;
     sessionsNotifier;
-    avatarService;
     departmentsService;
     roleRepository;
     refreshTokenRepository;
@@ -84,18 +78,16 @@ let AdminService = class AdminService {
     teacherProfileRepository;
     staffProfileRepository;
     departmentRepository;
-    directionRepository;
     groupRepository;
     consultationsRepository;
     scheduleItemsRepository;
     schedulesRepository;
     scheduleUploadsRepository;
     consultationPreferencesRepository;
-    constructor(usersService, sessionsService, sessionsNotifier, avatarService, departmentsService, roleRepository, refreshTokenRepository, studentProfileRepository, teacherProfileRepository, staffProfileRepository, departmentRepository, directionRepository, groupRepository, consultationsRepository, scheduleItemsRepository, schedulesRepository, scheduleUploadsRepository, consultationPreferencesRepository) {
+    constructor(usersService, sessionsService, sessionsNotifier, departmentsService, roleRepository, refreshTokenRepository, studentProfileRepository, teacherProfileRepository, staffProfileRepository, departmentRepository, groupRepository, consultationsRepository, scheduleItemsRepository, schedulesRepository, scheduleUploadsRepository, consultationPreferencesRepository) {
         this.usersService = usersService;
         this.sessionsService = sessionsService;
         this.sessionsNotifier = sessionsNotifier;
-        this.avatarService = avatarService;
         this.departmentsService = departmentsService;
         this.roleRepository = roleRepository;
         this.refreshTokenRepository = refreshTokenRepository;
@@ -103,7 +95,6 @@ let AdminService = class AdminService {
         this.teacherProfileRepository = teacherProfileRepository;
         this.staffProfileRepository = staffProfileRepository;
         this.departmentRepository = departmentRepository;
-        this.directionRepository = directionRepository;
         this.groupRepository = groupRepository;
         this.consultationsRepository = consultationsRepository;
         this.scheduleItemsRepository = scheduleItemsRepository;
@@ -128,7 +119,7 @@ let AdminService = class AdminService {
             isActive: user.isActive,
         };
     }
-    async updateUser(id, dto, currentUserId, photo) {
+    async updateUser(id, dto, currentUserId) {
         const user = await this.usersService.findByIdWithDetails(id);
         const trimmedLogin = dto.login.trim();
         if (id === currentUserId) {
@@ -152,24 +143,17 @@ let AdminService = class AdminService {
             throw new common_1.BadRequestException(`Роль ${dto.role} не найдена в системе`);
         }
         this.validateProfileFields(dto);
+        await this.validateStudentGroup(dto);
         const updateData = {
             login: trimmedLogin,
             roleId: role.id,
             surname: dto.surname.trim(),
             name: dto.name.trim(),
             patronymic: dto.patronymic?.trim() || '',
-            photoUrl: user.photoUrl,
             isActive: dto.isActive ?? user.isActive,
         };
         if (dto.password?.trim()) {
             updateData.passwordHash = await bcrypt.hash(dto.password.trim(), 10);
-        }
-        if (photo) {
-            updateData.photoUrl = await this.avatarService.saveAvatar(id, photo, user.photoUrl);
-        }
-        else if (dto.removePhoto) {
-            await this.avatarService.deleteAvatar(id, user.photoUrl);
-            updateData.photoUrl = null;
         }
         await this.usersService.update(id, updateData);
         const willBeActive = updateData.isActive;
@@ -189,7 +173,7 @@ let AdminService = class AdminService {
             isActive: updatedUser.isActive,
         };
     }
-    async createUser(dto, photo) {
+    async createUser(dto) {
         const existingUser = await this.usersService.findByLogin(dto.login);
         if (existingUser) {
             throw new common_1.ConflictException('Пользователь с таким логином уже существует');
@@ -201,6 +185,7 @@ let AdminService = class AdminService {
             throw new common_1.BadRequestException(`Роль ${dto.role} не найдена в системе`);
         }
         this.validateProfileFields(dto);
+        await this.validateStudentGroup(dto);
         const passwordHash = await bcrypt.hash(dto.password, 10);
         const user = await this.usersService.create({
             login: dto.login.trim(),
@@ -209,14 +194,9 @@ let AdminService = class AdminService {
             surname: dto.surname.trim(),
             name: dto.name.trim(),
             patronymic: dto.patronymic?.trim() || '',
-            photoUrl: null,
             isActive: true,
         });
         await this.createProfile(user.id, dto);
-        if (photo) {
-            const photoUrl = await this.avatarService.saveAvatar(user.id, photo);
-            await this.usersService.update(user.id, { photoUrl });
-        }
         const createdUser = await this.usersService.findByIdWithDetails(user.id);
         return {
             ...(0, auth_user_mapper_1.mapUserToAuthResponse)(createdUser),
@@ -227,9 +207,7 @@ let AdminService = class AdminService {
         if (id === currentUserId) {
             throw new common_1.BadRequestException('Нельзя удалить собственную учётную запись');
         }
-        const user = await this.usersService.findByIdWithDetails(id);
         await this.cleanupUserReferences(id);
-        await this.avatarService.deleteAvatar(id, user.photoUrl);
         try {
             await this.usersService.remove(id);
         }
@@ -286,12 +264,8 @@ let AdminService = class AdminService {
     }
     validateProfileFields(dto) {
         if (dto.role === role_entity_1.RoleCode.STUDENT) {
-            if (!dto.group?.trim() || !dto.direction?.trim() || !dto.course) {
-                throw new common_1.BadRequestException('Для студента нужны группа, направление и курс');
-            }
-            const directionValidation = (0, direction_utils_1.validateDirectionInput)(dto.direction);
-            if (!directionValidation.valid) {
-                throw new common_1.BadRequestException(directionValidation.message);
+            if (!dto.group?.trim() || !dto.course) {
+                throw new common_1.BadRequestException('Для студента нужны группа и курс');
             }
         }
         if (dto.role === role_entity_1.RoleCode.TEACHER) {
@@ -310,6 +284,12 @@ let AdminService = class AdminService {
             }
         }
     }
+    async validateStudentGroup(dto) {
+        if (dto.role !== role_entity_1.RoleCode.STUDENT) {
+            return;
+        }
+        await this.findExistingGroup(dto.group.trim(), this.mapEducationForm(dto.educationForm));
+    }
     async createProfile(userId, dto) {
         switch (dto.role) {
             case role_entity_1.RoleCode.STUDENT:
@@ -325,9 +305,8 @@ let AdminService = class AdminService {
         }
     }
     async createStudentProfile(userId, dto) {
-        const direction = await this.findOrCreateDirection(dto.direction.trim());
         const educationForm = this.mapEducationForm(dto.educationForm);
-        const group = await this.findOrCreateGroup(dto.group.trim(), direction.id, educationForm);
+        const group = await this.resolveStudentGroup(dto, educationForm);
         await this.studentProfileRepository.save({
             userId,
             groupId: group.id,
@@ -375,9 +354,8 @@ let AdminService = class AdminService {
                     await this.createStudentProfile(userId, dto);
                     return;
                 }
-                const direction = await this.findOrCreateDirection(dto.direction.trim());
                 const educationForm = this.mapEducationForm(dto.educationForm);
-                const group = await this.findOrCreateGroup(dto.group.trim(), direction.id, educationForm);
+                const group = await this.resolveStudentGroup(dto, educationForm);
                 await this.studentProfileRepository.update(profile.id, {
                     groupId: group.id,
                     course: dto.course,
@@ -437,47 +415,20 @@ let AdminService = class AdminService {
             shortName: null,
         });
     }
-    async findOrCreateDirection(name) {
-        const trimmed = name.trim();
-        const validation = (0, direction_utils_1.validateDirectionInput)(trimmed);
-        if (!validation.valid) {
-            throw new common_1.BadRequestException(validation.message);
-        }
-        const displayName = (0, direction_utils_1.buildDirectionDisplayName)(trimmed);
-        const storageCode = (0, direction_utils_1.buildDirectionStorageCode)(trimmed);
-        const existingByCode = await this.directionRepository.findOne({
-            where: { code: storageCode },
-        });
-        if (existingByCode) {
-            if (existingByCode.name !== displayName) {
-                existingByCode.name = displayName;
-                await this.directionRepository.save(existingByCode);
-            }
-            return existingByCode;
-        }
-        return this.directionRepository.save({
-            name: displayName,
-            code: storageCode,
-        });
+    async resolveStudentGroup(dto, educationForm) {
+        return this.findExistingGroup(dto.group.trim(), educationForm);
     }
-    static GROUP_LEGACY_COURSE = 1;
-    async findOrCreateGroup(name, directionId, educationForm) {
-        const existing = await this.groupRepository.findOne({
-            where: {
-                name,
-                directionId,
-                educationForm,
-            },
+    async findExistingGroup(name, educationForm) {
+        const groups = await this.groupRepository.find({
+            where: { name, educationForm },
         });
-        if (existing) {
-            return existing;
+        if (groups.length === 0) {
+            throw new common_1.BadRequestException(`Группа «${name}» не найдена. Сначала добавьте её в академическую структуру.`);
         }
-        return this.groupRepository.save({
-            name,
-            directionId,
-            course: AdminService_1.GROUP_LEGACY_COURSE,
-            educationForm,
-        });
+        if (groups.length > 1) {
+            throw new common_1.BadRequestException(`Найдено несколько групп «${name}». Уточните академическую структуру перед добавлением студента.`);
+        }
+        return groups[0];
     }
     mapEducationForm(label) {
         switch (label?.trim()) {
@@ -499,27 +450,24 @@ let AdminService = class AdminService {
     }
 };
 exports.AdminService = AdminService;
-exports.AdminService = AdminService = AdminService_1 = __decorate([
+exports.AdminService = AdminService = __decorate([
     (0, common_1.Injectable)(),
-    __param(5, (0, typeorm_1.InjectRepository)(role_entity_1.Role)),
-    __param(6, (0, typeorm_1.InjectRepository)(refresh_token_entity_1.RefreshToken)),
-    __param(7, (0, typeorm_1.InjectRepository)(student_profile_entity_1.StudentProfile)),
-    __param(8, (0, typeorm_1.InjectRepository)(teacher_profile_entity_1.TeacherProfile)),
-    __param(9, (0, typeorm_1.InjectRepository)(staff_profile_entity_1.StaffProfile)),
-    __param(10, (0, typeorm_1.InjectRepository)(department_entity_1.Department)),
-    __param(11, (0, typeorm_1.InjectRepository)(direction_entity_1.Direction)),
-    __param(12, (0, typeorm_1.InjectRepository)(group_entity_1.Group)),
-    __param(13, (0, typeorm_1.InjectRepository)(consultation_entity_1.Consultation)),
-    __param(14, (0, typeorm_1.InjectRepository)(schedule_item_entity_1.ScheduleItem)),
-    __param(15, (0, typeorm_1.InjectRepository)(schedule_entity_1.Schedule)),
-    __param(16, (0, typeorm_1.InjectRepository)(schedule_upload_entity_1.ScheduleUpload)),
-    __param(17, (0, typeorm_1.InjectRepository)(consultation_notification_preference_entity_1.ConsultationNotificationPreference)),
+    __param(4, (0, typeorm_1.InjectRepository)(role_entity_1.Role)),
+    __param(5, (0, typeorm_1.InjectRepository)(refresh_token_entity_1.RefreshToken)),
+    __param(6, (0, typeorm_1.InjectRepository)(student_profile_entity_1.StudentProfile)),
+    __param(7, (0, typeorm_1.InjectRepository)(teacher_profile_entity_1.TeacherProfile)),
+    __param(8, (0, typeorm_1.InjectRepository)(staff_profile_entity_1.StaffProfile)),
+    __param(9, (0, typeorm_1.InjectRepository)(department_entity_1.Department)),
+    __param(10, (0, typeorm_1.InjectRepository)(group_entity_1.Group)),
+    __param(11, (0, typeorm_1.InjectRepository)(consultation_entity_1.Consultation)),
+    __param(12, (0, typeorm_1.InjectRepository)(schedule_item_entity_1.ScheduleItem)),
+    __param(13, (0, typeorm_1.InjectRepository)(schedule_entity_1.Schedule)),
+    __param(14, (0, typeorm_1.InjectRepository)(schedule_upload_entity_1.ScheduleUpload)),
+    __param(15, (0, typeorm_1.InjectRepository)(consultation_notification_preference_entity_1.ConsultationNotificationPreference)),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         sessions_service_1.SessionsService,
         sessions_notifier_service_1.SessionsNotifierService,
-        avatar_service_1.AvatarService,
         departments_service_1.DepartmentsService,
-        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,

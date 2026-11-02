@@ -22,7 +22,6 @@ export type CreateUserPayload = {
   name: string
   patronymic?: string
   group?: string
-  direction?: string
   educationForm?: string
   course?: number
   department?: string
@@ -39,61 +38,13 @@ export type UpdateUserPayload = {
   name: string
   patronymic?: string
   isActive?: boolean
-  removePhoto?: boolean
   group?: string
-  direction?: string
   educationForm?: string
   course?: number
   department?: string
   departmentId?: number
   position?: string
   cabinet?: string
-}
-
-type UserFormPayload = CreateUserPayload | UpdateUserPayload
-
-function appendIfDefined(formData: FormData, key: string, value: unknown) {
-  if (value === undefined || value === null || value === '') {
-    return
-  }
-
-  formData.append(key, String(value))
-}
-
-function buildUserFormData(payload: UserFormPayload, photo?: File | null): FormData {
-  const formData = new FormData()
-
-  appendIfDefined(formData, 'login', payload.login)
-  appendIfDefined(formData, 'role', payload.role)
-  appendIfDefined(formData, 'surname', payload.surname)
-  appendIfDefined(formData, 'name', payload.name)
-  appendIfDefined(formData, 'patronymic', payload.patronymic)
-  appendIfDefined(formData, 'group', payload.group)
-  appendIfDefined(formData, 'direction', payload.direction)
-  appendIfDefined(formData, 'educationForm', payload.educationForm)
-  appendIfDefined(formData, 'course', payload.course)
-  appendIfDefined(formData, 'departmentId', payload.departmentId)
-  appendIfDefined(formData, 'department', payload.department)
-  appendIfDefined(formData, 'position', payload.position)
-  appendIfDefined(formData, 'cabinet', payload.cabinet)
-
-  if ('password' in payload && payload.password) {
-    appendIfDefined(formData, 'password', payload.password)
-  }
-
-  if ('isActive' in payload && payload.isActive !== undefined) {
-    appendIfDefined(formData, 'isActive', payload.isActive)
-  }
-
-  if ('removePhoto' in payload && payload.removePhoto) {
-    formData.append('removePhoto', 'true')
-  }
-
-  if (photo) {
-    formData.append('photo', photo)
-  }
-
-  return formData
 }
 
 export async function fetchAdminUser(id: number): Promise<AdminUser> {
@@ -104,10 +55,8 @@ export async function fetchAdminUser(id: number): Promise<AdminUser> {
 export async function updateAdminUser(
     id: number,
     payload: UpdateUserPayload,
-    photo?: File | null,
 ): Promise<AdminUser> {
-  const formData = buildUserFormData(payload, photo)
-  const response = await api.patch<AdminUser>(`/admin/users/${id}`, formData)
+  const response = await api.patch<AdminUser>(`/admin/users/${id}`, payload)
   return response.data
 }
 
@@ -118,10 +67,8 @@ export async function fetchAdminUsers(): Promise<AdminUser[]> {
 
 export async function createAdminUser(
     payload: CreateUserPayload,
-    photo?: File | null,
 ): Promise<AdminUser> {
-  const formData = buildUserFormData(payload, photo)
-  const response = await api.post<AdminUser>('/admin/users', formData)
+  const response = await api.post<AdminUser>('/admin/users', payload)
   return response.data
 }
 

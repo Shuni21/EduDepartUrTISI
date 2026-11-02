@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Group = exports.EducationForm = void 0;
 const typeorm_1 = require("typeorm");
-const direction_entity_1 = require("./direction.entity");
 const subgroup_entity_1 = require("./subgroup.entity");
 const student_profile_entity_1 = require("../../users/entities/student-profile.entity");
 const schedule_entity_1 = require("../../schedule/entities/schedule.entity");
@@ -24,8 +23,6 @@ var EducationForm;
 let Group = class Group {
     id;
     name;
-    directionId;
-    direction;
     course;
     educationForm;
     subgroups;
@@ -41,15 +38,6 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Group.prototype, "name", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Group.prototype, "directionId", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => direction_entity_1.Direction, (direction) => direction.groups, { nullable: false }),
-    (0, typeorm_1.JoinColumn)({ name: 'directionId' }),
-    __metadata("design:type", direction_entity_1.Direction)
-], Group.prototype, "direction", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'smallint' }),
     __metadata("design:type", Number)

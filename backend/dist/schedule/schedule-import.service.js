@@ -18,7 +18,6 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const group_entity_1 = require("../academic/entities/group.entity");
-const direction_entity_1 = require("../academic/entities/direction.entity");
 const subject_entity_1 = require("../academic/entities/subject.entity");
 const subgroup_entity_1 = require("../academic/entities/subgroup.entity");
 const schedule_entity_1 = require("./entities/schedule.entity");
@@ -26,40 +25,24 @@ const schedule_item_entity_1 = require("./entities/schedule-item.entity");
 const room_resolver_1 = require("./resolver/room.resolver");
 const teacher_resolver_1 = require("./resolver/teacher.resolver");
 const lesson_type_resolver_1 = require("./resolver/lesson-type.resolver");
-let ScheduleImportService = class ScheduleImportService {
-    static { ScheduleImportService_1 = this; }
+let ScheduleImportService = ScheduleImportService_1 = class ScheduleImportService {
     schedulesRepository;
     itemsRepository;
     groupsRepository;
-    directionsRepository;
     subjectsRepository;
     subgroupsRepository;
     roomResolver;
     teacherResolver;
     lessonTypeResolver;
-    static IMPORT_DIRECTION_CODE = 'SCHEDULE_IMPORT';
-    constructor(schedulesRepository, itemsRepository, groupsRepository, directionsRepository, subjectsRepository, subgroupsRepository, roomResolver, teacherResolver, lessonTypeResolver) {
+    constructor(schedulesRepository, itemsRepository, groupsRepository, subjectsRepository, subgroupsRepository, roomResolver, teacherResolver, lessonTypeResolver) {
         this.schedulesRepository = schedulesRepository;
         this.itemsRepository = itemsRepository;
         this.groupsRepository = groupsRepository;
-        this.directionsRepository = directionsRepository;
         this.subjectsRepository = subjectsRepository;
         this.subgroupsRepository = subgroupsRepository;
         this.roomResolver = roomResolver;
         this.teacherResolver = teacherResolver;
         this.lessonTypeResolver = lessonTypeResolver;
-    }
-    async findOrCreateImportDirection() {
-        let direction = await this.directionsRepository.findOne({
-            where: { code: ScheduleImportService_1.IMPORT_DIRECTION_CODE },
-        });
-        if (!direction) {
-            direction = await this.directionsRepository.save(this.directionsRepository.create({
-                code: ScheduleImportService_1.IMPORT_DIRECTION_CODE,
-                name: 'Импорт расписания',
-            }));
-        }
-        return direction;
     }
     async findOrCreateGroup(groupName) {
         const trimmed = groupName.trim();
@@ -69,10 +52,8 @@ let ScheduleImportService = class ScheduleImportService {
         if (existing) {
             return existing;
         }
-        const direction = await this.findOrCreateImportDirection();
         return this.groupsRepository.save(this.groupsRepository.create({
             name: trimmed,
-            directionId: direction.id,
             course: 1,
             educationForm: group_entity_1.EducationForm.FULL_TIME,
         }));
@@ -243,11 +224,9 @@ exports.ScheduleImportService = ScheduleImportService = ScheduleImportService_1 
     __param(0, (0, typeorm_1.InjectRepository)(schedule_entity_1.Schedule)),
     __param(1, (0, typeorm_1.InjectRepository)(schedule_item_entity_1.ScheduleItem)),
     __param(2, (0, typeorm_1.InjectRepository)(group_entity_1.Group)),
-    __param(3, (0, typeorm_1.InjectRepository)(direction_entity_1.Direction)),
-    __param(4, (0, typeorm_1.InjectRepository)(subject_entity_1.Subject)),
-    __param(5, (0, typeorm_1.InjectRepository)(subgroup_entity_1.Subgroup)),
+    __param(3, (0, typeorm_1.InjectRepository)(subject_entity_1.Subject)),
+    __param(4, (0, typeorm_1.InjectRepository)(subgroup_entity_1.Subgroup)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,

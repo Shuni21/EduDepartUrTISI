@@ -30,11 +30,8 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function addUser(
-      payload: CreateUserPayload,
-      photo?: File | null,
-  ): Promise<AdminUser> {
-    const createdUser = await createAdminUser(payload, photo)
+  async function addUser(payload: CreateUserPayload): Promise<AdminUser> {
+    const createdUser = await createAdminUser(payload)
     users.value = [...users.value, createdUser]
     return createdUser
   }
@@ -51,9 +48,8 @@ export const useUsersStore = defineStore('users', () => {
   async function editUser(
       id: number,
       payload: UpdateUserPayload,
-      photo?: File | null,
   ): Promise<AdminUser> {
-    const updatedUser = await updateAdminUser(id, payload, photo)
+    const updatedUser = await updateAdminUser(id, payload)
     users.value = users.value.map((user) =>
         user.id === id ? updatedUser : user,
     )

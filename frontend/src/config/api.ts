@@ -30,18 +30,6 @@ export function getSessionsSocketUrl(): string {
   return `${getApiBaseUrl()}/admin/sessions`
 }
 
-export function getPhotoUrl(photoUrl?: string | null): string | null {
-  if (!photoUrl) {
-    return null
-  }
-
-  if (photoUrl.startsWith('http://') || photoUrl.startsWith('https://')) {
-    return photoUrl
-  }
-
-  return `${getApiBaseUrl()}${photoUrl.startsWith('/') ? photoUrl : `/${photoUrl}`}`
-}
-
 export function getScheduleSocketUrl(): string{
   return `${getApiBaseUrl()}/schedules/live`
 }

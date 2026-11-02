@@ -29,10 +29,14 @@ let RoomResolver = class RoomResolver {
             return null;
         }
         const normalized = rawRoom.trim().toUpperCase();
+        const roomLabels = (0, lesson_cell_parser_1.splitPhysicalRoomLabels)(rawRoom);
+        const isCombinedRoom = roomLabels.length > 1;
         const romanNumber = (0, roman_room_utils_1.normalizeRomanRoomKey)(normalized);
-        const match = normalized.match(/^(\d+)\s*(УК\d)/);
+        const match = isCombinedRoom ? null : normalized.match(/^(\d+)\s*(УК\d)/);
         const number = romanNumber ?? match?.[1] ?? normalized;
-        const building = romanNumber ? (0, roman_room_utils_1.getRomanBuilding)(rawRoom) : match?.[2] ?? null;
+        const building = isCombinedRoom
+            ? null
+            : romanNumber ? (0, roman_room_utils_1.getRomanBuilding)(rawRoom) : match?.[2] ?? null;
         let room = await this.roomsRepository.findOne({
             where: {
                 number,

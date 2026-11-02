@@ -23,6 +23,7 @@ const user_entity_1 = require("../users/entities/user.entity");
 const schedule_item_mapper_1 = require("./schedule-item.mapper");
 const roman_room_utils_1 = require("./parser/roman-room.utils");
 const schedule_slot_utils_1 = require("./parser/schedule-slot.utils");
+const lesson_cell_parser_1 = require("./parser/lesson-cell.parser");
 const schedule_period_utils_1 = require("./parser/schedule-period.utils");
 const linked_lesson_service_1 = require("./linked-lesson.service");
 const DISTANCE_BUILDING = 'Дистанционное';
@@ -272,14 +273,16 @@ let ScheduleDisplayService = class ScheduleDisplayService {
             if (!label) {
                 continue;
             }
-            const roomKey = (0, schedule_slot_utils_1.normalizeRoomListKey)(label);
-            if (this.isDistanceRoom(label)) {
-                const existing = distanceRooms.get(roomKey);
-                distanceRooms.set(roomKey, existing ? (0, schedule_slot_utils_1.pickPreferredRoomLabel)(existing, label) : label);
-            }
-            else {
-                const existing = physicalRooms.get(roomKey);
-                physicalRooms.set(roomKey, existing ? (0, schedule_slot_utils_1.pickPreferredRoomLabel)(existing, label) : label);
+            for (const roomLabel of (0, lesson_cell_parser_1.splitPhysicalRoomLabels)(label)) {
+                const roomKey = (0, schedule_slot_utils_1.normalizeRoomListKey)(roomLabel);
+                if (this.isDistanceRoom(roomLabel)) {
+                    const existing = distanceRooms.get(roomKey);
+                    distanceRooms.set(roomKey, existing ? (0, schedule_slot_utils_1.pickPreferredRoomLabel)(existing, roomLabel) : roomLabel);
+                }
+                else {
+                    const existing = physicalRooms.get(roomKey);
+                    physicalRooms.set(roomKey, existing ? (0, schedule_slot_utils_1.pickPreferredRoomLabel)(existing, roomLabel) : roomLabel);
+                }
             }
         }
         const sortRooms = (left, right) => left.localeCompare(right, 'ru', { sensitivity: 'base', numeric: true });
@@ -306,11 +309,10 @@ let ScheduleDisplayService = class ScheduleDisplayService {
     async getRoomSchedule(roomName) {
         const normalizedRoomName = (0, schedule_slot_utils_1.normalizeRoomListKey)(roomName);
         const items = await this.baseItemsQuery().getMany();
-        const matchedItems = items.filter((item) => (0, schedule_slot_utils_1.normalizeRoomListKey)((0, schedule_item_mapper_1.formatRoomLabel)(item.room)) === normalizedRoomName);
+        const matchedItems = items.filter((item) => (0, lesson_cell_parser_1.splitPhysicalRoomLabels)((0, schedule_item_mapper_1.formatRoomLabel)(item.room))
+            .some((label) => (0, schedule_slot_utils_1.normalizeRoomListKey)(label) === normalizedRoomName));
         return {
-            room: matchedItems[0]
-                ? (0, schedule_item_mapper_1.formatRoomLabel)(matchedItems[0].room)
-                : roomName.trim(),
+            room: roomName.trim(),
             weeks: await this.buildWeeksFromItems(matchedItems),
             ...(0, schedule_period_utils_1.resolveSchedulePeriodMeta)(matchedItems),
         };
