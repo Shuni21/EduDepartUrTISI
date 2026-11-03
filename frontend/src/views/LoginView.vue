@@ -68,7 +68,7 @@ const rightDecor = [
   { id: 'right-bottom-right', className: 'right-bottom-right', rotate: -10 },
 ]
 
-// const demoAccountsText = computed(() =>   // можно закомментировать
+// const demoAccountsText = computed(() =>
 //   mockUsers.map((user) => `${user.login} / ${user.password}`).join(' | '),
 // )
 

@@ -83,7 +83,6 @@ const roleOptions = [
   { value: 'student', label: 'Студент' },
   { value: 'teacher', label: 'Преподаватель' },
   { value: 'employee', label: 'Сотрудник' },
-  { value: 'admin', label: 'Администратор' },
 ]
 
 const educationFormOptions = [
@@ -181,12 +180,7 @@ const validate = (): boolean => {
       errors.value.department = 'Укажите отдел или кафедру'
     }
   }
-  
-  if (form.value.role === 'admin') {
-    if (!form.value.department?.trim()) {
-      errors.value.department = 'Укажите отдел или кафедру'
-    }
-  }
+
   
   return Object.keys(errors.value).length === 0
 }
@@ -209,7 +203,7 @@ const handleSubmit = async () => {
       group: form.value.group?.trim(),
       educationForm: form.value.educationForm,
       course: form.value.course,
-      department: ['employee', 'admin'].includes(form.value.role)
+      department: ['employee'].includes(form.value.role)
         ? form.value.department?.trim()
         : undefined,
       departmentId: form.value.role === 'teacher' ? form.value.departmentId : undefined,
@@ -554,59 +548,6 @@ const resetForm = () => {
                   :disabled="isSubmitting"
                 />
                 <span v-if="errors.department" class="error-message">{{ errors.department }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Поля для АДМИНИСТРАТОРА -->
-          <div v-if="form.role === 'admin'" class="form-section">
-            <h2 class="section-title">Данные администратора</h2>
-            
-            <div class="form-row">
-              <div class="form-group full-width">
-                <label for="adminDepartment" class="form-label">
-                  Отдел / кафедра <span class="required">*</span>
-                </label>
-                <input
-                  id="adminDepartment"
-                  v-model="form.department"
-                  type="text"
-                  class="form-input"
-                  :class="{ error: errors.department }"
-                  placeholder="Например: Технический отдел, ИСТ или Кафедра «Информационных систем и технологий»"
-                  :disabled="isSubmitting"
-                />
-                <span v-if="errors.department" class="error-message">{{ errors.department }}</span>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="position" class="form-label">
-                  Должность
-                </label>
-                <input
-                  id="position"
-                  v-model="form.position"
-                  type="text"
-                  class="form-input"
-                  placeholder="Например: Специалист"
-                  :disabled="isSubmitting"
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="cabinet" class="form-label">
-                  Кабинет
-                </label>
-                <input
-                  id="cabinet"
-                  v-model="form.cabinet"
-                  type="text"
-                  class="form-input"
-                  placeholder="Например: 000"
-                  :disabled="isSubmitting"
-                />
               </div>
             </div>
           </div>

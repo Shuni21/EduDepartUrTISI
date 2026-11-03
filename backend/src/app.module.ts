@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 import { buildDatabaseConnectionOptions } from './database/typeorm.config';
 
@@ -11,7 +13,8 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { AcademicModule } from './academic/academic.module';
 import { AdminModule } from './admin/admin.module';
 import { SessionsModule } from './sessions/sessions.module';
-import { NotificationsModule} from './notifications/notifications.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { CustomThrottlerGuard } from './common/guards/custom-throttler.guard';
 
 @Module({
     imports: [
@@ -19,6 +22,14 @@ import { NotificationsModule} from './notifications/notifications.module';
             isGlobal: true,
             envFilePath: ['.env'],
         }),
+
+        ThrottlerModule.forRoot([
+            {
+                name: 'default',
+                ttl: 60_000, // 1 минута
+                limit: 120, // общий лимит на API
+            },
+        ]),
 
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
@@ -53,6 +64,12 @@ import { NotificationsModule} from './notifications/notifications.module';
         AdminModule,
         SessionsModule,
         NotificationsModule,
+    ],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: CustomThrottlerGuard,
+        },
     ],
 })
 export class AppModule {}

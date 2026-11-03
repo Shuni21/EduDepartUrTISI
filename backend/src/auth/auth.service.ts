@@ -28,9 +28,60 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserSessionResponse } from '../sessions/sessions.types';
 
 const MAX_ACTIVE_SESSIONS = 3;
+type LoginAttempt = {
+    count: number;
+    blockedUntil?: number;
+};
 
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOGIN_BLOCK_MS = 10 * 60_000; // 10 минут
 @Injectable()
 export class AuthService {
+
+    private readonly loginAttempts = new Map<string, LoginAttempt>();
+
+    private getLoginAttemptKey(login: string, ip: string): string {
+        return `${login.trim().toLowerCase()}|${ip}`;
+    }
+
+    private assertLoginNotBlocked(login: string, ip: string): void {
+        const key = this.getLoginAttemptKey(login, ip);
+        const entry = this.loginAttempts.get(key);
+
+        if (!entry?.blockedUntil) {
+            return;
+        }
+
+        const now = Date.now();
+
+        if (now < entry.blockedUntil) {
+            const seconds = Math.ceil((entry.blockedUntil - now) / 1000);
+            throw new UnauthorizedException(
+                `Слишком много попыток входа. Повторите через ${seconds} сек.`,
+            );
+        }
+
+        this.loginAttempts.delete(key);
+    }
+
+    private registerLoginFailure(login: string, ip: string): void {
+        const key = this.getLoginAttemptKey(login, ip);
+        const entry = this.loginAttempts.get(key) ?? { count: 0 };
+
+        entry.count += 1;
+
+        if (entry.count >= MAX_LOGIN_ATTEMPTS) {
+            entry.blockedUntil = Date.now() + LOGIN_BLOCK_MS;
+            entry.count = 0;
+        }
+
+        this.loginAttempts.set(key, entry);
+    }
+
+    private clearLoginAttempts(login: string, ip: string): void {
+        this.loginAttempts.delete(this.getLoginAttemptKey(login, ip));
+    }
+
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
@@ -73,16 +124,14 @@ export class AuthService {
         return this.generateTokens(userWithDetails);
     }
 
-    async login(dto: LoginDto) {
-        const user =
-            await this.usersService.findByLoginWithDetails(
-                dto.login,
-            );
+    async login(dto: LoginDto, ip: string) {
+        this.assertLoginNotBlocked(dto.login, ip);
+
+        const user = await this.usersService.findByLoginWithDetails(dto.login);
 
         if (!user) {
-            throw new UnauthorizedException(
-                'Неверный login или пароль',
-            );
+            this.registerLoginFailure(dto.login, ip);
+            throw new UnauthorizedException('Неверный login или пароль');
         }
 
         const isPasswordValid = await bcrypt.compare(
@@ -91,16 +140,16 @@ export class AuthService {
         );
 
         if (!isPasswordValid) {
-            throw new UnauthorizedException(
-                'Неверный login или пароль',
-            );
+            this.registerLoginFailure(dto.login, ip);
+            throw new UnauthorizedException('Неверный логин или пароль');
         }
 
         if (!user.isActive) {
-            throw new ForbiddenException(
-                'Учётная запись деактивирована',
-            );
+            // не считаем как brute-force, аккаунт просто выключен
+            throw new ForbiddenException('Учётная запись деактивирована');
         }
+
+        this.clearLoginAttempts(dto.login, ip);
 
         return this.generateTokens(user);
     }
