@@ -6,7 +6,7 @@ import { scheduleTypeMeta, type ScheduleKind } from '@/views/schedule/scheduleOp
 import { setPageTitle } from '@/utils/pageTitle'
 
 const AUTH_STORAGE_KEY = 'edu-depart-auth-user'
-const protectedScheduleTypes = new Set(['teachers', 'auditories', 'consults'])
+const protectedScheduleTypes = new Set(['teachers', 'auditories'])
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

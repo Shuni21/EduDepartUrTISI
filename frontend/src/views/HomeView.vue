@@ -9,7 +9,7 @@ const authStore = useAuthStore()
 
 const menuCards = [
   { id: 'students', title: 'Расписание студентов', needAuth: false },
-  { id: 'consults', title: 'Расписание консультаций', needAuth: true },
+  { id: 'consults', title: 'Расписание консультаций', needAuth: false },
   { id: 'auditories', title: 'Расписание аудиторий', needAuth: true },
   { id: 'teachers', title: 'Расписание преподавателей', needAuth: true },
 ]
