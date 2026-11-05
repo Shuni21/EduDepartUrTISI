@@ -474,21 +474,28 @@ function parseSheetGrid(
 }
 
 export function parseScheduleWorkbook(buffer: Buffer): ParseScheduleResult {
-    const workbook = XLSX.read(buffer, { type: 'buffer', cellDates: true });
+    const workbook = XLSX.read(buffer, {
+        type: 'buffer',
+        cellDates: true,
+    });
+
     const sheetName = workbook.SheetNames[0];
     if (!sheetName) {
         throw new Error('Файл не содержит листов');
     }
 
     const sheet = workbook.Sheets[sheetName];
+
     const grid = XLSX.utils.sheet_to_json<unknown[]>(sheet, {
         header: 1,
         defval: null,
-        raw: false,
+        raw: false,          // важно
+        blankrows: false,
     });
 
     const period = combineSchedulePeriods(parseSchedulePeriods(grid));
     const groupName = findGroupName(grid);
+
     if (!groupName) {
         throw new Error('Не удалось определить группу из заголовка "РАСПИСАНИЕ гр."');
     }

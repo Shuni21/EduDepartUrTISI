@@ -264,6 +264,60 @@ const resetForm = () => {
         </div>
 
         <form @submit.prevent="handleSubmit" class="user-form">
+
+          <!-- ФИО (для всех) -->
+          <div class="form-section">
+            <h2 class="section-title">Личные данные</h2>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="surname" class="form-label">
+                  Фамилия <span class="required">*</span>
+                </label>
+                <input
+                    id="surname"
+                    v-model="form.surname"
+                    type="text"
+                    class="form-input"
+                    :class="{ error: errors.surname }"
+                    placeholder="Введите фамилию"
+                    :disabled="isSubmitting"
+                />
+                <span v-if="errors.surname" class="error-message">{{ errors.surname }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="name" class="form-label">
+                  Имя <span class="required">*</span>
+                </label>
+                <input
+                    id="name"
+                    v-model="form.name"
+                    type="text"
+                    class="form-input"
+                    :class="{ error: errors.name }"
+                    placeholder="Введите имя"
+                    :disabled="isSubmitting"
+                />
+                <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
+              </div>
+
+              <div class="form-group">
+                <label for="patronymic" class="form-label">
+                  Отчество
+                </label>
+                <input
+                    id="patronymic"
+                    v-model="form.patronymic"
+                    type="text"
+                    class="form-input"
+                    placeholder="Введите отчество"
+                    :disabled="isSubmitting"
+                />
+              </div>
+            </div>
+          </div>
+
           <!-- Основные данные (для всех) -->
           <div class="form-section">
             <h2 class="section-title">Основные данные</h2>
@@ -319,59 +373,6 @@ const resetForm = () => {
                 </select>
               </div>
 
-            </div>
-          </div>
-
-          <!-- ФИО (для всех) -->
-          <div class="form-section">
-            <h2 class="section-title">Личные данные</h2>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="surname" class="form-label">
-                  Фамилия <span class="required">*</span>
-                </label>
-                <input
-                  id="surname"
-                  v-model="form.surname"
-                  type="text"
-                  class="form-input"
-                  :class="{ error: errors.surname }"
-                  placeholder="Введите фамилию"
-                  :disabled="isSubmitting"
-                />
-                <span v-if="errors.surname" class="error-message">{{ errors.surname }}</span>
-              </div>
-
-              <div class="form-group">
-                <label for="name" class="form-label">
-                  Имя <span class="required">*</span>
-                </label>
-                <input
-                  id="name"
-                  v-model="form.name"
-                  type="text"
-                  class="form-input"
-                  :class="{ error: errors.name }"
-                  placeholder="Введите имя"
-                  :disabled="isSubmitting"
-                />
-                <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
-              </div>
-
-              <div class="form-group">
-                <label for="patronymic" class="form-label">
-                  Отчество
-                </label>
-                <input
-                  id="patronymic"
-                  v-model="form.patronymic"
-                  type="text"
-                  class="form-input"
-                  placeholder="Введите отчество"
-                  :disabled="isSubmitting"
-                />
-              </div>
             </div>
           </div>
 
