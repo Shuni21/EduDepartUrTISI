@@ -20,13 +20,31 @@
 .cards-grid .menu-card:last-child:nth-child(odd) {
   grid-column: 1 / -1;
   justify-self: center;
-  width: 38vh; /* такая же ширина, как у остальных */
+  width: 38vh;
 }
 
 .menu-card {
-  @apply relative box-border overflow-hidden w-full min-h-[168px] grid place-content-center gap-[13px] rounded-[18px] border border-[#c8c8c8] dark:border-[#3a424d] bg-[#dcdcdc] dark:bg-[#252a31] text-center no-underline text-inherit transition-[transform,box-shadow,background-color,color] duration-[250ms] ease-in-out;
+  @apply relative box-border overflow-hidden w-full min-h-[168px]
+  grid place-content-center gap-[13px]
+  rounded-[18px]
+  border border-[#c8c8c8] dark:border-[#3a424d]
+  bg-[#EAF4FC] dark:bg-[#252a31]
+  text-center no-underline text-inherit
+  transition-[transform,box-shadow,background-color,color]
+  duration-[250ms] ease-in-out;
+
   padding: clamp(20px, 3vh, 28px) clamp(20px, 5vw, 36px);
   box-shadow: 0 7px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.menu-card-image {
+  @apply block mx-auto;
+
+  width: clamp(90px, 10vw, 130px);
+  height: clamp(90px, 10vw, 130px);
+  object-fit: contain;
+  transition: transform 0.3s ease;
 }
 
 .menu-card::before {
@@ -46,6 +64,10 @@
 
 .menu-card:hover::before {
   transform: scaleX(1);
+}
+
+.menu-card:hover .menu-card-image {
+  transform: scale(1.06);
 }
 
 .menu-card h2 {

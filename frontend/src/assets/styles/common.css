@@ -1,9 +1,16 @@
 body {
-  @apply bg-[#e8e8e8] text-[#101215] dark:bg-[#121418] dark:text-[#f0f4f7];
+  @apply bg-[linear-gradient(180deg,#f7fbfe_0%,#eef4f9_100%)]
+  text-[#101215]
+  dark:bg-[linear-gradient(180deg,#171b22_0%,#121418_100%)]
+  dark:text-[#f0f4f7];
 }
 
 .app-shell {
-  @apply min-h-screen min-h-[100dvh] flex flex-col bg-[#e8e8e8] text-[#101215] dark:bg-[#121418] dark:text-[#f0f4f7];
+  @apply min-h-screen min-h-[100dvh] flex flex-col
+  bg-[linear-gradient(180deg,#f7fbfe_0%,#eef4f9_100%)]
+  text-[#101215]
+  dark:bg-[linear-gradient(180deg,#171b22_0%,#121418_100%)]
+  dark:text-[#f0f4f7];
 }
 
 .page-content {
@@ -135,7 +142,10 @@ body {
 }
 
 .page-frame {
-  @apply relative flex-1 min-h-0 bg-[#efefef] dark:bg-[#121418];
+  @apply relative flex-1 min-h-0
+  bg-[linear-gradient(180deg,#f7fbfe_0%,#eef4f9_100%)]
+  dark:bg-[linear-gradient(180deg,#171b22_0%,#121418_100%)];
+
   overflow-x: clip;
   overflow-y: visible;
 }

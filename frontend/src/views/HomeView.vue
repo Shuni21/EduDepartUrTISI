@@ -5,13 +5,18 @@ import PageFrame from '@/components/PageFrame.vue'
 import { useAuthStore } from '@/stores/auth'
 import type { ScheduleKind } from '@/views/schedule/scheduleOptions'
 
+import studentsImage from '@/assets/students.png'
+import consultsImage from '@/assets/consults.png'
+import auditoriesImage from '@/assets/auditories.png'
+import teachersImage from '@/assets/teachers.png'
+
 const authStore = useAuthStore()
 
 const menuCards = [
-  { id: 'students', title: 'Расписание студентов', needAuth: false },
-  { id: 'consults', title: 'Расписание консультаций', needAuth: false },
-  { id: 'auditories', title: 'Расписание аудиторий', needAuth: true },
-  { id: 'teachers', title: 'Расписание преподавателей', needAuth: false },
+  { id: 'students', title: 'Расписание студентов', image: studentsImage, needAuth: false },
+  { id: 'consults', title: 'Расписание консультаций', image: consultsImage, needAuth: false },
+  { id: 'auditories', title: 'Расписание аудиторий', image: auditoriesImage, needAuth: true },
+  { id: 'teachers', title: 'Расписание преподавателей', image: teachersImage, needAuth: false },
 ]
 
 const visibleMenuCards = computed(() => {
@@ -48,7 +53,15 @@ const getCardRoute = (type: string) => ({
             class="menu-card"
             :to="getCardRoute(item.id)"
         >
+          <img
+              class="menu-card-image"
+              :src="item.image"
+              :alt="item.title"
+              aria-hidden="true"
+          />
+
           <h2>{{ item.title }}</h2>
+
           <p v-if="item.needAuth && !authStore.isAuthenticated">
             Требуется авторизация
           </p>

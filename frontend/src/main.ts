@@ -1,7 +1,7 @@
 import { bootstrapTheme, useThemeStore } from '@/stores/theme'
 
 bootstrapTheme()
-import './assets/main.css'
+import './assets/styles/main.css'
 import './assets/styles/common.css'
 import './assets/styles/home.css'
 import './assets/styles/login.css'
