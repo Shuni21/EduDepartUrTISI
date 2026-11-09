@@ -29,7 +29,7 @@ const myScheduleRoute = computed(() => getMyScheduleRoute(authStore.currentUser)
 
 const leftLinks = computed(() => {
   if (role.value === 'student') {
-    return []
+    return allLinks.filter((item) => item.id === 'teachers')
   }
 
   if (role.value === 'teacher') {
