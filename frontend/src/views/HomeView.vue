@@ -19,7 +19,7 @@ const visibleMenuCards = computed(() => {
 
   if (role === 'student') {
     return menuCards.filter(
-        (item) => item.id === 'students' || item.id === 'consults'
+        (item) => item.id === 'students' || item.id === 'consults' || item.id === 'teachers'
     )
   }
 

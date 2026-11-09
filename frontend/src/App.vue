@@ -35,7 +35,7 @@ const mainLinks = [
 
 const visibleMainLinks = computed(() => {
   if (authStore.currentUser?.role === 'student') {
-    return mainLinks.filter((item) => item.id === 'students' || item.id === 'consults')
+    return mainLinks.filter((item) => item.id === 'students' || item.id === 'consults' || item.id === 'teachers')
   }
 
   return mainLinks

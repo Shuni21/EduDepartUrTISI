@@ -17,6 +17,11 @@
   row-gap: 9vh;
   width: fit-content;
 }
+.cards-grid .menu-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 38vh; /* такая же ширина, как у остальных */
+}
 
 .menu-card {
   @apply relative box-border overflow-hidden w-full min-h-[168px] grid place-content-center gap-[13px] rounded-[18px] border border-[#c8c8c8] dark:border-[#3a424d] bg-[#dcdcdc] dark:bg-[#252a31] text-center no-underline text-inherit transition-[transform,box-shadow,background-color,color] duration-[250ms] ease-in-out;
