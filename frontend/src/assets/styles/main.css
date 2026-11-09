@@ -64,17 +64,21 @@ html {
 }
 
 body {
-  @apply bg-[#e8e8e8] text-[#101215] dark:bg-[#121418] dark:text-[#f0f4f7];
+  @apply bg-[linear-gradient(180deg,#f7fbfe_0%,#eef4f9_100%)]
+  text-[#101215]
+  dark:bg-[linear-gradient(180deg,#171b22_0%,#121418_100%)]
+  dark:text-[#f0f4f7];
+
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0;
   overflow-x: hidden;
   font-family:
-    'Segoe UI',
-    Tahoma,
-    Geneva,
-    Verdana,
-    sans-serif;
+          'Segoe UI',
+          Tahoma,
+          Geneva,
+          Verdana,
+          sans-serif;
   line-height: 1.6;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -86,3 +90,4 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
 }
+
