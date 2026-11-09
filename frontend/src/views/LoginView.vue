@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import telegramIcon from '@/assets/telegram.png'
 import vkIcon from '@/assets/vk.png'
 import maxIcon from '@/assets/max.png'
 import bgCard from '@/assets/bg-card.png'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import PasswordInput from '@/components/PasswordInput.vue'
-// import { mockUsers } from '@/mocks/users'   // можно закомментировать или удалить позже
 
 const router = useRouter()
 const authStore = useAuthStore()
