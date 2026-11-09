@@ -266,12 +266,14 @@ function onCancel() {
 
 .main {
   font-size: 0.95rem;
+  color: black
 }
 
 .meta {
   font-size: 0.85rem;
   opacity: 0.75;
   margin-top: 2px;
+  color: black
 }
 
 .conflict-reason {

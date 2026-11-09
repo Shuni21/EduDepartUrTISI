@@ -4,7 +4,7 @@
 }
 
 .admin-panel-page .admin-card {
-  @apply w-full max-w-[450px] min-h-[320px] bg-[#ececec] dark:bg-[#1e2228] border border-[#4ea3d7] rounded-[18px] shadow-[0_6px_14px_rgba(0,0,0,0.15)] flex flex-col items-center gap-[36px] p-[48px] px-[42px] relative z-[2];
+  @apply w-full max-w-[450px] min-h-[320px] bg-[#EAF4FC] dark:bg-[#1e2228] border border-[#4ea3d7] rounded-[18px] shadow-[0_6px_14px_rgba(0,0,0,0.15)] flex flex-col items-center gap-[36px] p-[48px] px-[42px] relative z-[2];
 }
 
 .admin-panel-page .admin-title {
@@ -28,7 +28,7 @@
 }
 
 .admin-edit-page .admin-card {
-  @apply w-full max-w-[1100px] bg-[#ececec] dark:bg-[#1e2228] border border-[#4ea3d7] rounded-[14px] shadow-[0_4px_12px_rgba(0,0,0,0.12)] py-[40px] px-[48px] relative z-[2];
+  @apply w-full max-w-[1100px] bg-[#EAF4FC] dark:bg-[#1e2228] border border-[#4ea3d7] rounded-[14px] shadow-[0_4px_12px_rgba(0,0,0,0.12)] py-[40px] px-[48px] relative z-[2];
 }
 
 .admin-edit-page .card-header {

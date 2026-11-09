@@ -9,7 +9,7 @@
 
 .settings-page .settings-card,
 .settings-detail-page .settings-card {
-  @apply w-full max-w-[450px] bg-[#ececec] dark:bg-[#1e2228] border border-[#4ea3d7] rounded-[18px] shadow-[0_6px_14px_rgba(0,0,0,0.15)] dark:shadow-[0_6px_14px_rgba(0,0,0,0.35)] flex flex-col relative z-[2];
+  @apply w-full max-w-[450px] bg-[#EAF4FC] dark:bg-[#1e2228] border border-[#4ea3d7] rounded-[18px] shadow-[0_6px_14px_rgba(0,0,0,0.15)] dark:shadow-[0_6px_14px_rgba(0,0,0,0.35)] flex flex-col relative z-[2];
 }
 
 .settings-page .settings-card {
@@ -37,7 +37,7 @@
 }
 
 .settings-page .settings-btn--optional {
-  @apply bg-[#ececec] dark:bg-[#252a31] text-[#24313f] dark:text-[#f0f4f7] border border-[#4ea3d7];
+  @apply bg-[#EAF4FC] dark:bg-[#252a31] text-[#24313f] dark:text-[#f0f4f7] border border-[#4ea3d7];
 }
 
 .settings-page .settings-btn--optional:hover {
