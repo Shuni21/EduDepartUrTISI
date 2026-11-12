@@ -19,11 +19,6 @@ const errors = ref<Record<string, string>>({})
 const submitMessage = ref<{ type: 'success' | 'error'; text: string } | null>(null)
 const isSubmitting = ref(false)
 
-
-const isPasswordStrong = computed(() =>
-    passwordRequirements.value.every((item) => item.valid),
-)
-
 const validate = (): boolean => {
   errors.value = {}
 

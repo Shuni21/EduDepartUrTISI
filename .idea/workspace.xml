@@ -4,146 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91e8ec1a-96e3-4795-8700-f4a880f9a12c" name="Changes" comment="Changing settings, including recommendations and profile style.">
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/loco-urtisi.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/loco-urtisi.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/styles/loco-urtisi.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/styles/loco-urtisi.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_10_2026_19_21_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_10_2026_19_21__Changes_.xml" beforeDir="false" />
+    <list default="true" id="91e8ec1a-96e3-4795-8700-f4a880f9a12c" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/academic.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/academic.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/academic.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/academic.module.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/departments-seed.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/departments-seed.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/departments-seed.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/departments-seed.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/departments.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/departments.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/departments.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/departments.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/departments.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/departments.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/departments.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/departments.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/entities/department.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/entities/department.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/entities/department.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/entities/department.entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/entities/group.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/entities/group.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/entities/subgroup.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/entities/subgroup.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/academic/entities/subject.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/academic/entities/subject.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/admin-academic.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/admin-academic.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/admin-academic.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/admin-academic.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/admin.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/admin.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/admin.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/admin.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/admin.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/admin.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/admin.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/admin.module.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/admin.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/admin.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/admin.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/admin.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/create-group.dto.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/create-group.dto.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/create-group.dto.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/create-group.dto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/create-staff-department.dto.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/create-staff-department.dto.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/create-staff-department.dto.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/create-staff-department.dto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/create-teacher-department.dto.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/create-teacher-department.dto.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/create-teacher-department.dto.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/create-teacher-department.dto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/create-user.dto.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/create-user.dto.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/set-department-head.dto.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/set-department-head.dto.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/set-department-head.dto.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/set-department-head.dto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/dto/update-user.dto.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/dto/update-user.dto.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/guards/admin.guard.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/guards/admin.guard.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/admin/roles-seed.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/admin/roles-seed.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/app.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/app.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/app.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/app.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/app.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/app.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/app.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/app.module.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/app.module.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/app.module.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/app.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/app.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/app.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/app.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/auth-user.mapper.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/auth-user.mapper.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/auth.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/auth.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/auth.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/auth.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/auth.controller.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/auth.controller.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/auth.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/auth.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/auth.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/auth.module.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/auth.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/auth.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/auth.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/auth.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/auth.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/auth.service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/entities/refresh-token.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/entities/refresh-token.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/auth/strategies/access-token.strategy.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/auth/strategies/access-token.strategy.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/database/seeds/users.seed.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/database/seeds/users.seed.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/database/users-seed.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/database/users-seed.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/database/users-seed.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/database/users-seed.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/main.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/main.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/consultation-notification-preference.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/consultation-notification-preference.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/consultation-notification-preferences.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/consultation-notification-preferences.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/consultation-notification-preferences.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/consultation-notification-preferences.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/consultation-notifications.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/consultation-notifications.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/consultation-notifications.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/consultation-notifications.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notification.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notification.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications-cleanup.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications-cleanup.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.gateway.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.gateway.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.module.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/push-notifications.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/push-notifications.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/push-subscription.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/push-subscription.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/push-subscriptions.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/push-subscriptions.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/consultation.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/consultation.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/consultation.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/consultation.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/consultation.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/consultation.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/consultation.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/consultation.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/entities/consultation.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/entities/consultation.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/entities/consultation.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/entities/consultation.entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/entities/lesson-type.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/entities/lesson-type.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/entities/room.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/entities/room.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule-item.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule-item.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule-upload.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule-upload.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule-upload.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule-upload.entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/entities/schedule.entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/guards/education-department.guard.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/guards/education-department.guard.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/guards/teacher.guard.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/guards/teacher.guard.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/linked-lecture.utils.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/linked-lecture.utils.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/linked-lesson.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/linked-lesson.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/excel-grid.parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/excel-grid.parser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/excel-grid.parser.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/excel-grid.parser.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-period.utils.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-period.utils.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/resolver/lesson-type.resolver.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/resolver/lesson-type.resolver.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/resolver/room.resolver.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/resolver/room.resolver.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/resolver/teacher.resolver.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/resolver/teacher.resolver.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-display.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-display.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-display.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-display.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-import.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-import.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-import.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-import.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-import.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-import.service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-item.mapper.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-item.mapper.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-notifier.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-notifier.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-preholiday.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-preholiday.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-preholiday.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-preholiday.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule.module.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/sessions/sessions-notifier.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/sessions/sessions-notifier.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/sessions/sessions.gateway.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/sessions/sessions.gateway.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/sessions/sessions.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/sessions/sessions.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/sessions/sessions.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/sessions/sessions.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/sessions/sessions.types.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/sessions/sessions.types.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/education-department-access.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/education-department-access.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/entities/role.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/entities/role.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/entities/staff-profile.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/entities/staff-profile.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/entities/staff-profile.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/entities/staff-profile.entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/entities/student-profile.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/entities/student-profile.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/entities/teacher-profile.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/entities/teacher-profile.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/entities/teacher-profile.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/entities/teacher-profile.entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/entities/user.entity.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/entities/user.entity.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/users.module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/users.module.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/users/users.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/users/users.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/schedule.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/assets/styles/schedule.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/schedule/Schedule.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/schedule/Schedule.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/settings/SettingsChangePasswordView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/settings/SettingsChangePasswordView.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -362,7 +225,7 @@
       <workItem from="1794196751534" duration="11938000" />
       <workItem from="1794213047803" duration="4321000" />
       <workItem from="1794455718228" duration="163000" />
-      <workItem from="1794456094746" duration="1673000" />
+      <workItem from="1794456094746" duration="2075000" />
     </task>
     <task id="LOCAL-00001" summary="add separate file for temporary database">
       <option name="closed" value="true" />
@@ -628,7 +491,15 @@
       <option name="project" value="LOCAL" />
       <updated>1794457758521</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="fix">
+      <option name="closed" value="true" />
+      <created>1794457871715</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1794457871715</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -646,11 +517,9 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Transferring style to a separate file and decoration README.md" />
     <MESSAGE value="Changing the css style" />
     <MESSAGE value="TypeORM" />
     <MESSAGE value="add migration and css fix" />
-    <MESSAGE value="fix" />
     <MESSAGE value="Skipping the gym and fixing Cyrillic display" />
     <MESSAGE value="drag &amp; drop steam transfer and adding pair recognition" />
     <MESSAGE value="Ignoring conflicts and adding pairs" />
@@ -671,6 +540,8 @@
     <MESSAGE value="Changing the color in the background to a cool shade and buttons" />
     <MESSAGE value="Changing window color" />
     <MESSAGE value="Changing settings, including recommendations and profile style." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changing settings, including recommendations and profile style." />
+    <MESSAGE value="Changing style list and the class schedule card header should not overlap the buttons." />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
 </project>
