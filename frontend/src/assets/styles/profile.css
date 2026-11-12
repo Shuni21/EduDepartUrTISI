@@ -3,7 +3,10 @@
 }
 
 .profile-card {
-  @apply w-full max-w-[850px] bg-[#ececec] dark:bg-[#1e2228] border border-[#4ea3d7] rounded-[18px] shadow-[0_6px_14px_rgba(0,0,0,0.15)] dark:shadow-[0_6px_14px_rgba(0,0,0,0.35)] p-[42px] relative z-[2];
+  @apply w-full max-w-[520px] bg-[#EAF4FC] dark:bg-[#1e2228]
+  border border-[#4ea3d7] rounded-[18px]
+  shadow-[0_6px_14px_rgba(0,0,0,0.15)] dark:shadow-[0_6px_14px_rgba(0,0,0,0.35)]
+  p-[36px] relative z-[2];
 }
 
 .profile-info {
@@ -11,19 +14,23 @@
 }
 
 .fullname {
-  @apply text-[18px] leading-[1.8] text-[#101215] dark:text-[#f0f4f7];
+  @apply text-[20px] leading-[1.5] font-medium text-[#101215] dark:text-[#f0f4f7];
+}
+
+.fullname p {
+  @apply m-0;
 }
 
 .divider {
-  @apply w-[270px] h-[2px] bg-[#222] dark:bg-[#3a424d] my-[12px] mx-0 mb-[24px];
+  @apply w-full h-[2px] bg-[#4ea3d7] my-[16px] mx-0 opacity-40;
 }
 
 .details {
-  @apply flex flex-col gap-[18px];
+  @apply flex flex-col gap-[14px];
 }
 
 .detail-row {
-  @apply flex gap-[8px] flex-wrap;
+  @apply flex gap-[8px] flex-wrap text-[15px];
 }
 
 .label {
@@ -35,33 +42,25 @@
 }
 
 .actions {
-  @apply mt-auto flex flex-wrap gap-[20px] pt-[40px];
+  @apply mt-[28px] flex flex-col gap-[12px];
 }
 
 .action-btn {
-  @apply min-w-[240px] h-[52px] border-0 rounded-[14px] bg-[#4ea3d7] text-white text-[15px] cursor-pointer transition-[transform,background-color] duration-[200ms];
+  @apply w-full min-h-[48px] border-0 rounded-[14px] bg-[#4ea3d7]
+  text-white text-[15px] cursor-pointer
+  transition-[transform,background-color] duration-[200ms];
 }
 
 .action-btn:hover {
   @apply bg-[#3f96cb] translate-y-[-2px];
 }
 
-@media (max-width: 900px) {
+@media (max-width: 600px) {
   .profile-card {
     @apply p-[24px];
   }
 
-  .divider {
-    width: 100%;
-  }
-
-  .actions {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 600px) {
-  .action-btn {
-    @apply w-full;
+  .fullname {
+    @apply text-[18px];
   }
 }

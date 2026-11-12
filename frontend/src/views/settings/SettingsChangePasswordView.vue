@@ -19,32 +19,6 @@ const errors = ref<Record<string, string>>({})
 const submitMessage = ref<{ type: 'success' | 'error'; text: string } | null>(null)
 const isSubmitting = ref(false)
 
-const passwordRequirements = computed(() => {
-  const value = form.newPassword
-
-  return [
-    {
-      label: 'Не менее 8 символов',
-      valid: value.length >= 8,
-    },
-    {
-      label: 'Заглавная латинская буква (A–Z)',
-      valid: /[A-Z]/.test(value),
-    },
-    {
-      label: 'Строчная латинская буква (a–z)',
-      valid: /[a-z]/.test(value),
-    },
-    {
-      label: 'Цифра (0–9)',
-      valid: /[0-9]/.test(value),
-    },
-    {
-      label: 'Специальный символ (! @ # $ % ^ & * ( ) _ - +)',
-      valid: /[!@#$%^&*()_\-+]/.test(value),
-    },
-  ]
-})
 
 const isPasswordStrong = computed(() =>
     passwordRequirements.value.every((item) => item.valid),
@@ -59,8 +33,8 @@ const validate = (): boolean => {
 
   if (!form.newPassword) {
     errors.value.newPassword = 'Введите новый пароль'
-  } else if (!isPasswordStrong.value) {
-    errors.value.newPassword = 'Пароль не соответствует требованиям'
+  } else if (form.newPassword.length < 8) {
+    errors.value.newPassword = 'Минимум 8 символов'
   } else if (form.newPassword === form.currentPassword) {
     errors.value.newPassword = 'Новый пароль должен отличаться от текущего'
   }
@@ -157,21 +131,14 @@ const handleSubmit = async () => {
             :error="!!errors.newPassword"
         />
 
-        <!-- Живая подсказка требований -->
         <div class="password-requirements">
-          <p class="password-requirements__title">Требования к паролю</p>
+          <p class="password-requirements__title">Рекомендации к паролю</p>
           <ul class="password-requirements__list">
-            <li
-                v-for="requirement in passwordRequirements"
-                :key="requirement.label"
-                class="password-requirements__item"
-                :class="{ 'password-requirements__item--valid': requirement.valid }"
-            >
-              <span class="password-requirements__icon" aria-hidden="true">
-                {{ requirement.valid ? '✓' : '○' }}
-              </span>
-              <span>{{ requirement.label }}</span>
-            </li>
+            <li>Не менее 8 символов</li>
+            <li>Заглавная латинская буква (A–Z)</li>
+            <li>Строчная латинская буква (a–z)</li>
+            <li>Цифра (0–9)</li>
+            <li>Специальный символ (! @ # $ % ^ & * ( ) _ - +)</li>
           </ul>
         </div>
 
@@ -225,7 +192,6 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-/* Password requirements hint */
 .settings-detail-page .password-requirements {
   @apply mt-[8px] p-[14px] rounded-[10px]
   bg-white dark:bg-[#252a31]
@@ -233,25 +199,16 @@ const handleSubmit = async () => {
 }
 
 .settings-detail-page .password-requirements__title {
-  @apply m-0 mb-[10px] text-[13px] font-medium
+  @apply m-0 mb-[8px] text-[13px] font-medium
   text-[#24313f] dark:text-[#d5dde6];
 }
 
 .settings-detail-page .password-requirements__list {
-  @apply m-0 p-0 list-none flex flex-col gap-[6px];
+  @apply m-0 pl-[18px] text-[13px] leading-[1.5]
+  text-[#5f6975] dark:text-[#9aa3ad];
 }
 
-.settings-detail-page .password-requirements__item {
-  @apply flex items-start gap-[8px] text-[13px]
-  text-[#5f6975] dark:text-[#9aa3ad]
-  transition-colors duration-[150ms];
-}
-
-.settings-detail-page .password-requirements__item--valid {
-  @apply text-[#1f7a45] dark:text-[#7dcea0];
-}
-
-.settings-detail-page .password-requirements__icon {
-  @apply w-[14px] shrink-0 text-[12px] leading-[1.4];
+.settings-detail-page .password-requirements__list li {
+  @apply mb-[2px];
 }
 </style>
