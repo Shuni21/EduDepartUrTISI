@@ -57,12 +57,44 @@ const refresh_token_entity_1 = require("./entities/refresh-token.entity");
 const auth_user_mapper_1 = require("./auth-user.mapper");
 const sessions_notifier_service_1 = require("../sessions/sessions-notifier.service");
 const MAX_ACTIVE_SESSIONS = 3;
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOGIN_BLOCK_MS = 10 * 60_000;
 let AuthService = class AuthService {
     usersService;
     jwtService;
     configService;
     refreshTokenRepository;
     sessionsNotifier;
+    loginAttempts = new Map();
+    getLoginAttemptKey(login, ip) {
+        return `${login.trim().toLowerCase()}|${ip}`;
+    }
+    assertLoginNotBlocked(login, ip) {
+        const key = this.getLoginAttemptKey(login, ip);
+        const entry = this.loginAttempts.get(key);
+        if (!entry?.blockedUntil) {
+            return;
+        }
+        const now = Date.now();
+        if (now < entry.blockedUntil) {
+            const seconds = Math.ceil((entry.blockedUntil - now) / 1000);
+            throw new common_1.UnauthorizedException(`Слишком много попыток входа. Повторите через ${seconds} сек.`);
+        }
+        this.loginAttempts.delete(key);
+    }
+    registerLoginFailure(login, ip) {
+        const key = this.getLoginAttemptKey(login, ip);
+        const entry = this.loginAttempts.get(key) ?? { count: 0 };
+        entry.count += 1;
+        if (entry.count >= MAX_LOGIN_ATTEMPTS) {
+            entry.blockedUntil = Date.now() + LOGIN_BLOCK_MS;
+            entry.count = 0;
+        }
+        this.loginAttempts.set(key, entry);
+    }
+    clearLoginAttempts(login, ip) {
+        this.loginAttempts.delete(this.getLoginAttemptKey(login, ip));
+    }
     constructor(usersService, jwtService, configService, refreshTokenRepository, sessionsNotifier) {
         this.usersService = usersService;
         this.jwtService = jwtService;
@@ -86,18 +118,22 @@ let AuthService = class AuthService {
         }
         return this.generateTokens(userWithDetails);
     }
-    async login(dto) {
+    async login(dto, ip) {
+        this.assertLoginNotBlocked(dto.login, ip);
         const user = await this.usersService.findByLoginWithDetails(dto.login);
         if (!user) {
+            this.registerLoginFailure(dto.login, ip);
             throw new common_1.UnauthorizedException('Неверный login или пароль');
         }
         const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
         if (!isPasswordValid) {
-            throw new common_1.UnauthorizedException('Неверный login или пароль');
+            this.registerLoginFailure(dto.login, ip);
+            throw new common_1.UnauthorizedException('Неверный логин или пароль');
         }
         if (!user.isActive) {
             throw new common_1.ForbiddenException('Учётная запись деактивирована');
         }
+        this.clearLoginAttempts(dto.login, ip);
         return this.generateTokens(user);
     }
     async changePassword(userId, currentSessionId, dto) {

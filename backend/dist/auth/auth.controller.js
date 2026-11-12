@@ -14,12 +14,20 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const throttler_1 = require("@nestjs/throttler");
 const auth_service_1 = require("./auth.service");
 const register_dto_1 = require("./dto/register.dto");
 const login_dto_1 = require("./dto/login.dto");
 const change_password_dto_1 = require("./dto/change-password.dto");
 const refresh_token_guard_1 = require("./guards/refresh-token.guard");
 const access_token_guard_1 = require("./guards/access-token.guard");
+function getClientIp(req) {
+    const forwarded = req.headers['x-forwarded-for'];
+    if (typeof forwarded === 'string' && forwarded.length > 0) {
+        return forwarded.split(',')[0].trim();
+    }
+    return req.ip || req.socket.remoteAddress || 'unknown';
+}
 let AuthController = class AuthController {
     authService;
     constructor(authService) {
@@ -28,8 +36,8 @@ let AuthController = class AuthController {
     register(dto) {
         return this.authService.register(dto);
     }
-    login(dto) {
-        return this.authService.login(dto);
+    login(dto, req) {
+        return this.authService.login(dto, getClientIp(req));
     }
     me(req) {
         return this.authService.getCurrentUser(req.user.sub);
@@ -60,9 +68,11 @@ __decorate([
 ], AuthController.prototype, "register", null);
 __decorate([
     (0, common_1.Post)('login'),
+    (0, throttler_1.Throttle)({ default: { limit: 5, ttl: 60_000 } }),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [login_dto_1.LoginDto]),
+    __metadata("design:paramtypes", [login_dto_1.LoginDto, Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "login", null);
 __decorate([

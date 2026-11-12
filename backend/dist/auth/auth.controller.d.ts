@@ -19,7 +19,7 @@ export declare class AuthController {
         refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
-    login(dto: LoginDto): Promise<{
+    login(dto: LoginDto, req: Request): Promise<{
         accessToken: string;
         refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;

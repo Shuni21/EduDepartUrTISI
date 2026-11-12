@@ -14,13 +14,18 @@ export declare class AuthService {
     private readonly configService;
     private readonly refreshTokenRepository;
     private readonly sessionsNotifier;
+    private readonly loginAttempts;
+    private getLoginAttemptKey;
+    private assertLoginNotBlocked;
+    private registerLoginFailure;
+    private clearLoginAttempts;
     constructor(usersService: UsersService, jwtService: JwtService, configService: ConfigService, refreshTokenRepository: Repository<RefreshToken>, sessionsNotifier: SessionsNotifierService);
     register(dto: RegisterDto): Promise<{
         accessToken: string;
         refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;
     }>;
-    login(dto: LoginDto): Promise<{
+    login(dto: LoginDto, ip: string): Promise<{
         accessToken: string;
         refreshToken: string;
         user: import("./auth-user.mapper").AuthUserResponse;

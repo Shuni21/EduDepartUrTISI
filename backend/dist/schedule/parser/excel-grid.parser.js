@@ -380,7 +380,10 @@ function parseSheetGrid(grid, groupName, period, warnings) {
     return lessons;
 }
 function parseScheduleWorkbook(buffer) {
-    const workbook = XLSX.read(buffer, { type: 'buffer', cellDates: true });
+    const workbook = XLSX.read(buffer, {
+        type: 'buffer',
+        cellDates: true,
+    });
     const sheetName = workbook.SheetNames[0];
     if (!sheetName) {
         throw new Error('Файл не содержит листов');
@@ -390,6 +393,7 @@ function parseScheduleWorkbook(buffer) {
         header: 1,
         defval: null,
         raw: false,
+        blankrows: false,
     });
     const period = combineSchedulePeriods(parseSchedulePeriods(grid));
     const groupName = findGroupName(grid);

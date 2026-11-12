@@ -156,7 +156,9 @@ let ScheduleImportService = ScheduleImportService_1 = class ScheduleImportServic
             },
         });
         if (schedule) {
-            await this.itemsRepository.delete({ scheduleId: schedule.id });
+            await this.itemsRepository.delete({
+                scheduleId: schedule.id,
+            });
             schedule.uploadId = upload.id;
             schedule.isActive = true;
             schedule = await this.schedulesRepository.save(schedule);
@@ -172,18 +174,106 @@ let ScheduleImportService = ScheduleImportService_1 = class ScheduleImportServic
                 isActive: true,
             }));
         }
-        let itemsCount = 0;
+        const uniqueSubjects = [
+            ...new Set(parsed.lessons.map((lesson) => lesson.subject.trim())),
+        ];
+        const subjectEntries = await Promise.all(uniqueSubjects.map(async (subjectName) => {
+            const subject = await this.findOrCreateSubject(subjectName);
+            return [subjectName, subject];
+        }));
+        const subjectMap = new Map(subjectEntries);
+        const uniqueTeachers = [
+            ...new Set(parsed.lessons
+                .map((lesson) => lesson.teacherName?.trim())
+                .filter((teacherName) => Boolean(teacherName))),
+        ];
+        const teacherEntries = await Promise.all(uniqueTeachers.map(async (teacherName) => {
+            const teacher = await this.teacherResolver.resolve(teacherName);
+            return [teacherName, teacher];
+        }));
+        const teacherMap = new Map(teacherEntries);
+        const uniqueRooms = [
+            ...new Set(parsed.lessons
+                .map((lesson) => lesson.room?.trim())
+                .filter((roomName) => Boolean(roomName))),
+        ];
+        const roomEntries = await Promise.all(uniqueRooms.map(async (roomName) => {
+            const room = await this.roomResolver.resolve(roomName);
+            return [roomName, room];
+        }));
+        const roomMap = new Map(roomEntries);
+        const uniqueLessonTypes = [
+            ...new Set(parsed.lessons
+                .map((lesson) => lesson.lessonType.trim())
+                .filter((lessonType) => Boolean(lessonType))),
+        ];
+        const lessonTypeEntries = await Promise.all(uniqueLessonTypes.map(async (lessonTypeName) => {
+            const lessonType = await this.lessonTypeResolver.resolve(lessonTypeName);
+            return [lessonTypeName, lessonType];
+        }));
+        const lessonTypeMap = new Map(lessonTypeEntries);
+        const uniqueSubgroups = [
+            ...new Set(parsed.lessons.map((lesson) => lesson.subgroup)),
+        ];
+        const subgroupEntries = await Promise.all(uniqueSubgroups.map(async (subgroupNumber) => {
+            const subgroup = await this.findSubgroup(group.id, subgroupNumber);
+            return [subgroupNumber, subgroup];
+        }));
+        const subgroupMap = new Map(subgroupEntries);
+        const itemsToInsert = [];
         for (const slot of parsed.lessons) {
-            const item = await this.mapSlotToItem(slot, schedule.id, group.id, warnings);
-            if (!item) {
-                continue;
+            const subjectName = slot.subject.trim();
+            const subject = subjectMap.get(subjectName);
+            if (!subject) {
+                throw new common_1.BadRequestException(`Не найден предмет: ${slot.subject}`);
             }
-            await this.itemsRepository.save(item);
-            itemsCount += 1;
+            const lessonTypeName = slot.lessonType.trim();
+            const lessonType = lessonTypeMap.get(lessonTypeName);
+            if (!lessonType) {
+                throw new common_1.BadRequestException(`Не найден тип занятия: ${slot.lessonType}`);
+            }
+            const roomName = slot.room?.trim() ?? '';
+            const room = roomName
+                ? roomMap.get(roomName) ?? null
+                : null;
+            const teacherName = slot.teacherName?.trim() ?? '';
+            const teacher = teacherName
+                ? teacherMap.get(teacherName) ?? null
+                : null;
+            if (teacherName && !teacher) {
+                warnings.push(`Преподаватель не найден в БД: ${slot.teacherName} (${slot.subject})`);
+            }
+            const subgroup = subgroupMap.get(slot.subgroup) ?? null;
+            const item = this.itemsRepository.create({
+                scheduleId: schedule.id,
+                subjectId: subject.id,
+                subgroupId: subgroup?.id ?? null,
+                lessonTypeId: lessonType.id,
+                teacherId: teacher?.id ?? null,
+                roomId: room?.id ?? null,
+                dayOfWeek: slot.dayOfWeek,
+                startTime: slot.startTime,
+                endTime: slot.endTime,
+                weekStart: this.toDate(slot.weekStart),
+                weekType: null,
+                comment: null,
+                isDisabled: false,
+                isSameCellParallel: slot.isSameCellParallel,
+                teacherPosition: slot.teacherPosition || null,
+                legacyTeacherName: teacher ? null : slot.teacherName,
+            });
+            itemsToInsert.push(item);
+        }
+        const CHUNK_SIZE = 200;
+        if (itemsToInsert.length > 0) {
+            for (let i = 0; i < itemsToInsert.length; i += CHUNK_SIZE) {
+                const chunk = itemsToInsert.slice(i, i + CHUNK_SIZE);
+                await this.itemsRepository.insert(chunk);
+            }
         }
         return {
             scheduleId: schedule.id,
-            itemsCount,
+            itemsCount: itemsToInsert.length,
             warnings: this.dedupeWarnings(warnings),
         };
     }

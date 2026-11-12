@@ -11,6 +11,8 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
 const typeorm_2 = require("@nestjs/typeorm");
 const config_1 = require("@nestjs/config");
+const throttler_1 = require("@nestjs/throttler");
+const core_1 = require("@nestjs/core");
 const typeorm_config_1 = require("./database/typeorm.config");
 const auth_module_1 = require("./auth/auth.module");
 const users_module_1 = require("./users/users.module");
@@ -19,6 +21,7 @@ const academic_module_1 = require("./academic/academic.module");
 const admin_module_1 = require("./admin/admin.module");
 const sessions_module_1 = require("./sessions/sessions.module");
 const notifications_module_1 = require("./notifications/notifications.module");
+const custom_throttler_guard_1 = require("./common/guards/custom-throttler.guard");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,6 +32,13 @@ exports.AppModule = AppModule = __decorate([
                 isGlobal: true,
                 envFilePath: ['.env'],
             }),
+            throttler_1.ThrottlerModule.forRoot([
+                {
+                    name: 'default',
+                    ttl: 60_000,
+                    limit: 120,
+                },
+            ]),
             typeorm_2.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
@@ -57,6 +67,12 @@ exports.AppModule = AppModule = __decorate([
             admin_module_1.AdminModule,
             sessions_module_1.SessionsModule,
             notifications_module_1.NotificationsModule,
+        ],
+        providers: [
+            {
+                provide: core_1.APP_GUARD,
+                useClass: custom_throttler_guard_1.CustomThrottlerGuard,
+            },
         ],
     })
 ], AppModule);
