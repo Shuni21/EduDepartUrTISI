@@ -86,6 +86,21 @@ let editPreviewGeneration = 0
 let transferPreviewGeneration = 0
 let transferDragPreviewGeneration = 0
 
+const isWeekPickerOpen = ref(false)
+
+const toggleWeekPicker = () => {
+  isWeekPickerOpen.value = !isWeekPickerOpen.value
+}
+
+const closeWeekPicker = () => {
+  isWeekPickerOpen.value = false
+}
+
+const selectWeek = (index: number) => {
+  currentWeekIndex.value = index
+  isWeekPickerOpen.value = false
+}
+
 const reloadScheduleSoon = () => {
   if (scheduleReloadTimer) {
     clearTimeout(scheduleReloadTimer)
@@ -2815,6 +2830,10 @@ const syncMobileLayout = (queryList: MediaQueryList | MediaQueryListEvent) => {
   isMobileLayout.value = queryList.matches
 }
 
+const handleOutsideClick = () => {
+  closeWeekPicker()
+}
+
 onMounted(() => {
   void loadPreholidayDays()
   connectScheduleLiveUpdates()
@@ -2823,9 +2842,11 @@ onMounted(() => {
   mobileMediaQuery = window.matchMedia('(max-width: 640px)')
   syncMobileLayout(mobileMediaQuery)
   mobileMediaQuery.addEventListener('change', syncMobileLayout)
+  document.addEventListener('click', handleOutsideClick)
 })
 
 onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick)
   document.removeEventListener('click', closeMenu)
   mobileMediaQuery?.removeEventListener('change', syncMobileLayout)
 
@@ -2878,15 +2899,31 @@ onUnmounted(() => {
         </div>
 
         <div class="week-nav">
-          <select v-model.number="currentWeekIndex" class="week-label week-select" aria-label="Выбрать неделю">
-            <option
-                v-for="(key, index) in weekKeys"
-                :key="key"
-                :value="index"
+          <div class="week-picker" @click.stop>
+            <button
+                type="button"
+                class="week-picker__trigger"
+                :class="{ open: isWeekPickerOpen }"
+                aria-label="Выбрать неделю"
+                @click="toggleWeekPicker"
             >
-              Неделя: {{ key }}
-            </option>
-          </select>
+              <span>Неделя: {{ weekKeys[currentWeekIndex] }}</span>
+              <span class="week-picker__arrow" :class="{ open: isWeekPickerOpen }"></span>
+            </button>
+
+            <div v-if="isWeekPickerOpen" class="week-picker__panel">
+              <button
+                  v-for="(key, index) in weekKeys"
+                  :key="key"
+                  type="button"
+                  class="week-picker__option"
+                  :class="{ active: index === currentWeekIndex }"
+                  @click="selectWeek(index)"
+              >
+                Неделя: {{ key }}
+              </button>
+            </div>
+          </div>
 
           <div class="week-buttons">
             <button type="button" @click="prevWeek" :disabled="currentWeekIndex === 0">

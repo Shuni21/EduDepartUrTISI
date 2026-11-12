@@ -252,6 +252,60 @@
   @apply max-w-[1460px] mx-auto mb-[24px] flex flex-col items-center gap-[14px];
 }
 
+.schedule-page .week-picker {
+  @apply relative z-[20] min-w-[220px];
+}
+
+.schedule-page .week-picker__trigger {
+  @apply w-full min-h-[42px] flex items-center justify-between gap-[12px] px-[16px]
+  border border-[#c9d2dc] dark:border-[#3a424d] rounded-[14px]
+  bg-white dark:bg-[#252a31]
+  text-[#1c232b] dark:text-[#f0f4f7] text-[16px] font-bold
+  shadow-[0_10px_24px_rgba(18,38,63,0.06)] dark:shadow-[0_10px_24px_rgba(0,0,0,0.2)]
+  cursor-pointer text-left;
+}
+
+.schedule-page .week-picker__trigger.open {
+  @apply border-[#2d90d2] rounded-b-none shadow-[0_0_0_2px_rgba(45,144,210,0.12)];
+}
+
+.schedule-page .week-picker__arrow {
+  @apply block w-[8px] h-[8px] border-r-2 border-b-2 border-[#5b6470] dark:border-[#9aa3ad]
+  rotate-45 transition-transform duration-[200ms] ease-in-out mt-[-4px];
+}
+
+.schedule-page .week-picker__arrow.open {
+  @apply rotate-[-135deg] mt-[4px];
+}
+
+.schedule-page .week-picker__panel {
+  @apply absolute top-[calc(100%-1px)] left-0 right-0 z-[30]
+  max-h-[220px] overflow-y-auto pt-[6px] pb-[10px]
+  border-2 border-[#2d90d2] border-t-0 rounded-b-[14px]
+  bg-white dark:bg-[#1e2228]
+  shadow-[0_12px_28px_rgba(18,38,63,0.12)] dark:shadow-[0_12px_28px_rgba(0,0,0,0.28)];
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #59b4ef #eef2f6;
+}
+
+.dark .schedule-page .week-picker__panel {
+  scrollbar-color: #59b4ef #2a3038;
+}
+
+.schedule-page .week-picker__option {
+  @apply w-full py-[10px] px-[16px] border-0 bg-transparent
+  text-[#5f6977] dark:text-[#9aa3ad] text-[16px] text-left cursor-pointer;
+}
+
+.schedule-page .week-picker__option:hover {
+  @apply bg-[rgba(89,180,239,0.08)] dark:bg-[rgba(89,180,239,0.14)];
+}
+
+.schedule-page .week-picker__option.active {
+  @apply text-[#2d90d2] font-semibold bg-[rgba(89,180,239,0.12)] dark:bg-[rgba(89,180,239,0.18)];
+}
+
 .schedule-page .week-label {
   @apply py-[10px] px-[16px] rounded-[12px] bg-[rgba(255,255,255,0.92)] dark:bg-[rgba(37,42,49,0.92)] border border-[#d7e0e9] dark:border-[#3a424d] font-bold;
 }
@@ -570,7 +624,10 @@
 }
 
 .schedule-page .modal-title {
-  @apply m-0 py-[17px] px-[22px] border-b border-[#999999] dark:border-[#3a424d] text-[25px] italic font-normal shrink-0 text-[#101215] dark:text-[#f0f4f7];
+  @apply m-0 py-[17px] pl-[22px] pr-[110px] border-b border-[#999999] dark:border-[#3a424d]
+  text-[25px] italic font-normal shrink-0
+  text-[#101215] dark:text-[#f0f4f7]
+  break-words whitespace-normal leading-[1.25];
 }
 
 .schedule-page .modal-body {
