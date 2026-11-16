@@ -6,7 +6,26 @@
   <component name="ChangeListManager">
     <list default="true" id="91e8ec1a-96e3-4795-8700-f4a880f9a12c" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/settings/SettingsChangePasswordView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/settings/SettingsChangePasswordView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/notifications/notifications.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/notifications/notifications.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/schedule/dto/schedule-item.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/dto/schedule-item.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/schedule/schedule-admin.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/schedule-admin.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/schedule/schedule-admin.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/schedule-admin.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/scheduleAdmin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/scheduleAdmin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/schedule.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/assets/styles/schedule.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/schedule/Schedule.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/schedule/Schedule.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +63,9 @@
     <commands />
     <urls />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -77,7 +99,7 @@
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;npm.Back.executor&quot;: &quot;Run&quot;,
     &quot;npm.Front.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AcpAgentsConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\kiril\\WebstormProjects\\EduDepartUrTISI\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -225,7 +247,10 @@
       <workItem from="1794196751534" duration="11938000" />
       <workItem from="1794213047803" duration="4321000" />
       <workItem from="1794455718228" duration="163000" />
-      <workItem from="1794456094746" duration="2075000" />
+      <workItem from="1794456094746" duration="2363000" />
+      <workItem from="1794471045063" duration="5241000" />
+      <workItem from="1794803437568" duration="946000" />
+      <workItem from="1794809564645" duration="3588000" />
     </task>
     <task id="LOCAL-00001" summary="add separate file for temporary database">
       <option name="closed" value="true" />
@@ -499,7 +524,15 @@
       <option name="project" value="LOCAL" />
       <updated>1794457871715</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="fix">
+      <option name="closed" value="true" />
+      <created>1794458403992</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1794458403992</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

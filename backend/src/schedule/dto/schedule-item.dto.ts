@@ -1,4 +1,5 @@
 import {
+    IsDateString,
     IsInt,
     IsNotEmpty,
     IsOptional,
@@ -167,4 +168,24 @@ export class ScheduleItemPreviewDto {
 export interface ScheduleItemPreviewResultDto {
     conflicts: string[];
     recommendations: ScheduleTransferRecommendationDto[];
+}
+
+export class BulkDisableByTeacherDto {
+    @IsOptional()
+    @IsInt()
+    teacherId?: number;
+
+    @IsOptional()
+    @IsString()
+    teacherName?: string;
+
+    @IsDateString()
+    fromDate!: string;
+
+    @IsDateString()
+    toDate!: string;
+}
+
+export interface BulkDisableResultDto {
+    disabledCount: number;
 }

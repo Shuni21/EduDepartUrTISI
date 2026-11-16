@@ -50,3 +50,12 @@ export interface ScheduleItemPreviewResultDto {
     conflicts: string[];
     recommendations: ScheduleTransferRecommendationDto[];
 }
+export declare class BulkDisableByTeacherDto {
+    teacherId?: number;
+    teacherName?: string;
+    fromDate: string;
+    toDate: string;
+}
+export interface BulkDisableResultDto {
+    disabledCount: number;
+}

@@ -19,6 +19,8 @@ import {
     ScheduleTransferRecommendationDto,
     ScheduleTransferRecommendationQueryDto,
     UpdateScheduleItemDto,
+    BulkDisableByTeacherDto,
+    BulkDisableResultDto,
 } from './dto/schedule-item.dto';
 import { EducationDepartmentGuard } from './guards/education-department.guard';
 import { ScheduleAdminService } from './schedule-admin.service';
@@ -34,6 +36,13 @@ export class ScheduleAdminController {
     @Post()
     createItem(@Body() dto: CreateScheduleItemDto): Promise<ScheduleDisplayLesson> {
         return this.scheduleAdminService.createItem(dto);
+    }
+
+    @Post('bulk-disable')
+    bulkDisableByTeacher(
+        @Body() dto: BulkDisableByTeacherDto,
+    ): Promise<BulkDisableResultDto> {
+        return this.scheduleAdminService.disableItemsByTeacher(dto);
     }
 
     @Get(':id/recommendations')

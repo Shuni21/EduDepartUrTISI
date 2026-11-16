@@ -111,9 +111,31 @@ export async function previewScheduleItemChanges(
   return response.data
 }
 
+export interface BulkDisableByTeacherPayload {
+  teacherId?: number
+  teacherName?: string
+  fromDate: string
+  toDate: string
+}
+
+export interface BulkDisableResult {
+  disabledCount: number
+}
+
+export async function bulkDisableByTeacher(
+    payload: BulkDisableByTeacherPayload,
+): Promise<BulkDisableResult> {
+  const response = await api.post<BulkDisableResult>(
+      '/education-department/schedules/items/bulk-disable',
+      payload,
+  )
+  return response.data
+}
+
 export async function disableScheduleItem(id: number): Promise<void> {
   await api.patch(`/education-department/schedules/items/${id}/disable`)
 }
+
 
 export async function cancelScheduleItem(id: number): Promise<void> {
   await api.delete(`/education-department/schedules/items/${id}`)

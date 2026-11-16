@@ -226,6 +226,131 @@ export class NotificationsService {
         }
     }
 
+    async notifyTeacherPairsBulkDisabled(params: {
+        teacherName: string;
+        fromDate: string;
+        toDate: string;
+        items: ScheduleItem[];
+    }): Promise<void> {
+        try {
+            const { teacherName, fromDate, toDate, items } = params;
+
+            if (items.length === 0) {
+                return;
+            }
+
+            const byGroup = new Map<string, ScheduleItem[]>();
+
+            for (const item of items) {
+                const groupName = item.schedule?.group?.name?.trim();
+                if (!groupName) continue;
+
+                const list = byGroup.get(groupName) ?? [];
+                list.push(item);
+                byGroup.set(groupName, list);
+            }
+
+            const fromLabel = this.formatIsoDate(fromDate);
+            const toLabel = this.formatIsoDate(toDate);
+            const periodLabel = fromLabel === toLabel
+                ? fromLabel
+                : `с ${fromLabel} по ${toLabel}`;
+
+            const teacherLabel = teacherName.trim() || 'преподавателя';
+
+            // Студентам — одна сводка на группу
+            for (const [groupName, groupItems] of byGroup) {
+                const count = groupItems.length;
+                const students = await this.findStudentsByGroupName(groupName, null);
+
+                if (students.length === 0) {
+                    this.logger.warn(
+                        `Bulk disable notification has no students: group=${groupName}`,
+                    );
+                    continue;
+                }
+
+                const message =
+                    `У преподавателя ${teacherLabel} отменены пары ${periodLabel} `;
+
+                const notifications = await this.notificationsRepository.save(
+                    students.map((student) =>
+                        this.notificationsRepository.create({
+                            userId: student.id,
+                            type: NotificationType.SCHEDULE,
+                            title: 'Пары отменены',
+                            message,
+                            payload: {
+                                action: 'bulk-disabled',
+                                teacherName: teacherLabel,
+                                groupName,
+                                fromDate,
+                                toDate,
+                                lessonsCount: count,
+                                scheduleItemIds: groupItems.map((item) => item.id),
+                            },
+                        }),
+                    ),
+                );
+
+                for (const notification of notifications) {
+                    this.notificationsGateway.sendToUser(notification.userId, notification);
+                    void this.pushNotificationsService.sendToUser(notification.userId, notification);
+                }
+            }
+
+            // Преподавателю — одна сводка по всем отменённым парам
+            const teacherIds = new Set(
+                items
+                    .map((item) => item.teacherId)
+                    .filter((id): id is number => typeof id === 'number'),
+            );
+
+            if (teacherIds.size > 0) {
+                const totalCount = items.length;
+                const message =
+                    `Отменены ваши пары ${periodLabel} ` +
+                    `(${totalCount} ${this.formatLessonsCountLabel(totalCount)}).`;
+
+                const teachers = await this.usersRepository.find({
+                    where: {
+                        id: In([...teacherIds]),
+                        isActive: true,
+                    },
+                });
+
+                const notifications = await this.notificationsRepository.save(
+                    teachers.map((teacher) =>
+                        this.notificationsRepository.create({
+                            userId: teacher.id,
+                            type: NotificationType.SCHEDULE,
+                            title: 'Пары отменены',
+                            message,
+                            payload: {
+                                action: 'bulk-disabled',
+                                teacherName: teacherLabel,
+                                fromDate,
+                                toDate,
+                                lessonsCount: totalCount,
+                                scheduleItemIds: items.map((item) => item.id),
+                            },
+                        }),
+                    ),
+                );
+
+                for (const notification of notifications) {
+                    this.notificationsGateway.sendToUser(notification.userId, notification);
+                    void this.pushNotificationsService.sendToUser(notification.userId, notification);
+                }
+            }
+        } catch (error) {
+            this.logger.error(
+                'Failed to send bulk disable notifications',
+                error instanceof Error ? error.stack : String(error),
+            );
+        }
+    }
+
     createScheduleItemSnapshot(item: ScheduleItem): ScheduleItemNotificationSnapshot {
         return {
             id: item.id,
@@ -717,4 +842,5 @@ export class NotificationsService {
 
         return value.slice(0, 10) === `${year}-${month}-${day}`;
     }
+
 }

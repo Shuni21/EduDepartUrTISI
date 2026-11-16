@@ -26,6 +26,9 @@ let ScheduleAdminController = class ScheduleAdminController {
     createItem(dto) {
         return this.scheduleAdminService.createItem(dto);
     }
+    bulkDisableByTeacher(dto) {
+        return this.scheduleAdminService.disableItemsByTeacher(dto);
+    }
     getTransferRecommendations(id, query) {
         return this.scheduleAdminService.getTransferRecommendations(id, query.weekStart);
     }
@@ -53,6 +56,13 @@ __decorate([
     __metadata("design:paramtypes", [schedule_item_dto_1.CreateScheduleItemDto]),
     __metadata("design:returntype", Promise)
 ], ScheduleAdminController.prototype, "createItem", null);
+__decorate([
+    (0, common_1.Post)('bulk-disable'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [schedule_item_dto_1.BulkDisableByTeacherDto]),
+    __metadata("design:returntype", Promise)
+], ScheduleAdminController.prototype, "bulkDisableByTeacher", null);
 __decorate([
     (0, common_1.Get)(':id/recommendations'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),

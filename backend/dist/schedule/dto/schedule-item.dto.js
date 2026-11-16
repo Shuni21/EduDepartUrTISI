@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScheduleItemPreviewDto = exports.ScheduleTransferRecommendationQueryDto = exports.UpdateScheduleItemDto = exports.CreateScheduleItemDto = void 0;
+exports.BulkDisableByTeacherDto = exports.ScheduleItemPreviewDto = exports.ScheduleTransferRecommendationQueryDto = exports.UpdateScheduleItemDto = exports.CreateScheduleItemDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateScheduleItemDto {
     groupName;
@@ -224,4 +224,29 @@ __decorate([
     (0, class_validator_1.Max)(2),
     __metadata("design:type", Object)
 ], ScheduleItemPreviewDto.prototype, "subgroup", void 0);
+class BulkDisableByTeacherDto {
+    teacherId;
+    teacherName;
+    fromDate;
+    toDate;
+}
+exports.BulkDisableByTeacherDto = BulkDisableByTeacherDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    __metadata("design:type", Number)
+], BulkDisableByTeacherDto.prototype, "teacherId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], BulkDisableByTeacherDto.prototype, "teacherName", void 0);
+__decorate([
+    (0, class_validator_1.IsDateString)(),
+    __metadata("design:type", String)
+], BulkDisableByTeacherDto.prototype, "fromDate", void 0);
+__decorate([
+    (0, class_validator_1.IsDateString)(),
+    __metadata("design:type", String)
+], BulkDisableByTeacherDto.prototype, "toDate", void 0);
 //# sourceMappingURL=schedule-item.dto.js.map

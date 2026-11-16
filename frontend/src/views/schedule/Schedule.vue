@@ -20,6 +20,7 @@ import {
 import {
   createScheduleItem,
   cancelScheduleItem,
+  bulkDisableByTeacher,
   fetchScheduleItemLinkedGroups,
   fetchScheduleTransferRecommendations,
   previewScheduleItemChanges,
@@ -208,7 +209,7 @@ const DAY_TO_OFFSET: Record<string, number> = {
   СБ: 5,
 }
 
-//Праздники
+//Праздники (отдельно их вынести)
 const PUBLIC_HOLIDAYS: Record<string, string> = {
   '01-01': 'Новогодние каникулы',
   '01-02': 'Новогодние каникулы',
@@ -2824,6 +2825,128 @@ const canEdit = computed(() => {
   return hasScheduleManageAccess(authStore.currentUser)
 })
 
+
+const isBulkDisabling = ref(false)
+const isBulkDisableModalVisible = ref(false)
+
+const bulkFromDate = ref('')
+const bulkToDate = ref('')
+const bulkMinDate = ref('')
+const bulkMaxDate = ref('')
+
+const bulkWeekOptions = computed(() =>
+    weekKeys.value.filter((key) => !isPastWeek(key)),
+)
+
+const formatDateInput = (date: Date): string => {
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
+const formatIsoDateForDisplay = (value: string): string => {
+  const [year, month, day] = value.split('-')
+  return `${day}.${month}.${year}`
+}
+
+function openBulkDisableModal() {
+  if (scheduleType.value !== 'teachers' || !secondValue.value) return
+
+  const options = bulkWeekOptions.value
+  const firstOption = options.at(0)
+  const lastOption = options.at(-1)
+
+  if (!firstOption || !lastOption) {
+    void confirmDialog.alert({
+      title: 'Нет будущих недель',
+      message: 'Нет недель, по которым можно отменить пары.',
+    })
+    return
+  }
+
+  const firstWeekDate = resolveWeekStartDate(firstOption)
+  const lastWeekDate = resolveWeekStartDate(lastOption)
+
+  if (!firstWeekDate || !lastWeekDate) {
+    void confirmDialog.alert({
+      title: 'Ошибка',
+      message: 'Не удалось определить даты расписания.',
+    })
+    return
+  }
+
+  const today = formatDateInput(new Date())
+  const firstDate = formatDateInput(firstWeekDate)
+  const lastDate = new Date(lastWeekDate)
+  lastDate.setDate(lastDate.getDate() + 6)
+
+  bulkMinDate.value = today
+  bulkMaxDate.value = formatDateInput(lastDate)
+  bulkFromDate.value = firstDate > today ? firstDate : today
+  bulkToDate.value = bulkMaxDate.value
+
+  isBulkDisableModalVisible.value = true
+}
+
+function closeBulkDisableModal() {
+  isBulkDisableModalVisible.value = false
+}
+
+async function confirmBulkDisable() {
+  const teacherName = secondValue.value.trim()
+  const fromDate = bulkFromDate.value
+  const toDate = bulkToDate.value
+
+  if (!teacherName) return
+
+  if (!fromDate || !toDate || fromDate > toDate) {
+    await confirmDialog.alert({
+      title: 'Проверьте даты',
+      message: 'Дата начала должна быть не позже даты окончания.',
+    })
+    return
+  }
+
+  const confirmed = await confirmDialog.confirm({
+    title: 'Отменить пары',
+    message:
+        `Отменить пары преподавателя «${teacherName}» ` +
+        `с ${formatIsoDateForDisplay(fromDate)} по ${formatIsoDateForDisplay(toDate)}? ` +
+        'Группы получат уведомления.',
+    confirmText: 'Отменить пары',
+    cancelText: 'Назад',
+  })
+
+  if (!confirmed) return
+
+  isBulkDisabling.value = true
+
+  try {
+    const result = await bulkDisableByTeacher({
+      teacherName,
+      fromDate,
+      toDate,
+    })
+
+    closeBulkDisableModal()
+
+    await confirmDialog.alert({
+      title: 'Готово',
+      message: result.disabledCount > 0
+          ? `Отменено пар: ${result.disabledCount}. Группы уведомлены.`
+          : 'Пар для отмены в выбранном периоде не найдено.',
+    })
+
+    await refreshSchedulePreservingView()
+  } catch (error) {
+    await showScheduleAdminError(error)
+  } finally {
+    isBulkDisabling.value = false
+  }
+}
+
+
 const canManagePairs = computed(() => canEdit.value && scheduleType.value !== 'consults')
 
 const syncMobileLayout = (queryList: MediaQueryList | MediaQueryListEvent) => {
@@ -2882,6 +3005,16 @@ onUnmounted(() => {
     <section class="schedule-page">
       <div class="page-head">
         <h1 class="title">{{ pageTitle }}</h1>
+
+        <button
+            v-if="scheduleType === 'teachers' && canManagePairs"
+            type="button"
+            class="bulk-disable-btn"
+            :disabled="isBulkDisabling || isLoadingSchedule"
+            @click="openBulkDisableModal"
+        >
+          Отменить пары...
+        </button>
       </div>
 
       <div v-if="isLoadingSchedule && !hasLoadedScheduleOnce && !isConsultationSchedule" class="empty-state">
@@ -3185,6 +3318,103 @@ onUnmounted(() => {
           Попробуйте вернуться назад и выбрать другие параметры.
         </p>
       </div>
+
+
+      <template>
+        <PageFrame>
+          <section class="schedule-page">
+            <!-- Здесь остаётся весь твой текущий код расписания -->
+          </section>
+        </PageFrame>
+
+        <Teleport to="body">
+          <div
+              v-if="isBulkDisableModalVisible"
+              class="schedule-page schedule-modal-host"
+          >
+            <div class="modal-overlay" @click.self="closeBulkDisableModal">
+              <div
+                  class="modal bulk-disable-modal"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="bulk-disable-title"
+                  @click.stop
+              >
+                <button
+                    type="button"
+                    class="close-btn"
+                    aria-label="Закрыть"
+                    @click="closeBulkDisableModal"
+                >
+                  ✕
+                </button>
+
+                <h2 id="bulk-disable-title" class="modal-title">
+                  Отменить пары преподавателя
+                </h2>
+
+                <div class="modal-body">
+                  <div class="transfer-summary">
+                    <strong>{{ secondValue }}</strong>
+                  </div>
+
+                  <div class="edit-form">
+                    <div class="form-group">
+                      <label for="bulk-disable-from" class="form-label">
+                        С даты
+                      </label>
+                      <input
+                          id="bulk-disable-from"
+                          v-model="bulkFromDate"
+                          type="date"
+                          class="form-input"
+                          :min="bulkMinDate"
+                          :max="bulkMaxDate"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="bulk-disable-to" class="form-label">
+                        По дату
+                      </label>
+                      <input
+                          id="bulk-disable-to"
+                          v-model="bulkToDate"
+                          type="date"
+                          class="form-input"
+                          :min="bulkFromDate || bulkMinDate"
+                          :max="bulkMaxDate"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="edit-actions">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        :disabled="isBulkDisabling"
+                        @click="closeBulkDisableModal"
+                    >
+                      Назад
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        :disabled="isBulkDisabling"
+                        @click="confirmBulkDisable"
+                    >
+                      {{ isBulkDisabling ? 'Отмена...' : 'Отменить пары' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Teleport>
+      </template>
+
+
     </section>
   </PageFrame>
 

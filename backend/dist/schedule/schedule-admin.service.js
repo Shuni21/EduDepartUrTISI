@@ -127,6 +127,19 @@ let ScheduleAdminService = class ScheduleAdminService {
         const pad = (part) => part.padStart(2, '0');
         return `${year}-${pad(month)}-${pad(day)}`;
     }
+    toIsoDateString(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    getWeekStartIso(dateIso) {
+        const [year, month, day] = dateIso.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        const daysFromMonday = (date.getDay() + 6) % 7;
+        date.setDate(date.getDate() - daysFromMonday);
+        return this.toIsoDateString(date);
+    }
     normalizeTeacherLabel(rawTeacherName) {
         const trimmed = rawTeacherName?.trim().replace(/\s+/g, ' ') ?? '';
         if (!trimmed) {
@@ -526,10 +539,7 @@ let ScheduleAdminService = class ScheduleAdminService {
         if (!date) {
             return '';
         }
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${year}-${month}-${day}`;
+        return this.toIsoDateString(date);
     }
     async loadPreholidayDayKeys(weekStart) {
         const weekStartDate = this.parseRecommendationDate(weekStart, 1);
@@ -831,6 +841,81 @@ let ScheduleAdminService = class ScheduleAdminService {
         await this.itemsRepository.delete(id);
         this.scheduleNotifier.notifyScheduleChanged('item-deleted', targets);
         await this.notificationsService.notifyScheduleItemChanged('cancelled', item);
+    }
+    async disableItemsByTeacher(dto) {
+        if (!dto.teacherId && !dto.teacherName?.trim()) {
+            throw new common_1.BadRequestException('Укажите teacherId или teacherName');
+        }
+        const fromDate = this.toDate(dto.fromDate);
+        const toDate = this.toDate(dto.toDate);
+        if (fromDate > toDate) {
+            throw new common_1.BadRequestException('Дата начала не может быть позже даты окончания');
+        }
+        const fromWeekStart = this.getWeekStartIso(fromDate);
+        const toWeekStart = this.getWeekStartIso(toDate);
+        const today = this.toIsoDateString(new Date());
+        const qb = this.itemsRepository
+            .createQueryBuilder('item')
+            .leftJoinAndSelect('item.schedule', 'schedule')
+            .leftJoinAndSelect('schedule.group', 'group')
+            .leftJoinAndSelect('item.subject', 'subject')
+            .leftJoinAndSelect('item.lessonType', 'lessonType')
+            .leftJoinAndSelect('item.teacher', 'teacher')
+            .leftJoinAndSelect('item.room', 'room')
+            .leftJoinAndSelect('item.subgroup', 'subgroup')
+            .where('item.isDisabled = false')
+            .andWhere('item.weekStart BETWEEN :fromWeekStart AND :toWeekStart', { fromWeekStart, toWeekStart });
+        if (dto.teacherId) {
+            qb.andWhere('item.teacherId = :teacherId', {
+                teacherId: dto.teacherId,
+            });
+        }
+        else {
+            const normalized = this.normalizeTeacherLabel(dto.teacherName);
+            qb.andWhere('(item.legacyTeacherName = :name OR item.teacherId IN ' +
+                '(SELECT u.id FROM users u WHERE CONCAT(u.surname, \' \', LEFT(u.name, 1), \'.\', LEFT(u.patronymic, 1), \'.\') = :name))', { name: normalized });
+        }
+        const items = await qb.getMany();
+        const futureItems = items.filter((item) => {
+            const lessonDate = this.getDateKey(String(item.weekStart), item.dayOfWeek);
+            return Boolean(lessonDate)
+                && lessonDate >= fromDate
+                && lessonDate <= toDate
+                && lessonDate >= today;
+        });
+        if (futureItems.length === 0) {
+            return { disabledCount: 0 };
+        }
+        const allTargets = new Map();
+        for (const item of futureItems) {
+            const linked = await this.findLinkedLectureItems(item);
+            for (const linkedItem of linked) {
+                const linkedDate = this.getDateKey(String(linkedItem.weekStart), linkedItem.dayOfWeek);
+                if (linkedDate
+                    && linkedDate >= fromDate
+                    && linkedDate <= toDate
+                    && linkedDate >= today) {
+                    allTargets.set(linkedItem.id, linkedItem);
+                }
+            }
+        }
+        const toDisable = [...allTargets.values()];
+        const targets = this.scheduleNotifier.getTargetsForItems(toDisable);
+        for (const item of toDisable) {
+            item.isDisabled = true;
+            await this.itemsRepository.save(item);
+        }
+        this.scheduleNotifier.notifyScheduleChanged('item-disabled', targets);
+        const teacherName = dto.teacherName?.trim()
+            || (toDisable[0] ? (0, schedule_item_mapper_1.resolveTeacherName)(toDisable[0]) : 'преподаватель');
+        const fullItems = await Promise.all(toDisable.map((item) => this.loadItemWithRelations(item.id)));
+        await this.notificationsService.notifyTeacherPairsBulkDisabled({
+            teacherName,
+            fromDate,
+            toDate,
+            items: fullItems,
+        });
+        return { disabledCount: toDisable.length };
     }
 };
 exports.ScheduleAdminService = ScheduleAdminService;

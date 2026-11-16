@@ -42,6 +42,12 @@ export declare class NotificationsService {
     }): Promise<void>;
     notifyPreholidayDayCreated(date: string): Promise<void>;
     notifyScheduleItemChanged(action: ScheduleNotificationAction, item: ScheduleItem, previousItem?: ScheduleItemNotificationSnapshot): Promise<void>;
+    notifyTeacherPairsBulkDisabled(params: {
+        teacherName: string;
+        fromDate: string;
+        toDate: string;
+        items: ScheduleItem[];
+    }): Promise<void>;
     createScheduleItemSnapshot(item: ScheduleItem): ScheduleItemNotificationSnapshot;
     private resolveRecipients;
     private addStudentRecipients;

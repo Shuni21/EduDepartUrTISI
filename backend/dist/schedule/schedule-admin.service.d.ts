@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { Group } from '../academic/entities/group.entity';
 import { Subject } from '../academic/entities/subject.entity';
 import { Subgroup } from '../academic/entities/subgroup.entity';
-import { CreateScheduleItemDto, ScheduleItemPreviewDto, ScheduleItemPreviewResultDto, ScheduleTransferRecommendationDto, UpdateScheduleItemDto } from './dto/schedule-item.dto';
+import { CreateScheduleItemDto, ScheduleItemPreviewDto, ScheduleItemPreviewResultDto, ScheduleTransferRecommendationDto, UpdateScheduleItemDto, BulkDisableByTeacherDto, BulkDisableResultDto } from './dto/schedule-item.dto';
 import { Schedule } from './entities/schedule.entity';
 import { ScheduleItem } from './entities/schedule-item.entity';
 import { SchedulePreholidayDay } from './entities/schedule-preholiday-day.entity';
@@ -28,6 +28,8 @@ export declare class ScheduleAdminService {
     private readonly linkedLessonService;
     constructor(itemsRepository: Repository<ScheduleItem>, schedulesRepository: Repository<Schedule>, groupsRepository: Repository<Group>, subjectsRepository: Repository<Subject>, subgroupsRepository: Repository<Subgroup>, preholidayDaysRepository: Repository<SchedulePreholidayDay>, roomResolver: RoomResolver, teacherResolver: TeacherResolver, lessonTypeResolver: LessonTypeResolver, scheduleNotifier: ScheduleNotifierService, notificationsService: NotificationsService, linkedLessonService: LinkedLessonService);
     private toDate;
+    private toIsoDateString;
+    private getWeekStartIso;
     private normalizeTeacherLabel;
     private findOrCreateGroup;
     private findOrCreateSubject;
@@ -64,4 +66,5 @@ export declare class ScheduleAdminService {
     updateItem(id: number, dto: UpdateScheduleItemDto): Promise<ScheduleDisplayLesson>;
     disableItem(id: number): Promise<void>;
     deleteItem(id: number): Promise<void>;
+    disableItemsByTeacher(dto: BulkDisableByTeacherDto): Promise<BulkDisableResultDto>;
 }
