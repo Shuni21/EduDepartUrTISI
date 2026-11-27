@@ -245,12 +245,15 @@ export const SPECIAL_LESSON_TYPE = 'Особое' as const
 
 export const KR_DEFENSE_LESSON_TYPE = 'Защита КР' as const
 
+export const KP_DEFENSE_LESSON_TYPE = 'Защита КП' as const
+
 export const LESSON_TYPE_OPTIONS = [
   'Лекция',
   'Практика',
   'Лабораторная',
   'Зачёт',
   KR_DEFENSE_LESSON_TYPE,
+  KP_DEFENSE_LESSON_TYPE,
   SPECIAL_LESSON_TYPE,
 ] as const
 

@@ -38,7 +38,11 @@ function parseSubgroupNumber(value: string): number | null {
 }
 
 function isKrDefenseLessonType(value: string): boolean {
-    return value.includes('защ') && value.includes('кр');
+    return value.includes('защ') && value.includes('кр') && !value.includes('кп');
+}
+
+function isKpDefenseLessonType(value: string): boolean {
+    return value.includes('защ') && value.includes('кп');
 }
 
 function isSelfStudySpecialDay(value: string): boolean {
@@ -60,6 +64,7 @@ function normalizeLessonType(raw: string): string {
     if (value.startsWith('лек')) return 'Лекция';
     if (value.startsWith('практ')) return 'Практика';
     if (value.startsWith('лаб')) return 'Лаб. раб.';
+    if (isKpDefenseLessonType(value)) return 'Защита КП';
     if (isKrDefenseLessonType(value)) return 'Защита КР';
     if (value.includes('зач')) return 'Зачет';
 

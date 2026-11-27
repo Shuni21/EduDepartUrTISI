@@ -3113,7 +3113,7 @@ onUnmounted(() => {
 
             <div class="legend-item">
               <span class="box exam"></span>
-              Зачёт/защита КР
+              Зачёт/защита КР/КП
             </div>
 
             <div class="legend-item">

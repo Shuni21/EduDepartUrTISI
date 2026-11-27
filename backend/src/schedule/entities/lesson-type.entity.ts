@@ -7,6 +7,7 @@ export enum LessonTypeCode {
     LAB = 'lab',
     CREDIT = 'credit',
     KR_DEFENSE = 'kr_defense',
+    KP_DEFENSE = 'kp_defense',
     SPECIAL = 'special',
 }
 
