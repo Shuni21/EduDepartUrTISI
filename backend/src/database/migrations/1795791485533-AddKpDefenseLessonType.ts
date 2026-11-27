@@ -8,6 +8,7 @@ export class AddKpDefenseLessonType1795791485533 implements MigrationInterface {
         await queryRunner.query(`CREATE TYPE "public"."lesson_types_code_enum" AS ENUM('lecture', 'practice', 'lab', 'credit', 'kr_defense', 'kp_defense', 'special')`);
         await queryRunner.query(`ALTER TABLE "lesson_types" ALTER COLUMN "code" TYPE "public"."lesson_types_code_enum" USING "code"::"text"::"public"."lesson_types_code_enum"`);
         await queryRunner.query(`DROP TYPE "public"."lesson_types_code_enum_old"`);
+        await queryRunner.query(`INSERT INTO "lesson_types" ("code", "name") SELECT 'kp_defense', 'Защита КП' WHERE NOT EXISTS (SELECT 1 FROM "lesson_types" WHERE "code" = 'kp_defense')`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

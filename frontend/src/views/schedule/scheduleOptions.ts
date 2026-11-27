@@ -441,8 +441,40 @@ export function getRomanRoomHint(room: string): (RomanRoomInfo & { key: RomanRoo
   return { key, ...ROMAN_ROOM_HINTS[key] }
 }
 
+function compactLessonType(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[^a-zа-я0-9]+/gi, '')
+}
+
+function isKpDefenseLessonType(value: string): boolean {
+  const compact = compactLessonType(value)
+
+  if (!compact) {
+    return false
+  }
+
+  return compact.includes('курсовойпроект')
+    || compact.includes('курспроект')
+    || compact === 'кп'
+    || compact === 'зкп'
+    || (compact.includes('защ') && compact.includes('кп'))
+}
+
 function isKrDefenseLessonType(value: string): boolean {
-  return value.includes('защ') && value.includes('кр')
+  const compact = compactLessonType(value)
+
+  if (!compact || isKpDefenseLessonType(value)) {
+    return false
+  }
+
+  return compact.includes('курсоваяработа')
+    || compact.includes('курсработа')
+    || compact === 'кр'
+    || compact === 'зкр'
+    || (compact.includes('защ') && compact.includes('кр'))
 }
 
 export function isSubgroupApplicableLessonType(type: string): boolean {
@@ -451,6 +483,7 @@ export function isSubgroupApplicableLessonType(type: string): boolean {
   return value.includes('практ')
     || value.includes('лаб')
     || value.includes('зач')
+    || isKpDefenseLessonType(value)
     || isKrDefenseLessonType(value)
 }
 
@@ -520,8 +553,11 @@ export function normalizeLessonTypeForForm(type: string): string {
   if (value.includes('лек')) return 'Лекция'
   if (value.includes('практ')) return 'Практика'
   if (value.includes('лаб')) return 'Лабораторная'
+  if (isKpDefenseLessonType(value)) return KP_DEFENSE_LESSON_TYPE
   if (isKrDefenseLessonType(value)) return KR_DEFENSE_LESSON_TYPE
-  if (value.includes('зач')) return 'Зачёт'
+  if (compactLessonType(value) === 'зач' || compactLessonType(value).startsWith('зачет')) {
+    return 'Зачёт'
+  }
 
   return type
 }
@@ -536,7 +572,15 @@ export function getLessonGridClass(type: string): string {
   if (lessonType.includes('лек')) return 'lecture'
   if (lessonType.includes('практ')) return 'practice'
   if (lessonType.includes('лаб')) return 'lab'
-  if (lessonType.includes('зач') || lessonType.includes('защ')) return 'exam'
+  if (
+    isKpDefenseLessonType(lessonType)
+    || isKrDefenseLessonType(lessonType)
+    || compactLessonType(lessonType) === 'зач'
+    || compactLessonType(lessonType).startsWith('зачет')
+    || lessonType.includes('защ')
+  ) {
+    return 'exam'
+  }
 
   return ''
 }

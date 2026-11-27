@@ -85,10 +85,14 @@ function isTeacherConflictAllowed(first, second) {
 function validateScheduleConflicts(lessons, existingLessons = []) {
     const conflicts = [];
     const allLessons = [...existingLessons, ...lessons];
+    const incoming = new Set(lessons);
     for (let i = 0; i < allLessons.length; i += 1) {
         for (let j = i + 1; j < allLessons.length; j += 1) {
             const first = allLessons[i];
             const second = allLessons[j];
+            if (!incoming.has(first) && !incoming.has(second)) {
+                continue;
+            }
             if (!overlapsSameSlot(first, second)) {
                 continue;
             }

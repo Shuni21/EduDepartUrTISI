@@ -186,16 +186,17 @@ export class ScheduleUploadService implements OnModuleInit {
         );
         const allExisting = [...existingSameGroupLessons, ...otherGroupsLessons];
 
-        // Конфликты по каждой паре отдельно (не бросаем исключение)
-        // Помечаем только конфликты, в которых участвует ЗАГРУЖАЕМАЯ группа
+        // Конфликты по каждой паре отдельно (не бросаем исключение).
+        // Учитываем только столкновения самой загружаемой пары, без старых
+        // конфликтов, которые уже лежат в базе между другими занятиями.
         const conflictByIndex = new Map<number, string>();
         parsed.lessons.forEach((lesson, index) => {
-            const conflicts = validateScheduleConflicts([lesson], allExisting);
-            const relevant = conflicts.filter((c) =>
-                c.message.includes(parsed.groupName),
-            );
-            if (relevant.length > 0) {
-                conflictByIndex.set(index, relevant.map((c) => c.message).join('; '));
+            const conflicts = validateScheduleConflicts([lesson], allExisting)
+                .filter((conflict) =>
+                    conflict.lessonA === lesson || conflict.lessonB === lesson,
+                );
+            if (conflicts.length > 0) {
+                conflictByIndex.set(index, conflicts.map((c) => c.message).join('; '));
             }
         });
 
@@ -276,33 +277,6 @@ export class ScheduleUploadService implements OnModuleInit {
             parsed.periodStart!,
             parsed.periodEnd!,
         );
-        const obsoleteUploadIds = obsoleteUploads.map((u) => u.id);
-        const excludePeriod = {
-            validFrom: this.toDate(parsed.periodStart!),
-            validTo: this.toDate(parsed.periodEnd!),
-        };
-
-        const existingSameGroupLessons = await this.loadExistingLessons(
-            parsed.groupName,
-            obsoleteUploadIds,
-            excludePeriod,
-        );
-        const otherGroupsLessons = await this.loadOtherGroupsLessons(
-            parsed.groupName,
-            obsoleteUploadIds,
-        );
-
-        // Проверяем конфликты ТОЛЬКО среди выбранных
-        // Конфликты не блокируют загрузку (общие лекции / потоки между группами — норма)
-        const conflicts = validateScheduleConflicts(
-            selectedLessons,
-            [...existingSameGroupLessons, ...otherGroupsLessons],
-        );
-
-        // только конфликты с участием загружаемой группы
-        const conflictWarnings = conflicts
-            .map((c) => c.message)
-            .filter((msg) => msg.includes(parsed.groupName));
 
         const allWarnings = parsed.warnings.filter((warning) => !isConflictWarning(warning));
         const storedFileName = normalizeStoredFileName(originalFileName);
@@ -837,6 +811,9 @@ export class ScheduleUploadService implements OnModuleInit {
         const conflicts = validateScheduleConflicts(
             parsed.lessons,
             [...existingSameGroupLessons, ...otherGroupsLessons],
+        ).filter((conflict) =>
+            parsed.lessons.includes(conflict.lessonA)
+            || parsed.lessons.includes(conflict.lessonB),
         );
 
         if (conflicts.length > 0) {

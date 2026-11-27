@@ -17,27 +17,27 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const lesson_type_entity_1 = require("../entities/lesson-type.entity");
+const lesson_type_utils_1 = require("../parser/lesson-type.utils");
 let LessonTypeResolver = class LessonTypeResolver {
     lessonTypesRepository;
     constructor(lessonTypesRepository) {
         this.lessonTypesRepository = lessonTypesRepository;
     }
-    isKrDefenseLessonType(value) {
-        return value.includes('защ') && value.includes('кр');
-    }
     mapRawToCode(raw) {
-        const value = raw.trim().toLowerCase();
-        if (value.startsWith('лек'))
+        const compact = (0, lesson_type_utils_1.compactLessonType)(raw);
+        if (compact.startsWith('лек'))
             return lesson_type_entity_1.LessonTypeCode.LECTURE;
-        if (value.startsWith('практ'))
+        if (compact.startsWith('практ'))
             return lesson_type_entity_1.LessonTypeCode.PRACTICE;
-        if (value.startsWith('лаб'))
+        if (compact.startsWith('лаб'))
             return lesson_type_entity_1.LessonTypeCode.LAB;
-        if (this.isKrDefenseLessonType(value))
+        if ((0, lesson_type_utils_1.isKpDefenseLessonType)(raw))
+            return lesson_type_entity_1.LessonTypeCode.KP_DEFENSE;
+        if ((0, lesson_type_utils_1.isKrDefenseLessonType)(raw))
             return lesson_type_entity_1.LessonTypeCode.KR_DEFENSE;
-        if (value.includes('зач'))
+        if ((0, lesson_type_utils_1.isCreditLessonType)(raw))
             return lesson_type_entity_1.LessonTypeCode.CREDIT;
-        if (value.includes('куратор') || value === 'особое' || value === 'особенное') {
+        if (compact.includes('куратор') || compact === 'особое' || compact === 'особенное') {
             return lesson_type_entity_1.LessonTypeCode.SPECIAL;
         }
         return lesson_type_entity_1.LessonTypeCode.PRACTICE;
@@ -52,6 +52,7 @@ let LessonTypeResolver = class LessonTypeResolver {
             case lesson_type_entity_1.LessonTypeCode.LAB: return 'Лаб. раб.';
             case lesson_type_entity_1.LessonTypeCode.CREDIT: return 'Зачёт';
             case lesson_type_entity_1.LessonTypeCode.KR_DEFENSE: return 'Защита КР';
+            case lesson_type_entity_1.LessonTypeCode.KP_DEFENSE: return 'Защита КП';
             case lesson_type_entity_1.LessonTypeCode.SPECIAL: return 'Особое';
             default: return raw.trim();
         }

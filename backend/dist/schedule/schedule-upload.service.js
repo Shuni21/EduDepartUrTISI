@@ -112,10 +112,10 @@ let ScheduleUploadService = class ScheduleUploadService {
         const allExisting = [...existingSameGroupLessons, ...otherGroupsLessons];
         const conflictByIndex = new Map();
         parsed.lessons.forEach((lesson, index) => {
-            const conflicts = (0, schedule_conflict_validator_1.validateScheduleConflicts)([lesson], allExisting);
-            const relevant = conflicts.filter((c) => c.message.includes(parsed.groupName));
-            if (relevant.length > 0) {
-                conflictByIndex.set(index, relevant.map((c) => c.message).join('; '));
+            const conflicts = (0, schedule_conflict_validator_1.validateScheduleConflicts)([lesson], allExisting)
+                .filter((conflict) => conflict.lessonA === lesson || conflict.lessonB === lesson);
+            if (conflicts.length > 0) {
+                conflictByIndex.set(index, conflicts.map((c) => c.message).join('; '));
             }
         });
         const lessons = parsed.lessons.map((lesson, index) => ({
@@ -162,17 +162,6 @@ let ScheduleUploadService = class ScheduleUploadService {
         }
         const obsoleteUploads = await this.findPeriodUploads(uploadedById, parsed.groupName, parsed.periodStart, parsed.periodEnd);
         const previousItems = await this.loadScheduleItemsForGroupPeriod(parsed.groupName, parsed.periodStart, parsed.periodEnd);
-        const obsoleteUploadIds = obsoleteUploads.map((u) => u.id);
-        const excludePeriod = {
-            validFrom: this.toDate(parsed.periodStart),
-            validTo: this.toDate(parsed.periodEnd),
-        };
-        const existingSameGroupLessons = await this.loadExistingLessons(parsed.groupName, obsoleteUploadIds, excludePeriod);
-        const otherGroupsLessons = await this.loadOtherGroupsLessons(parsed.groupName, obsoleteUploadIds);
-        const conflicts = (0, schedule_conflict_validator_1.validateScheduleConflicts)(selectedLessons, [...existingSameGroupLessons, ...otherGroupsLessons]);
-        const conflictWarnings = conflicts
-            .map((c) => c.message)
-            .filter((msg) => msg.includes(parsed.groupName));
         const allWarnings = parsed.warnings.filter((warning) => !isConflictWarning(warning));
         const storedFileName = normalizeStoredFileName(originalFileName);
         const filePath = (0, node_path_1.join)(this.schedulesDir, storedFileName);
@@ -540,7 +529,8 @@ let ScheduleUploadService = class ScheduleUploadService {
         };
         const existingSameGroupLessons = await this.loadExistingLessons(parsed.groupName, obsoleteUploadIds, excludePeriod);
         const otherGroupsLessons = await this.loadOtherGroupsLessons(parsed.groupName, obsoleteUploadIds);
-        const conflicts = (0, schedule_conflict_validator_1.validateScheduleConflicts)(parsed.lessons, [...existingSameGroupLessons, ...otherGroupsLessons]);
+        const conflicts = (0, schedule_conflict_validator_1.validateScheduleConflicts)(parsed.lessons, [...existingSameGroupLessons, ...otherGroupsLessons]).filter((conflict) => parsed.lessons.includes(conflict.lessonA)
+            || parsed.lessons.includes(conflict.lessonB));
         if (conflicts.length > 0) {
             throw new common_1.BadRequestException({
                 message: 'Загрузка отменена: обнаружены конфликты в расписании',

@@ -7,6 +7,7 @@ exports.isAuditoriumRoomLabel = isAuditoriumRoomLabel;
 exports.isSharedMultiHallRoom = isSharedMultiHallRoom;
 exports.splitPhysicalRoomLabels = splitPhysicalRoomLabels;
 exports.splitRoomForSubgroups = splitRoomForSubgroups;
+const lesson_type_utils_1 = require("./lesson-type.utils");
 const TEACHER_POSITION_PATTERNS = [
     /^ст\.?(?:\s*преподаватель)(?=\s|$|[.,;:])/i,
     /^старший\s+преподаватель(?=\s|$|[.,;:])/i,
@@ -31,9 +32,6 @@ function parseSubgroupNumber(value) {
     }
     return null;
 }
-function isKrDefenseLessonType(value) {
-    return value.includes('защ') && value.includes('кр');
-}
 function isSelfStudySpecialDay(value) {
     return /самоподготов/i.test(value);
 }
@@ -45,18 +43,7 @@ function isIgnorableLessonCell(rawText) {
     return isSelfStudySpecialDay(normalized);
 }
 function normalizeLessonType(raw) {
-    const value = raw.trim().replace(/;$/, '').toLowerCase();
-    if (value.startsWith('лек'))
-        return 'Лекция';
-    if (value.startsWith('практ'))
-        return 'Практика';
-    if (value.startsWith('лаб'))
-        return 'Лаб. раб.';
-    if (isKrDefenseLessonType(value))
-        return 'Защита КР';
-    if (value.includes('зач'))
-        return 'Зачет';
-    return raw.trim().replace(/;$/, '');
+    return (0, lesson_type_utils_1.normalizeLessonTypeLabel)(raw);
 }
 function formatTeacherName(raw) {
     const match = raw.trim().match(TEACHER_NAME_PATTERN);

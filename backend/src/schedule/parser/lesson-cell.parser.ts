@@ -1,3 +1,5 @@
+import { normalizeLessonTypeLabel } from './lesson-type.utils';
+
 export interface ParsedLessonPart {
     subject: string;
     lessonType: string;
@@ -37,14 +39,6 @@ function parseSubgroupNumber(value: string): number | null {
     return null;
 }
 
-function isKrDefenseLessonType(value: string): boolean {
-    return value.includes('защ') && value.includes('кр') && !value.includes('кп');
-}
-
-function isKpDefenseLessonType(value: string): boolean {
-    return value.includes('защ') && value.includes('кп');
-}
-
 function isSelfStudySpecialDay(value: string): boolean {
     return /самоподготов/i.test(value);
 }
@@ -59,16 +53,7 @@ export function isIgnorableLessonCell(rawText: string | null | undefined): boole
 }
 
 function normalizeLessonType(raw: string): string {
-    const value = raw.trim().replace(/;$/, '').toLowerCase();
-
-    if (value.startsWith('лек')) return 'Лекция';
-    if (value.startsWith('практ')) return 'Практика';
-    if (value.startsWith('лаб')) return 'Лаб. раб.';
-    if (isKpDefenseLessonType(value)) return 'Защита КП';
-    if (isKrDefenseLessonType(value)) return 'Защита КР';
-    if (value.includes('зач')) return 'Зачет';
-
-    return raw.trim().replace(/;$/, '');
+    return normalizeLessonTypeLabel(raw);
 }
 
 function formatTeacherName(raw: string): string {

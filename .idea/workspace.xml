@@ -6,26 +6,26 @@
   <component name="ChangeListManager">
     <list default="true" id="91e8ec1a-96e3-4795-8700-f4a880f9a12c" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/notifications/notifications.service.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/dto/schedule-item.dto.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.controller.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-admin.service.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/lesson-cell.parser.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/lesson-cell.parser.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/lesson-cell.parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/lesson-cell.parser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/lesson-cell.parser.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/lesson-cell.parser.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-conflict.validator.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-conflict.validator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-conflict.validator.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-conflict.validator.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-period.utils.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-period.utils.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-period.utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/parser/schedule-period.utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/resolver/lesson-type.resolver.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/resolver/lesson-type.resolver.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/resolver/lesson-type.resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/resolver/lesson-type.resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/resolver/lesson-type.resolver.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/resolver/lesson-type.resolver.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-display.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-display.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/schedule/schedule-upload.service.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/backend/dist/tsconfig.build.tsbuildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/notifications/notifications.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/notifications/notifications.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/schedule/dto/schedule-item.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/dto/schedule-item.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/schedule/schedule-admin.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/schedule-admin.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/schedule/schedule-admin.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/schedule-admin.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/scheduleAdmin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/scheduleAdmin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/schedule.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/assets/styles/schedule.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/schedule/Schedule.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/schedule/Schedule.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/database/migrations/1795791485533-AddKpDefenseLessonType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/database/migrations/1795791485533-AddKpDefenseLessonType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/schedule/parser/lesson-cell.parser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/parser/lesson-cell.parser.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/schedule/parser/schedule-conflict.validator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/parser/schedule-conflict.validator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/schedule/resolver/lesson-type.resolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/resolver/lesson-type.resolver.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/schedule/schedule-upload.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/schedule/schedule-upload.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/schedule/scheduleOptions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/schedule/scheduleOptions.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

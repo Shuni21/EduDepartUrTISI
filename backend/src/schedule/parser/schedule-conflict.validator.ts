@@ -130,11 +130,18 @@ export function validateScheduleConflicts(
 ): ScheduleConflict[] {
     const conflicts: ScheduleConflict[] = [];
     const allLessons = [...existingLessons, ...lessons];
+    const incoming = new Set(lessons);
 
     for (let i = 0; i < allLessons.length; i += 1) {
         for (let j = i + 1; j < allLessons.length; j += 1) {
             const first = allLessons[i];
             const second = allLessons[j];
+
+            // Уже сохранённые конфликты между старыми парами не относятся
+            // к текущей загрузке — их не возвращаем.
+            if (!incoming.has(first) && !incoming.has(second)) {
+                continue;
+            }
 
             if (!overlapsSameSlot(first, second)) {
                 continue;

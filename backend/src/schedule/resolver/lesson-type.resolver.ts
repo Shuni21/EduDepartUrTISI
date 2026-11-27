@@ -3,6 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { LessonType, LessonTypeCode } from '../entities/lesson-type.entity';
+import {
+    compactLessonType,
+    isCreditLessonType,
+    isKpDefenseLessonType,
+    isKrDefenseLessonType,
+} from '../parser/lesson-type.utils';
 
 @Injectable()
 export class LessonTypeResolver {
@@ -11,24 +17,16 @@ export class LessonTypeResolver {
         private readonly lessonTypesRepository: Repository<LessonType>,
     ) {}
 
-    private isKrDefenseLessonType(value: string): boolean {
-        return value.includes('защ') && value.includes('кр') && !value.includes('кп');
-    }
-
-    private isKpDefenseLessonType(value: string): boolean {
-        return value.includes('защ') && value.includes('кп');
-    }
-
     private mapRawToCode(raw: string): LessonTypeCode {
-        const value = raw.trim().toLowerCase();
+        const compact = compactLessonType(raw);
 
-        if (value.startsWith('лек')) return LessonTypeCode.LECTURE;
-        if (value.startsWith('практ')) return LessonTypeCode.PRACTICE;
-        if (value.startsWith('лаб')) return LessonTypeCode.LAB;
-        if (this.isKpDefenseLessonType(value)) return LessonTypeCode.KP_DEFENSE;
-        if (this.isKrDefenseLessonType(value)) return LessonTypeCode.KR_DEFENSE;
-        if (value.includes('зач')) return LessonTypeCode.CREDIT;
-        if (value.includes('куратор') || value === 'особое' || value === 'особенное') {
+        if (compact.startsWith('лек')) return LessonTypeCode.LECTURE;
+        if (compact.startsWith('практ')) return LessonTypeCode.PRACTICE;
+        if (compact.startsWith('лаб')) return LessonTypeCode.LAB;
+        if (isKpDefenseLessonType(raw)) return LessonTypeCode.KP_DEFENSE;
+        if (isKrDefenseLessonType(raw)) return LessonTypeCode.KR_DEFENSE;
+        if (isCreditLessonType(raw)) return LessonTypeCode.CREDIT;
+        if (compact.includes('куратор') || compact === 'особое' || compact === 'особенное') {
             return LessonTypeCode.SPECIAL;
         }
 
